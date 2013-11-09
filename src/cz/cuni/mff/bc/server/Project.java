@@ -4,10 +4,10 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.common.main.ProjectUID;
-import cz.cuni.mff.bc.common.main.TaskID;
-import cz.cuni.mff.bc.common.enums.ProjectState;
-import cz.cuni.mff.bc.common.main.ProjectInfo;
+import cz.cuni.mff.bc.server.misc.ProjectUID;
+import cz.cuni.mff.bc.server.misc.TaskID;
+import cz.cuni.mff.bc.api.enums.ProjectState;
+import cz.cuni.mff.bc.server.misc.ProjectInfo;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;

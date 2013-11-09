@@ -6,14 +6,12 @@ package cz.cuni.mff.bc.server;
 
 import cz.cuni.mff.bc.server.classloading.CustomObjectInputStream;
 import cz.cuni.mff.bc.server.classloading.ClassManager;
-import cz.cuni.mff.bc.common.main.CustomIO;
-import cz.cuni.mff.bc.common.main.Logger;
-import cz.cuni.mff.bc.common.main.ProjectUID;
-import cz.cuni.mff.bc.common.main.TaskID;
-import cz.cuni.mff.bc.common.main.Task;
-import cz.cuni.mff.bc.common.enums.ELoggerMessages;
-import cz.cuni.mff.bc.common.enums.ProjectState;
-import cz.cuni.mff.bc.common.main.ProjectInfo;
+import cz.cuni.mff.bc.server.misc.CustomIO;
+import cz.cuni.mff.bc.server.misc.ProjectUID;
+import cz.cuni.mff.bc.server.misc.TaskID;
+import cz.cuni.mff.bc.server.misc.Task;
+import cz.cuni.mff.bc.api.enums.ProjectState;
+import cz.cuni.mff.bc.server.misc.ProjectInfo;
 import cz.cuni.mff.bc.server.exceptions.ExtractionException;
 import cz.cuni.mff.bc.server.exceptions.NotSupportedArchiveException;
 import java.io.File;
@@ -35,6 +33,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 
 /**
  *
@@ -43,7 +43,6 @@ import java.util.concurrent.PriorityBlockingQueue;
 public class TaskManager {
 
     private ExecutorService executor;
-    private Logger logger;
     public ClassManager classManager = new ClassManager();
     private final int inititalCapacity = 1000;
     private Comparator<TaskID> comp;
@@ -57,8 +56,9 @@ public class TaskManager {
     private ConcurrentHashMap<ProjectUID, Project> projectsPreparing = new ConcurrentHashMap<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsCompleted = new ConcurrentHashMap<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsForDownload = new ConcurrentHashMap<>();
-
-    public TaskManager() {
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(TaskManager.class.getName());
+    private Handler logHandler;
+    public TaskManager(Handler logHandler) {
         this.executor = Executors.newCachedThreadPool();
         comp = new Comparator<TaskID>() {
             @Override
@@ -74,7 +74,8 @@ public class TaskManager {
                 }
             }
         };
-        logger = Server.getLogger();
+        this.logHandler = logHandler;
+        LOG.addHandler(logHandler);
         tasksPool = new PriorityBlockingQueue<>(inititalCapacity, comp);
     }
 
@@ -203,7 +204,7 @@ public class TaskManager {
             tasksInProgress.remove(taskID);
             Project p = projectsAll.get(taskID.getProjectUID());
             p.addTaskAgain(taskID); // prida znovu ulohu do seznamu uncompleted v projectu
-            logger.log("Task " + taskID + " calculated by " + clientID + " is again in tasks pool");
+            LOG.log(Level.INFO, "Task {0} calculated by {1} is again in tasks pool", new Object[]{taskID, clientID});
             if (p.getState().equals(ProjectState.ACTIVE)) {
                 tasksPool.add(taskID); // pokud je stav projektu active, prida se uloha znovu do poolu
                 // pokud je cokoli jineho, neprida se do poolu
@@ -283,10 +284,10 @@ public class TaskManager {
             associateClientWithTask(clientID, id);
             tasksBeforeCalc.remove(id);
             tasksInProgress.add(id);
-            logger.log("Task: " + task.getUnicateID() + " is sent for computation by client: " + clientID);
+            LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientID});
             return task;
         } catch (ClassNotFoundException | IOException e) {
-            logger.log("Unpacking task: " + e.toString(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Problem during unpacking task: {0}", e.toString());
             return null;
         }
     }
@@ -305,7 +306,7 @@ public class TaskManager {
                 out.writeObject(task);
                 project.addTask(task.getUnicateID());
                 //tasksPool.add(task.getUnicateID()); //- pridano do commentu protoze je tam pak pridavam vsechny najednou
-                logger.log("Task created: " + task.getUnicateID() + ", " + saveFolder + file.getName(), ELoggerMessages.DEBUG);
+                LOG.log(Level.INFO, "Task created: {0}, {1}{2}", new Object[]{task.getUnicateID(), saveFolder, file.getName()});
                 out.close();
             }
             numberOfTasks++;
@@ -315,7 +316,7 @@ public class TaskManager {
     }
 
     private void extractProject(Project project, String extension) throws ExtractionException, NotSupportedArchiveException {//, InterruptedException {
-        new Extractor(extension, project, logger).unpack();
+        new Extractor(extension, project, logHandler).unpack();
 
     }
 
@@ -353,22 +354,22 @@ public class TaskManager {
             changePreparingToActive(project);
             addTasksToPool(clientID, projectID);
         } catch (ExtractionException e) {
-            logger.log(e.getMessage(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, e.getMessage());
             undoProject(project);
         } catch (NotSupportedArchiveException e) {
-            logger.log(e.getMessage(), ELoggerMessages.ALERT);
+            LOG.log(Level.WARNING, e.getMessage());
             undoProject(project);
         } catch (ClassNotFoundException e) {
-            logger.log("ClassNotFoundException during task creation : " + e.toString(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "ClassNotFoundException during task creation : {0}", e.toString());
             undoProject(project);
         } catch (IllegalAccessException e) {
-            logger.log("Illegal access: " + e.getMessage(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Illegal access: {0}", e.getMessage());
             undoProject(project);
         } catch (InstantiationException e) {
-            logger.log("Instantiation problem: " + e.getMessage(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Instantiation problem: {0}", e.getMessage());
             undoProject(project);
         } catch (IOException e) {
-            logger.log("Creating tasks: " + e.toString(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Creating tasks: {0}", e.toString());
             undoProject(project);
         }
 
@@ -456,7 +457,7 @@ public class TaskManager {
             project.setState(ProjectState.COMPLETED);
             projectsCompleted.put(ID.getProjectUID(), project);
             projectsActive.remove(ID.getProjectUID());
-            final Future<Boolean> f = executor.submit(new ProjectPacker(project, logger));
+            final Future<Boolean> f = executor.submit(new ProjectPacker(project, logHandler));
             try {
                 Boolean result = f.get();
                 // if (result == Boolean.TRUE) {
@@ -464,9 +465,9 @@ public class TaskManager {
                 projectsForDownload.put(project.getProjectUID(), project);
                 // }//TODO osetrit kdyz vysledek je ne
             } catch (ExecutionException e) {
-                logger.log("Error inside task, client has to fix it!", ELoggerMessages.ERROR);
+                LOG.log(Level.WARNING, "Error inside task, client has to fix it!");
             } catch (InterruptedException e) {
-                logger.log("interpution");
+                LOG.log(Level.WARNING, "Interpution during project packing");
             }
             /*       executor.submit(new Runnable() {
              @Override

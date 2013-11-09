@@ -4,7 +4,7 @@
  */
 package cz.cuni.mff.bc.server.classloading;
 
-import cz.cuni.mff.bc.common.main.ProjectUID;
+import cz.cuni.mff.bc.server.misc.ProjectUID;
 import cz.cuni.mff.bc.server.TaskManager;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

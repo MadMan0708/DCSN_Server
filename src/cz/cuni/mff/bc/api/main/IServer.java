@@ -2,13 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cuni.mff.bc.common.main;
+package cz.cuni.mff.bc.api.main;
 
 /**
  *
  * @author Aku
  */
-import cz.cuni.mff.bc.common.enums.InformMessage;
+import cz.cuni.mff.bc.server.misc.Task;
+import cz.cuni.mff.bc.server.misc.TaskID;
+import cz.cuni.mff.bc.server.misc.ProjectInfo;
+import cz.cuni.mff.bc.server.misc.ProjectUID;
+import cz.cuni.mff.bc.api.enums.InformMessage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;

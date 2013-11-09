@@ -4,15 +4,13 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.common.main.IServer;
-import cz.cuni.mff.bc.common.main.Logger;
-import cz.cuni.mff.bc.common.main.Task;
-import cz.cuni.mff.bc.common.main.TaskID;
-import cz.cuni.mff.bc.common.enums.ELoggerMessages;
+import cz.cuni.mff.bc.api.main.IServer;
+import cz.cuni.mff.bc.server.misc.Task;
+import cz.cuni.mff.bc.server.misc.TaskID;
 import static cz.cuni.mff.bc.server.Server.getUploadedDir;
-import cz.cuni.mff.bc.common.main.ProjectUID;
-import cz.cuni.mff.bc.common.enums.InformMessage;
-import cz.cuni.mff.bc.common.main.ProjectInfo;
+import cz.cuni.mff.bc.server.misc.ProjectUID;
+import cz.cuni.mff.bc.api.enums.InformMessage;
+import cz.cuni.mff.bc.server.misc.ProjectInfo;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -24,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import org.cojen.dirmi.Pipe;
 
 /**
@@ -33,20 +33,18 @@ import org.cojen.dirmi.Pipe;
 public class IServerImpl implements IServer {
 
     private TaskManager taskManager;
-    private Logger logger;
     private final int timerPeriodSec = 11;
     private HashMap<String, Timer> clientTimers;
     private HashMap<String, Boolean> clientsTimeout;
     private ArrayList<String> activeConnections;
-    // private SessionAcceptor sessionAcceptor;
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(IServerImpl.class.getName());
 
-    public IServerImpl() {//SessionAcceptor sessionAcceptor) {
-        // this.sessionAcceptor = sessionAcceptor;
-        this.logger = Server.getLogger();
+    public IServerImpl(Handler logHandler) {
         this.taskManager = Server.getTaskManager();
         this.clientTimers = new HashMap<>();
         this.clientsTimeout = new HashMap<>();
         this.activeConnections = Server.getActiveConnections();
+        LOG.addHandler(logHandler);
     }
 
     @Override
@@ -76,7 +74,7 @@ public class IServerImpl implements IServer {
         try {
             return taskManager.getClassData(taskID);
         } catch (IOException e) {
-            logger.log("Data for class: " + taskID.getClassName() + " could not be load; " + e.toString(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Data for class: {0} could not be load; {1}", new Object[]{taskID.getClassName(), e.toString()});
             return null;
         }
     }
@@ -103,7 +101,7 @@ public class IServerImpl implements IServer {
         if (!task.hasDataBeenSaved()) {
             task.saveData(taskManager.createTaskSavePath(task.getUnicateID()));
             taskManager.addCompletedTask(clientID, task.getUnicateID());
-            logger.log("Task saving: Task " + task.getUnicateID() + " has been saved", ELoggerMessages.DEBUG);
+            LOG.log(Level.INFO, "Task saving: Task {0} has been saved", task.getUnicateID());
         }
     }
 
@@ -119,7 +117,7 @@ public class IServerImpl implements IServer {
             pipe.close();
 
         } catch (IOException e) {
-            logger.log("Saving uploaded file: " + e.getMessage(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Saving uploaded file: " + e.getMessage());
         }
         taskManager.addProject(clientID, projectID, priority, extension);
         return null;
@@ -143,7 +141,7 @@ public class IServerImpl implements IServer {
             pipe.close();
 
         } catch (IOException e) {
-            logger.log("Loading project for download: " + e.getMessage(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Loading project for download: " + e.getMessage());
         }
         taskManager.removeDownloadedProject(new ProjectUID(clientID, projectID));
         return null;
@@ -202,7 +200,7 @@ public class IServerImpl implements IServer {
     }
 
     private void startClientTimer(final String clientID) {
-        logger.log("Timer for client " + clientID + " started");
+        LOG.log(Level.INFO, "Timer for client {0} started", clientID);
         final Timer t = new Timer(clientID);
         clientsTimeout.put(clientID, Boolean.TRUE);
         t.scheduleAtFixedRate(new TimerTask() {
@@ -211,13 +209,13 @@ public class IServerImpl implements IServer {
                 if (clientsTimeout.get(clientID).equals(Boolean.TRUE)) {
                     // vse ok, klient se ozval, znovu nastavuju timer
                     clientsTimeout.put(clientID, Boolean.FALSE);
-                    logger.log("Client " + clientID + " is active");
+                    LOG.log(Level.INFO, "Client {0} is active", clientID);
                 } else {
                     ArrayList<TaskID> tasks = taskManager.cancelTasksAssociation(clientID);
-                    logger.log("Client  " + clientID + " has not sent ping message, disconnected", ELoggerMessages.ERROR);
+                    LOG.log(Level.WARNING, "Client  {0} has not sent ping message, disconnected", clientID);
                     if (tasks != null) {
                         for (TaskID taskID : tasks) {
-                            logger.log("Task " + taskID + " calculated by " + clientID + " is again in tasks pool");
+                            LOG.log(Level.INFO, "Task {0} calculated by {1} is again in tasks pool", new Object[]{taskID, clientID});
                         }
                     }
                     stopClientTimer(clientID);

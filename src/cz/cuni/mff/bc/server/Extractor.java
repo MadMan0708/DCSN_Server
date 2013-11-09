@@ -4,7 +4,6 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.common.main.Logger;
 import cz.cuni.mff.bc.server.exceptions.ExtractionException;
 import cz.cuni.mff.bc.server.exceptions.NotSupportedArchiveException;
 import static cz.cuni.mff.bc.server.TaskManager.getDirInProject;
@@ -15,6 +14,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.kamranzafar.jtar.TarEntry;
@@ -30,30 +32,28 @@ public class Extractor {//implements Callable<Boolean> {
     private String projectName;
     private String clientName;
     private Project project;
-    private Logger logger;
+    private static final Logger LOG = Logger.getLogger(Extractor.class.getName());
+    
 
-    public Extractor(String extension, Project project, Logger logger) {
+    public Extractor(String extension, Project project, Handler logHandler) {
         projectName = project.getProjectName();
         clientName = project.getClientName();
         this.extension = extension;
         this.project = project;
-        this.logger = logger;
+        LOG.addHandler(logHandler);
     }
 
-    // @Override
     public void unpack() throws NotSupportedArchiveException, ExtractionException {
         switch (extension.toLowerCase()) {
             case "tar":
-                logger.log("Extracting " + projectName + " by " + clientName + " from " + extension + " archive");
+                LOG.log(Level.INFO, "Extracting {0} by {1} from {2} archive", new Object[]{projectName, clientName, extension});
                 extractFromTar();
-                logger.log("Extraction of " + projectName + " by " + clientName + " was sucesfull");
-                //return null;
+                LOG.log(Level.INFO, "Extraction of {0} by {1} was sucesfull", new Object[]{projectName, clientName});
                 break;
             case "zip":
-                logger.log("Extracting " + projectName + " by " + clientName + " from " + extension + " archive");
+                LOG.log(Level.INFO, "Extracting {0} by {1} from {2} archive", new Object[]{projectName, clientName, extension});
                 extractFromZip();
-                logger.log("Extraction of " + projectName + " by " + clientName + " was sucesfull");
-                //return null;
+                LOG.log(Level.INFO, "Extraction of {0} by {1} was sucesfull", new Object[]{projectName, clientName});
                 break;
             default:
                 throw new NotSupportedArchiveException("Archive with extension " + extension + " is not supported");

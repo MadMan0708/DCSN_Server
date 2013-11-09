@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cuni.mff.bc.common.main;
+package cz.cuni.mff.bc.server.misc;
 
-import cz.cuni.mff.bc.common.enums.ECalculationState;
+import cz.cuni.mff.bc.api.enums.TaskState;
+import cz.cuni.mff.bc.api.main.ITask;
 import java.io.Serializable;
 import java.nio.file.Path;
 
@@ -16,7 +17,7 @@ public class Task implements Serializable {
 
     private TaskID unicateTaskID;
     public ITask computeTask;
-    private ECalculationState state = ECalculationState.BEFORE_START;
+    private TaskState state = TaskState.BEFORE_START;
     private boolean dataHasBeenSaved = false;
 
     public Task(String projectID, String clientID, String taskID, int priority, String className) {
@@ -61,11 +62,11 @@ public class Task implements Serializable {
         dataHasBeenSaved = true;
     }
 
-    public void setState(ECalculationState state) {
+    public void setState(TaskState state) {
         this.state = state;
     }
 
-    public ECalculationState getState() {
+    public TaskState getState() {
         return this.state;
     }
 }

@@ -4,16 +4,18 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.common.main.GConsole;
-import cz.cuni.mff.bc.common.main.IConsole;
-import cz.cuni.mff.bc.common.main.Logger;
-import cz.cuni.mff.bc.common.main.PropertiesManager;
-import cz.cuni.mff.bc.common.enums.ELoggerMessages;
+import cz.cuni.mff.bc.server.misc.GConsole;
+import cz.cuni.mff.bc.server.misc.IConsole;
+import cz.cuni.mff.bc.server.misc.PropertiesManager;
+import cz.cuni.mff.bc.server.logging.CustomFormater;
+import cz.cuni.mff.bc.server.logging.CustomHandler;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import org.cojen.dirmi.Environment;
 import org.cojen.dirmi.SessionAcceptor;
 
@@ -24,7 +26,6 @@ import org.cojen.dirmi.SessionAcceptor;
 public class Server implements IConsole {
 
     private static String basedir;
-    private static Logger logger;
     private static PropertiesManager propManager;
     private static final int numThreads = 100;
     private Environment env;
@@ -32,13 +33,19 @@ public class Server implements IConsole {
     private static ArrayList<String> activeConnections;
     private static TaskManager taskManager;
     private IServerImpl remoteMethods;
+    private Handler logHandler;
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     public Server() {
-        logger = new Logger("server.log");
-        propManager = new PropertiesManager(logger, "server.config.properties");
+        logHandler = new CustomHandler(new File("server.log"));
+        logHandler.setFormatter(new CustomFormater());
+        logHandler.setLevel(Level.ALL);
+
         activeConnections = new ArrayList<>();
-        taskManager = new TaskManager();
-        remoteMethods = new IServerImpl();
+        taskManager = new TaskManager(logHandler);
+        remoteMethods = new IServerImpl(logHandler);
+
+        propManager = new PropertiesManager("server.config.properties", logHandler);
     }
 
     public void initialize() {
@@ -47,10 +54,6 @@ public class Server implements IConsole {
 
     public static TaskManager getTaskManager() {
         return taskManager;
-    }
-
-    public static Logger getLogger() {
-        return logger;
     }
 
     public static ArrayList<String> getActiveConnections() {
@@ -106,7 +109,7 @@ public class Server implements IConsole {
                 proceedCommand(br.readLine());
             }
         } catch (IOException e) {
-            logger.log("Proceeding command: " + e.getMessage(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Proceeding command: {0}", e.getMessage());
         }
     }
 
@@ -131,7 +134,7 @@ public class Server implements IConsole {
         switch (cmd[0]) {
             case "start": {
                 startListening(numThreads);
-                logger.log("Server is listening for incoming sessions");
+                LOG.log(Level.INFO, "Server is listening for incoming sessions");
                 break;
             }
             case "setBaseDir": {
@@ -141,14 +144,14 @@ public class Server implements IConsole {
                         throw new IOException();
                     }
                     propManager.setProperty("basedir", f.getAbsolutePath());
-                    logger.log("Basedir is now set to: " + f.getAbsolutePath());
+                    LOG.log(Level.INFO, "Basedir is now set to: {0}", f.getAbsolutePath());
                 } catch (IOException e) {
-                    logger.log("Path " + cmd[1] + " is not correct path");
+                    LOG.log(Level.WARNING, "Path {0} is not correct path", cmd[1]);
                 }
                 break;
             }
             case "getBaseDir": {
-                logger.log("Basedir is set to: " + propManager.getProperty("basedir"));
+                LOG.log(Level.INFO, "Basedir is set to: {0}", propManager.getProperty("basedir"));
                 break;
             }
             case "stop": {
@@ -164,16 +167,16 @@ public class Server implements IConsole {
 
     private void startListening(int numThreads) {
         if (basedir == null) {
-            logger.log("Server base dir has to be set before starting the server", ELoggerMessages.ALERT);
+            LOG.log(Level.INFO, "Server base dir has to be set before starting the server");
         } else {
             try {
                 checkFolders();
                 env = new Environment(numThreads);
                 sesAcceptor = env.newSessionAcceptor(1099);
-                sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor));
-                
+                sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor, logHandler));
+
             } catch (IOException e) {
-                logger.log("Starting server: " + e.getMessage(), ELoggerMessages.ERROR);
+                LOG.log(Level.WARNING, "Starting server: {0}", e.getMessage());
             }
         }
     }
@@ -183,9 +186,9 @@ public class Server implements IConsole {
             if (env != null) {
                 env.close();
             }
-            logger.log("Server succesfully stopped.");
+            LOG.log(Level.INFO, "Server succesfully stopped.");
         } catch (IOException e) {
-            logger.log("Stopping server: " + e.getMessage(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Stopping server: {0}", e.getMessage());
         }
     }
 

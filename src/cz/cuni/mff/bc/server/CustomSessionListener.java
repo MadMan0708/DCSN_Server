@@ -4,11 +4,10 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.common.main.Logger;
-import cz.cuni.mff.bc.common.enums.ELoggerMessages;
-import cz.cuni.mff.bc.common.enums.EUserAddingState;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import org.cojen.dirmi.Link;
 import org.cojen.dirmi.Session;
 import org.cojen.dirmi.SessionAcceptor;
@@ -22,16 +21,16 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
 
     private TaskManager taskManager;
     private ArrayList<String> activeConnections;
-    private Logger logger;
     private IServerImpl remoteMethods;
     private SessionAcceptor sesAcceptor;
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(CustomSessionListener.class.getName());
 
-    public CustomSessionListener(IServerImpl remoteMethods, SessionAcceptor sesAcceptor) {
+    public CustomSessionListener(IServerImpl remoteMethods, SessionAcceptor sesAcceptor,Handler logHandler) {
         this.taskManager = Server.getTaskManager();
         this.activeConnections = Server.getActiveConnections();
-        this.logger = Server.getLogger();
         this.remoteMethods = remoteMethods;
         this.sesAcceptor = sesAcceptor;
+        LOG.addHandler(logHandler);
     }
 
     @Override
@@ -42,26 +41,26 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
             activeConnections.add(clientID);
             taskManager.classManager.setCustomClassLoader(clientID);
             session.setClassLoader(taskManager.classManager.getClassLoader(clientID));
-            session.send(EUserAddingState.OK);
+            session.send(Boolean.TRUE);
             session.send(remoteMethods);
-            logger.log("Client " + clientID + " has been connected to the server");
+            LOG.log(Level.INFO, "Client {0} has been connected to the server", clientID);
             session.addCloseListener(new SessionCloseListener() {
                 @Override
                 public void closed(Link sessionLink, SessionCloseListener.Cause cause) {
                     taskManager.classManager.deleteCustomClassLoader(clientID);
                     activeConnections.remove(clientID);
-                    logger.log("Client " + clientID + " has been disconnected form the server");
+                    LOG.log(Level.INFO, "Client {0} has been disconnected form the server", clientID);
                     try {
                         sessionLink.close();
                     } catch (IOException e) {
-                        logger.log("Closing session; Caouse: " + cause.name() + "; " + e.getMessage(), ELoggerMessages.ERROR);
+                        LOG.log(Level.WARNING, "Closing session; Cause: {0}; {1}", new Object[]{cause.name(), e.getMessage()});
                     }
 
                 }
             });
 
         } else {
-            session.send(EUserAddingState.EXIST);
+            session.send(Boolean.FALSE);
         }
     }
 

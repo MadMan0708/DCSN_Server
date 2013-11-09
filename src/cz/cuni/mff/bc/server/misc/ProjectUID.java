@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cuni.mff.bc.common.main;
+package cz.cuni.mff.bc.server.misc;
 
-import cz.cuni.mff.bc.common.enums.ProjectState;
+import cz.cuni.mff.bc.api.enums.ProjectState;
 import java.io.Serializable;
 import java.util.Objects;
 

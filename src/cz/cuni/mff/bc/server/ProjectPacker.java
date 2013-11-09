@@ -4,14 +4,15 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.common.main.Logger;
-import cz.cuni.mff.bc.common.enums.ELoggerMessages;
-import cz.cuni.mff.bc.common.enums.ProjectState;
+import cz.cuni.mff.bc.api.enums.ProjectState;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Callable;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -24,27 +25,23 @@ public class ProjectPacker implements Callable<Boolean> {
     private Project project;
     private String clientID;
     private String projectID;
-    private Logger logger;
-    //private ConcurrentHashMap<ProjectUID,Project> projectsReadyForDownload;
+    private static final Logger LOG = Logger.getLogger(ProjectPacker.class.getName());
 
     @Override
     public Boolean call() throws Exception {
-      return packProject();
+        return packProject();
     }
 
-   
-
-    public ProjectPacker(Project project,Logger logger){// ConcurrentHashMap<ProjectUID,Project> projectsReadyForDownload, Logger logger) {
-       // this.projectsReadyForDownload = projectsReadyForDownload;
+    public ProjectPacker(Project project, Handler logHandler) {
         this.project = project;
         this.clientID = project.getClientName();
         this.projectID = project.getProjectName();
-        this.logger = logger;
+        LOG.addHandler(logHandler);
 
     }
 
     private void addFileToZip(File sourceFile, ZipOutputStream zos) throws IOException {
-        
+
         ZipEntry ze = new ZipEntry(sourceFile.getName());
         zos.putNextEntry(ze);
 
@@ -73,13 +70,13 @@ public class ProjectPacker implements Callable<Boolean> {
             }
             zos.closeEntry();
             zos.close();
-            logger.log("Project " + projectID + " by client " + clientID + " packed");
+            LOG.log(Level.INFO, "Project {0} by client {1} packed", new Object[]{projectID, clientID});
             project.setState(ProjectState.READY_FOR_DOWNLOAD);
-          // projectsReadyForDownload.add(project);
-         //   projectsReadyForDownload.put(project., project)
+            // projectsReadyForDownload.add(project);
+            //   projectsReadyForDownload.put(project., project)
             return Boolean.TRUE;
         } catch (IOException e) {
-            logger.log("Packing project problem " + e.toString(), ELoggerMessages.ERROR);
+            LOG.log(Level.WARNING, "Packing project problem {0}", e.getMessage());
             return Boolean.FALSE;
         }
 
