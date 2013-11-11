@@ -46,6 +46,7 @@ public class Server implements IConsole {
         remoteMethods = new IServerImpl(logHandler);
 
         propManager = new PropertiesManager("server.config.properties", logHandler);
+        LOG.addHandler(logHandler);
     }
 
     public void initialize() {
@@ -81,6 +82,7 @@ public class Server implements IConsole {
 
     }
 
+ 
     public static String getUploadedDir() {
         return propManager.getProperty("basedir") + File.separator + "Uploaded";
     }

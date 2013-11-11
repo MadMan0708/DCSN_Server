@@ -14,11 +14,11 @@ import java.lang.reflect.Proxy;
  *
  * @author Jakub
  */
-public class CustomObjectInputStream extends ObjectInputStream {
+public class CustObjectInputStream extends ObjectInputStream {
 
     CustomCL cl;
 
-    public CustomObjectInputStream(InputStream in, CustomCL cl) throws IOException {
+    public CustObjectInputStream(InputStream in, CustomCL cl) throws IOException {
         super(in);
         this.cl = cl;
     }

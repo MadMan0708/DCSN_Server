@@ -8,10 +8,6 @@ package cz.cuni.mff.bc.api.main;
  *
  * @author Aku
  */
-import cz.cuni.mff.bc.server.misc.Task;
-import cz.cuni.mff.bc.server.misc.TaskID;
-import cz.cuni.mff.bc.server.misc.ProjectInfo;
-import cz.cuni.mff.bc.server.misc.ProjectUID;
 import cz.cuni.mff.bc.api.enums.InformMessage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -29,9 +25,12 @@ public interface IServer extends Remote {
     public boolean isProjectExists(String clientID, String projectID) throws RemoteException;
 
     @Asynchronous
-    public Pipe uploadProject(String clientID, String projectID, int priority, String extension, Pipe pipe) throws RemoteException;
+    public Pipe uploadProject(String clientName, String projectName, int priority, Pipe pipe) throws RemoteException;
 
-    public byte[] getClassData(TaskID id) throws RemoteException;
+    @Asynchronous
+    public Pipe downloadProjectJar(ProjectUID uid, Pipe pipe) throws RemoteException;
+
+   // public Class<?> getClassData(TaskID id) throws RemoteException;
 
     public boolean isProjectReadyForDownload(String clientID, String projectID) throws RemoteException;
 

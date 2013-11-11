@@ -4,14 +4,15 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.server.classloading.CustomObjectInputStream;
 import cz.cuni.mff.bc.server.classloading.ClassManager;
-import cz.cuni.mff.bc.server.misc.CustomIO;
-import cz.cuni.mff.bc.server.misc.ProjectUID;
-import cz.cuni.mff.bc.server.misc.TaskID;
-import cz.cuni.mff.bc.server.misc.Task;
+import cz.cuni.mff.bc.api.main.CustomIO;
+import cz.cuni.mff.bc.api.main.ProjectUID;
+import cz.cuni.mff.bc.api.main.TaskID;
+import cz.cuni.mff.bc.api.main.Task;
 import cz.cuni.mff.bc.api.enums.ProjectState;
-import cz.cuni.mff.bc.server.misc.ProjectInfo;
+import cz.cuni.mff.bc.api.main.ProjectInfo;
+import static cz.cuni.mff.bc.server.Server.getUploadedDir;
+import cz.cuni.mff.bc.server.classloading.CustObjectInputStream;
 import cz.cuni.mff.bc.server.exceptions.ExtractionException;
 import cz.cuni.mff.bc.server.exceptions.NotSupportedArchiveException;
 import java.io.File;
@@ -58,6 +59,7 @@ public class TaskManager {
     private ConcurrentHashMap<ProjectUID, Project> projectsForDownload = new ConcurrentHashMap<>();
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(TaskManager.class.getName());
     private Handler logHandler;
+
     public TaskManager(Handler logHandler) {
         this.executor = Executors.newCachedThreadPool();
         comp = new Comparator<TaskID>() {
@@ -87,12 +89,11 @@ public class TaskManager {
         }
     }
 
-    public byte[] getClassData(TaskID ID) throws IOException {
-        return classManager.getClassData(ID.getProjectUID(), ID.getClassName());
-    }
-
+    /*   public Class<?> getClassData(TaskID ID) throws IOException {
+     return classManager.getClassData(ID.getProjectUID(), ID.getClassName());
+     }*/
     private String taskIDToPath(TaskID ID) {
-        return TaskManager.getDirInProject(ID.getProjectID(), ID.getClientID(), "ready") + ID.getTaskID();
+        return TaskManager.getDirInProject(ID.getClientID(), ID.getProjectID(), "ready") + ID.getTaskID();
     }
 
     public boolean isTaskCompleted(TaskID ID) {
@@ -123,14 +124,14 @@ public class TaskManager {
             userFolder.mkdir();
         }
         //creation project folder inside user folder
-        String projectFolderPath = getProjectDir(projectID, clientID);
+        String projectFolderPath = getProjectDir(clientID, projectID);
         File projectFolder = new File(projectFolderPath);
         projectFolder.mkdir();
 
         // creation of calculation folders
-        String readyFolderPath = getDirInProject(projectID, clientID, "ready");
-        String completeFolderPath = getDirInProject(projectID, clientID, "complete");
-        String tempFolderPath = getDirInProject(projectID, clientID, "temp");
+        String readyFolderPath = getDirInProject(clientID, projectID, "ready");
+        String completeFolderPath = getDirInProject(clientID, projectID, "complete");
+        String tempFolderPath = getDirInProject(clientID, projectID, "temp");
 
         File readyFolder = new File(readyFolderPath);
         File completeFolder = new File(completeFolderPath);
@@ -146,12 +147,16 @@ public class TaskManager {
         return Server.getProjectsDir() + File.separator + clientID + File.separator;
     }
 
-    public static String getProjectDir(String projectID, String clientID) {
+    public static String getProjectDir(String clientID, String projectID) {
         return getClientDir(clientID) + projectID + File.separator;
     }
 
-    public static String getDirInProject(String projectID, String clientID, String dir) {
-        return getProjectDir(projectID, clientID) + dir + File.separator;
+    public static String getDirInProject(String clientID, String projectID, String dir) {
+        return getProjectDir(clientID, projectID) + dir + File.separator;
+    }
+
+    public static File getDirInUploaded(String clientName, String projectName) {
+        return new File(getUploadedDir() + File.separator + clientName + "_" + projectName + File.separator);
     }
 
     private boolean zeroTasks() {
@@ -265,21 +270,21 @@ public class TaskManager {
     }
 
     public Path createTaskSavePath(TaskID id) {
-        return Paths.get(getDirInProject(id.getProjectID(), id.getClientID(), "complete") + id.getTaskID());
+        return Paths.get(getDirInProject(id.getClientID(), id.getProjectID(), "complete") + id.getTaskID());
     }
 
     public Path createTaskLoadPath(TaskID id) {
-        return Paths.get(getDirInProject(id.getProjectID(), id.getClientID(), "ready") + id.getTaskID());
+        return Paths.get(getDirInProject(id.getClientID(), id.getProjectID(), "ready") + id.getTaskID());
     }
 
     public Path createTaskLoadDataPath(TaskID id) {
-        return Paths.get(getDirInProject(id.getProjectID(), id.getClientID(), "temp") + id.getTaskID());
+        return Paths.get(getDirInProject(id.getClientID(), id.getProjectID(), "temp") + id.getTaskID());
     }
 
     public Task getTask(String clientID, TaskID id) {
         File f = new File(taskIDToPath(id));
-        classManager.getClassLoader(clientID).setProjectUID(id.getProjectUID());
-        try (CustomObjectInputStream ois = new CustomObjectInputStream(new FileInputStream(f), classManager.getClassLoader(clientID))) {
+        // classManager.getClassLoader(clientID).setProjectUID(id.getProjectUID());
+        try (CustObjectInputStream ois = new CustObjectInputStream(new FileInputStream(f), classManager.getClassLoader(clientID))) {
             Task task = (Task) ois.readObject();
             associateClientWithTask(clientID, id);
             tasksBeforeCalc.remove(id);
@@ -293,14 +298,14 @@ public class TaskManager {
     }
 
     private void createTasks(Project project) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-        File dataFolder = new File(getDirInProject(project.getProjectName(), project.getClientName(), "temp"));
-        String saveFolder = getDirInProject(project.getProjectName(), project.getClientName(), "ready");
+        File dataFolder = new File(getDirInProject(project.getClientName(), project.getProjectName(), "temp"));
+        String saveFolder = getDirInProject(project.getClientName(), project.getProjectName(), "ready");
         File[] dataFiles = dataFolder.listFiles();
         String className = project.getClassName();
         int numberOfTasks = 0;
         for (File file : dataFiles) {
             Task task = new Task(project.getProjectName(), project.getClientName(), file.getName(), project.getPriority(), className);
-            task.setClass(classManager.loadClass(task.getClientID(), task.getProjectUID(), className));
+            task.setClass(classManager.loadClass(task.getClientID(), task.getProjectUID()));
             task.loadData(createTaskLoadDataPath(task.getUnicateID()));
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFolder + file.getName()))) {
                 out.writeObject(task);
@@ -315,8 +320,17 @@ public class TaskManager {
         project.setState(ProjectState.ACTIVE);
     }
 
-    private void extractProject(Project project, String extension) throws ExtractionException, NotSupportedArchiveException {//, InterruptedException {
-        new Extractor(extension, project, logHandler).unpack();
+    private void moveJarAndExtractTasks(Project project) throws ExtractionException, NotSupportedArchiveException, IOException {
+        File inUploadDir = getDirInUploaded(project.getClientName(), project.getProjectName());
+        File inProjectDir = new File(getProjectDir(project.getClientName(), project.getProjectName()));
+        File[] files = inUploadDir.listFiles();
+        for (File file : files) {
+            if (file.getName().endsWith(".jar")) {
+                CustomIO.copyFile(file, new File(inProjectDir, file.getName()));
+            } else {
+                new Extractor(file, project, logHandler).unpack();
+            }
+        }
 
     }
 
@@ -343,20 +357,17 @@ public class TaskManager {
         projectsActive.put(project.getProjectUID(), project);
     }
 
-    public void addProject(String clientID, String projectID, int priority, String extension) {
+    public void addProject(String clientID, String projectID, int priority) {
         Project project = new Project(ProjectState.PREPARING, priority, clientID, projectID);
         //preparation of folders for client's project
         prepareFolders(projectID, clientID);
         try {
             putProjectIntoAllPreparing(project);
-            extractProject(project, extension);
+            moveJarAndExtractTasks(project);
             createTasks(project);
             changePreparingToActive(project);
             addTasksToPool(clientID, projectID);
-        } catch (ExtractionException e) {
-            LOG.log(Level.WARNING, e.getMessage());
-            undoProject(project);
-        } catch (NotSupportedArchiveException e) {
+        } catch (ExtractionException | NotSupportedArchiveException e) {
             LOG.log(Level.WARNING, e.getMessage());
             undoProject(project);
         } catch (ClassNotFoundException e) {
@@ -377,7 +388,7 @@ public class TaskManager {
 
     private void deleteProject(String clientID, String projectID) {
         final String pattern = clientID + "_" + projectID + "\\..*";
-        File projectDir = new File(getProjectDir(projectID, clientID));
+        File projectDir = new File(getProjectDir(clientID, projectID));
         File uploadedDir = new File(Server.getUploadedDir() + File.separator);
         CustomIO.deleteWithPattern(uploadedDir, pattern);
         CustomIO.deleteDirectory(projectDir);
@@ -465,7 +476,7 @@ public class TaskManager {
                 projectsForDownload.put(project.getProjectUID(), project);
                 // }//TODO osetrit kdyz vysledek je ne
             } catch (ExecutionException e) {
-                LOG.log(Level.WARNING, "Error inside task, client has to fix it!");
+                LOG.log(Level.WARNING, "Error durong project packing: {0}", ((Exception) e.getCause()).toString());
             } catch (InterruptedException e) {
                 LOG.log(Level.WARNING, "Interpution during project packing");
             }

@@ -5,12 +5,13 @@
 package cz.cuni.mff.bc.server;
 
 import cz.cuni.mff.bc.api.main.IServer;
-import cz.cuni.mff.bc.server.misc.Task;
-import cz.cuni.mff.bc.server.misc.TaskID;
+import cz.cuni.mff.bc.api.main.Task;
+import cz.cuni.mff.bc.api.main.TaskID;
 import static cz.cuni.mff.bc.server.Server.getUploadedDir;
-import cz.cuni.mff.bc.server.misc.ProjectUID;
+import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.enums.InformMessage;
-import cz.cuni.mff.bc.server.misc.ProjectInfo;
+import cz.cuni.mff.bc.api.main.ProjectInfo;
+import cz.cuni.mff.bc.api.main.CustomIO;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -68,16 +69,16 @@ public class IServerImpl implements IServer {
                 break;
         }
     }
-
+/*
     @Override
-    public byte[] getClassData(TaskID taskID) throws RemoteException {
+    public Class<?> getClassData(TaskID taskID) throws RemoteException {
         try {
             return taskManager.getClassData(taskID);
         } catch (IOException e) {
             LOG.log(Level.WARNING, "Data for class: {0} could not be load; {1}", new Object[]{taskID.getClassName(), e.toString()});
             return null;
         }
-    }
+    }*/
 
     /*    @Override
      public EUserAddingState addClient(String client) throws RemoteException {
@@ -93,7 +94,7 @@ public class IServerImpl implements IServer {
      */
     @Override
     public void setSessionClassLoaderDetails(String clientSessionID, ProjectUID projectUID) throws RemoteException {
-        taskManager.classManager.getClassLoader(clientSessionID).setProjectUID(projectUID);
+        // taskManager.classManager.getClassLoader(clientSessionID).setProjectUID(projectUID);
     }
 
     @Override
@@ -106,26 +107,52 @@ public class IServerImpl implements IServer {
     }
 
     @Override
-    public Pipe uploadProject(String clientID, String projectID, int priority, String extension, Pipe pipe) throws RemoteException {
-        File file = new File(getUploadedDir() + File.separator + clientID + "_" + projectID + "." + extension);
-        try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
-            int n;
-            byte[] buffer = new byte[8192];
-            while ((n = pipe.read(buffer)) > -1) {
-                out.write(buffer, 0, n);
+    public Pipe uploadProject(String clientName, String projectName, int priority, Pipe pipe) throws RemoteException {
+        File upDir = CustomIO.createFolder(new File(getUploadedDir() + File.separator + clientName + "_" + projectName));
+        try {
+            File tmp = File.createTempFile(clientName, projectName + ".zip");
+            try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tmp))) {
+                int n;
+                byte[] buffer = new byte[8192];
+                while ((n = pipe.read(buffer)) > -1) {
+                    out.write(buffer, 0, n);
+                }
+                pipe.close();
             }
-            pipe.close();
-
+            CustomIO.extractZipFile(tmp, upDir);
+            tmp.delete();
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Saving uploaded file: " + e.getMessage());
+            LOG.log(Level.WARNING, "Problem during saving uploaded file: {0}", e.toString());
         }
-        taskManager.addProject(clientID, projectID, priority, extension);
+        taskManager.addProject(clientName, projectName, priority);
         return null;
     }
 
     @Override
     public boolean isProjectReadyForDownload(String clientID, String projectID) {
         return taskManager.isProjectReadyForDownload(clientID, projectID);
+    }
+
+    @Override
+    public Pipe downloadProjectJar(ProjectUID uid, Pipe pipe) throws RemoteException {
+        try {
+            File input = taskManager.classManager.getJarFile(uid);
+            try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(input))) {
+                int n;
+                byte[] buffer = new byte[8192];
+                while ((n = in.read(buffer)) > -1) {
+                    pipe.write(buffer, 0, n);
+                }
+                pipe.close();
+
+            } catch (IOException e) {
+                LOG.log(Level.WARNING, "Loading project JAR for client class loader: {0}", e.getMessage());
+            }
+
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Problem with reading project JAR file {0}", e.getMessage());
+        }
+        return null;
     }
 
     @Override
@@ -141,7 +168,7 @@ public class IServerImpl implements IServer {
             pipe.close();
 
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Loading project for download: " + e.getMessage());
+            LOG.log(Level.WARNING, "Loading project for download: {0}", e.getMessage());
         }
         taskManager.removeDownloadedProject(new ProjectUID(clientID, projectID));
         return null;

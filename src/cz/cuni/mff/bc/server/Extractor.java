@@ -4,6 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.api.main.CustomIO;
 import cz.cuni.mff.bc.server.exceptions.ExtractionException;
 import cz.cuni.mff.bc.server.exceptions.NotSupportedArchiveException;
 import static cz.cuni.mff.bc.server.TaskManager.getDirInProject;
@@ -32,14 +33,17 @@ public class Extractor {//implements Callable<Boolean> {
     private String projectName;
     private String clientName;
     private Project project;
+    private File archive;
+    private File destination;
     private static final Logger LOG = Logger.getLogger(Extractor.class.getName());
-    
 
-    public Extractor(String extension, Project project, Handler logHandler) {
+    public Extractor(File archive, Project project, Handler logHandler) {
         projectName = project.getProjectName();
         clientName = project.getClientName();
-        this.extension = extension;
+        extension = CustomIO.getExtension(archive);
         this.project = project;
+        this.archive = archive;
+        destination = new File(TaskManager.getDirInProject(clientName, projectName, "temp"));
         LOG.addHandler(logHandler);
     }
 
@@ -60,7 +64,7 @@ public class Extractor {//implements Callable<Boolean> {
         }
     }
 
-    private File getOutputFileDestination(String fileName) {
+  /*  private File getOutputFileDestination(String fileName) {
         if (fileName.endsWith(".class")) {
             project.setClassName(fileName.substring(0, fileName.length() - 6)); // cutting out ".class" from the end of the file
             return new File(getProjectDir(projectName, clientName) + fileName);
@@ -69,53 +73,43 @@ public class Extractor {//implements Callable<Boolean> {
             return new File(getDirInProject(projectName, clientName, "temp") + fileName);
         }
     }
-
+*/
     private void extractFromZip() throws ExtractionException {
-        File archive = new File(Server.getUploadedDir() + File.separator + clientName + "_" + projectName + ".zip");
-
-        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(archive))) {
-            ZipEntry entry = zis.getNextEntry();
-            while (entry != null) {//while there are entries
-                int count;
-                byte buffer[] = new byte[2048];
-                File outputFile = getOutputFileDestination(entry.getName());
-                try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile))) {
-                    while ((count = zis.read(buffer)) != -1) {
-                        out.write(buffer, 0, count);
-                    }
-                } catch (IOException e) {
-                    throw new ExtractionException("Problem with extracting file " + entry.getName() + " from archive " + archive.getName(), e);
-                }
-                entry = zis.getNextEntry();
-            }
+        try {
+            CustomIO.extractZipFile(archive, destination);
         } catch (IOException e) {
-            throw new ExtractionException("Problem with opening project archive", e);
+            throw new ExtractionException(e.getMessage(), e);
         }
     }
 
-    private void extractFromTar() throws ExtractionException {
-        File archive = new File(Server.getUploadedDir() + File.separator + clientName + "_" + projectName + ".tar");
-
-        try (TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(archive)))) {
+    private static void extractTarFile(File tar, File dest) throws IOException {
+        try (TarInputStream tis = new TarInputStream(new BufferedInputStream(new FileInputStream(tar)))) {
             TarEntry entry = tis.getNextEntry();
             while (entry != null) {
                 int count;
                 byte buffer[] = new byte[2048];
-                File outputFile = getOutputFileDestination(entry.getName());
-                try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile))) {
+                String fileName = entry.getName();
+                File newFile = new File(dest, fileName);
+                try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newFile))) {
                     while ((count = tis.read(buffer)) != -1) {
                         out.write(buffer, 0, count);
                     }
                     out.flush();
                 } catch (IOException e) {
-                    throw new ExtractionException("Problem with extracting file " + entry.getName() + " from archive " + archive.getName(), e);
+                    throw new IOException("Problem with extracting file " + entry.getName() + " from archive " + tar.getName(), e);
                 }
                 tis.getNextEntry();
             }
-
-
         } catch (IOException e) {
-            throw new ExtractionException("Problem with opening project archive", e);
+            throw new IOException("Problem with opening project archive " + tar.getName(), e);
+        }
+    }
+
+    private void extractFromTar() throws ExtractionException {
+        try {
+            extractTarFile(archive, destination);
+        } catch (IOException e) {
+            throw new ExtractionException(e.getMessage(), e);
         }
     }
 }
