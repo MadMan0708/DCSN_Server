@@ -7,8 +7,6 @@ package cz.cuni.mff.bc.server;
 import cz.cuni.mff.bc.api.main.CustomIO;
 import cz.cuni.mff.bc.server.exceptions.ExtractionException;
 import cz.cuni.mff.bc.server.exceptions.NotSupportedArchiveException;
-import static cz.cuni.mff.bc.server.TaskManager.getDirInProject;
-import static cz.cuni.mff.bc.server.TaskManager.getProjectDir;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -18,8 +16,6 @@ import java.io.IOException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import org.kamranzafar.jtar.TarEntry;
 import org.kamranzafar.jtar.TarInputStream;
 
@@ -43,7 +39,7 @@ public class Extractor {//implements Callable<Boolean> {
         extension = CustomIO.getExtension(archive);
         this.project = project;
         this.archive = archive;
-        destination = new File(TaskManager.getDirInProject(clientName, projectName, "temp"));
+        destination = FilesStructure.getTempDirInProject(clientName, projectName);
         LOG.addHandler(logHandler);
     }
 
@@ -64,16 +60,6 @@ public class Extractor {//implements Callable<Boolean> {
         }
     }
 
-  /*  private File getOutputFileDestination(String fileName) {
-        if (fileName.endsWith(".class")) {
-            project.setClassName(fileName.substring(0, fileName.length() - 6)); // cutting out ".class" from the end of the file
-            return new File(getProjectDir(projectName, clientName) + fileName);
-
-        } else {
-            return new File(getDirInProject(projectName, clientName, "temp") + fileName);
-        }
-    }
-*/
     private void extractFromZip() throws ExtractionException {
         try {
             CustomIO.extractZipFile(archive, destination);

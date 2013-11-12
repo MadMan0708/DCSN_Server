@@ -7,7 +7,6 @@ package cz.cuni.mff.bc.server;
 import cz.cuni.mff.bc.api.main.IServer;
 import cz.cuni.mff.bc.api.main.Task;
 import cz.cuni.mff.bc.api.main.TaskID;
-import static cz.cuni.mff.bc.server.Server.getUploadedDir;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.enums.InformMessage;
 import cz.cuni.mff.bc.api.main.ProjectInfo;
@@ -69,16 +68,16 @@ public class IServerImpl implements IServer {
                 break;
         }
     }
-/*
-    @Override
-    public Class<?> getClassData(TaskID taskID) throws RemoteException {
-        try {
-            return taskManager.getClassData(taskID);
-        } catch (IOException e) {
-            LOG.log(Level.WARNING, "Data for class: {0} could not be load; {1}", new Object[]{taskID.getClassName(), e.toString()});
-            return null;
-        }
-    }*/
+    /*
+     @Override
+     public Class<?> getClassData(TaskID taskID) throws RemoteException {
+     try {
+     return taskManager.getClassData(taskID);
+     } catch (IOException e) {
+     LOG.log(Level.WARNING, "Data for class: {0} could not be load; {1}", new Object[]{taskID.getClassName(), e.toString()});
+     return null;
+     }
+     }*/
 
     /*    @Override
      public EUserAddingState addClient(String client) throws RemoteException {
@@ -100,7 +99,7 @@ public class IServerImpl implements IServer {
     @Override
     public void saveCompletedTask(String clientID, Task task) throws RemoteException {
         if (!task.hasDataBeenSaved()) {
-            task.saveData(taskManager.createTaskSavePath(task.getUnicateID()));
+            task.saveData(FilesStructure.getTaskSavePath(task.getUnicateID()));
             taskManager.addCompletedTask(clientID, task.getUnicateID());
             LOG.log(Level.INFO, "Task saving: Task {0} has been saved", task.getUnicateID());
         }
@@ -108,7 +107,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public Pipe uploadProject(String clientName, String projectName, int priority, Pipe pipe) throws RemoteException {
-        File upDir = CustomIO.createFolder(new File(getUploadedDir() + File.separator + clientName + "_" + projectName));
+        File upDir = CustomIO.createFolder(FilesStructure.getClientUploadedDir(clientName, projectName));
         try {
             File tmp = File.createTempFile(clientName, projectName + ".zip");
             try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tmp))) {
@@ -135,29 +134,24 @@ public class IServerImpl implements IServer {
 
     @Override
     public Pipe downloadProjectJar(ProjectUID uid, Pipe pipe) throws RemoteException {
-        try {
-            File input = taskManager.classManager.getJarFile(uid);
-            try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(input))) {
-                int n;
-                byte[] buffer = new byte[8192];
-                while ((n = in.read(buffer)) > -1) {
-                    pipe.write(buffer, 0, n);
-                }
-                pipe.close();
-
-            } catch (IOException e) {
-                LOG.log(Level.WARNING, "Loading project JAR for client class loader: {0}", e.getMessage());
+        File input = FilesStructure.getProjectJarFile(uid.getClientID(), uid.getProjectID());
+        try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(input))) {
+            int n;
+            byte[] buffer = new byte[8192];
+            while ((n = in.read(buffer)) > -1) {
+                pipe.write(buffer, 0, n);
             }
+            pipe.close();
 
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Problem with reading project JAR file {0}", e.getMessage());
+            LOG.log(Level.WARNING, "Loading project JAR for client class loader: {0}", e.getMessage());
         }
         return null;
     }
 
     @Override
     public Pipe downloadProject(String clientID, String projectID, Pipe pipe) throws RemoteException {
-        File input = new File(TaskManager.getProjectDir(projectID, clientID) + clientID + "_" + projectID + "_completed" + ".zip");
+        File input = FilesStructure.getCalculatedDataFile(clientID, projectID);
         try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(input))) {
 
             int n;
@@ -176,7 +170,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public long getProjectFileSize(String clientID, String projectID) throws RemoteException {
-        File output = new File(TaskManager.getProjectDir(projectID, clientID) + clientID + "_" + projectID + "_completed" + ".zip");
+        File output = FilesStructure.getCalculatedDataFile(clientID, projectID);
         return output.length();
     }
 

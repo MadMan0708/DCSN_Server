@@ -1084,3 +1084,1243 @@ Mon Nov 11 15:17:31 GMT 2013 INFO Client Aku has been disconnected form the serv
 
 Mon Nov 11 15:17:32 GMT 2013 INFO Client Aku has been disconnected form the server
 
+Mon Nov 11 19:27:43 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 19:27:47 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 19:28:09 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 19:28:13 GMT 2013 INFO Extracting TestProject by Aku from zip archive
+
+Mon Nov 11 19:28:13 GMT 2013 INFO Extraction of TestProject by Aku was sucesfull
+
+Mon Nov 11 19:28:14 GMT 2013 INFO Task created: Aku_TestProject_data_2.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_2.txt
+
+Mon Nov 11 19:28:14 GMT 2013 INFO Task created: Aku_TestProject_data_3.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_3.txt
+
+Mon Nov 11 19:28:15 GMT 2013 INFO Task created: Aku_TestProject_data_4.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_4.txt
+
+Mon Nov 11 19:28:23 GMT 2013 INFO Timer for client Aku started
+
+Mon Nov 11 19:28:24 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 19:28:24 GMT 2013 WARNING Problem during unpacking task: java.io.FileNotFoundException: D:\BC\server_base\Projects\Aku\TestProject\ready\data_2.txt (The system cannot find the path specified)
+
+Mon Nov 11 19:28:34 GMT 2013 WARNING Problem during unpacking task: java.io.FileNotFoundException: D:\BC\server_base\Projects\Aku\TestProject\ready\data_4.txt (The system cannot find the path specified)
+
+Mon Nov 11 19:28:35 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 19:28:44 GMT 2013 WARNING Problem during unpacking task: java.io.FileNotFoundException: D:\BC\server_base\Projects\Aku\TestProject\ready\data_3.txt (The system cannot find the path specified)
+
+Mon Nov 11 19:28:46 GMT 2013 WARNING Client  Aku has not sent ping message, disconnected
+
+Mon Nov 11 19:30:49 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 19:31:04 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 19:31:11 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 19:31:21 GMT 2013 INFO Extracting TestProject by Aku from zip archive
+
+Mon Nov 11 19:31:21 GMT 2013 INFO Extraction of TestProject by Aku was sucesfull
+
+Mon Nov 11 19:31:21 GMT 2013 WARNING Creating tasks: java.io.FileNotFoundException: D:\BC\server_base\Projects\Aku\TestProject\ready\data_2.txt (The system cannot find the path specified)
+
+Mon Nov 11 19:31:48 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 19:32:12 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 19:32:20 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 19:32:30 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 19:32:38 GMT 2013 INFO Extracting TestProject by Aku from zip archive
+
+Mon Nov 11 19:32:38 GMT 2013 INFO Extraction of TestProject by Aku was sucesfull
+
+Mon Nov 11 19:32:39 GMT 2013 INFO Task created: Aku_TestProject_data_2.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_2.txt
+
+Mon Nov 11 19:32:39 GMT 2013 INFO Task created: Aku_TestProject_data_3.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_3.txt
+
+Mon Nov 11 19:32:40 GMT 2013 INFO Task created: Aku_TestProject_data_4.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_4.txt
+
+Mon Nov 11 19:32:46 GMT 2013 INFO Timer for client Aku started
+
+Mon Nov 11 19:32:46 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 19:32:47 GMT 2013 INFO Task: Aku_TestProject_data_2.txt is sent for computation by client: Aku
+
+Mon Nov 11 19:32:49 GMT 2013 INFO Task: Aku_TestProject_data_4.txt is sent for computation by client: Aku
+
+Mon Nov 11 19:32:49 GMT 2013 INFO Task saving: Task Aku_TestProject_data_2.txt has been saved
+
+Mon Nov 11 19:32:49 GMT 2013 INFO Task saving: Task Aku_TestProject_data_4.txt has been saved
+
+Mon Nov 11 19:32:50 GMT 2013 INFO Task: Aku_TestProject_data_3.txt is sent for computation by client: Aku
+
+Mon Nov 11 19:32:51 GMT 2013 INFO Project TestProject by client Aku packed
+
+Mon Nov 11 19:32:51 GMT 2013 INFO Task saving: Task Aku_TestProject_data_3.txt has been saved
+
+Mon Nov 11 19:32:57 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 19:33:08 GMT 2013 WARNING Client  Aku has not sent ping message, disconnected
+
+Mon Nov 11 19:34:37 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 19:35:26 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 19:35:34 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 19:35:37 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 19:36:27 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 20:03:10 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 20:03:12 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 20:03:16 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 20:04:23 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 20:05:05 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 20:05:11 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 20:05:16 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 20:05:21 GMT 2013 INFO Extracting TestProject by Aku from zip archive
+
+Mon Nov 11 20:05:21 GMT 2013 INFO Extraction of TestProject by Aku was sucesfull
+
+Mon Nov 11 20:05:22 GMT 2013 INFO Task created: Aku_TestProject_data_2.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_2.txt
+
+Mon Nov 11 20:05:22 GMT 2013 INFO Task created: Aku_TestProject_data_3.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_3.txt
+
+Mon Nov 11 20:05:23 GMT 2013 INFO Task created: Aku_TestProject_data_4.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_4.txt
+
+Mon Nov 11 20:05:31 GMT 2013 INFO Timer for client Aku started
+
+Mon Nov 11 20:05:31 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 20:05:32 GMT 2013 INFO Task: Aku_TestProject_data_2.txt is sent for computation by client: Aku
+
+Mon Nov 11 20:05:33 GMT 2013 INFO Task: Aku_TestProject_data_4.txt is sent for computation by client: Aku
+
+Mon Nov 11 20:05:34 GMT 2013 INFO Task saving: Task Aku_TestProject_data_2.txt has been saved
+
+Mon Nov 11 20:05:34 GMT 2013 INFO Task saving: Task Aku_TestProject_data_4.txt has been saved
+
+Mon Nov 11 20:05:35 GMT 2013 INFO Task: Aku_TestProject_data_3.txt is sent for computation by client: Aku
+
+Mon Nov 11 20:05:35 GMT 2013 INFO Project TestProject by client Aku packed
+
+Mon Nov 11 20:05:35 GMT 2013 INFO Task saving: Task Aku_TestProject_data_3.txt has been saved
+
+Mon Nov 11 20:05:42 GMT 2013 WARNING Client  Aku has not sent ping message, disconnected
+
+Mon Nov 11 20:06:25 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 20:08:57 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 20:08:59 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 20:09:03 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 20:09:07 GMT 2013 INFO Extracting TestProject by Aku from zip archive
+
+Mon Nov 11 20:09:07 GMT 2013 INFO Extraction of TestProject by Aku was sucesfull
+
+Mon Nov 11 20:09:08 GMT 2013 INFO Task created: Aku_TestProject_data_2.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_2.txt
+
+Mon Nov 11 20:09:08 GMT 2013 INFO Task created: Aku_TestProject_data_3.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_3.txt
+
+Mon Nov 11 20:09:09 GMT 2013 INFO Task created: Aku_TestProject_data_4.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_4.txt
+
+Mon Nov 11 20:09:17 GMT 2013 INFO Timer for client Aku started
+
+Mon Nov 11 20:09:17 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 20:09:18 GMT 2013 INFO Task: Aku_TestProject_data_2.txt is sent for computation by client: Aku
+
+Mon Nov 11 20:09:19 GMT 2013 INFO Task: Aku_TestProject_data_4.txt is sent for computation by client: Aku
+
+Mon Nov 11 20:09:20 GMT 2013 INFO Task saving: Task Aku_TestProject_data_2.txt has been saved
+
+Mon Nov 11 20:09:20 GMT 2013 INFO Task saving: Task Aku_TestProject_data_4.txt has been saved
+
+Mon Nov 11 20:09:21 GMT 2013 INFO Task: Aku_TestProject_data_3.txt is sent for computation by client: Aku
+
+Mon Nov 11 20:09:21 GMT 2013 INFO Project TestProject by client Aku packed
+
+Mon Nov 11 20:09:21 GMT 2013 INFO Task saving: Task Aku_TestProject_data_3.txt has been saved
+
+Mon Nov 11 20:09:28 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 20:09:39 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 20:09:50 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 20:10:01 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 20:10:46 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 20:10:47 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 20:10:51 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 20:10:55 GMT 2013 WARNING Creating tasks: java.nio.file.FileAlreadyExistsException: D:\BC\server_base\Projects\Aku\TestProject\data.jar
+
+Mon Nov 11 20:11:20 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 20:11:22 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 20:11:25 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 20:11:30 GMT 2013 INFO Extracting TestProject by Aku from zip archive
+
+Mon Nov 11 20:11:30 GMT 2013 INFO Extraction of TestProject by Aku was sucesfull
+
+Mon Nov 11 20:11:31 GMT 2013 INFO Task created: Aku_TestProject_data_2.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_2.txt
+
+Mon Nov 11 20:11:31 GMT 2013 INFO Task created: Aku_TestProject_data_3.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_3.txt
+
+Mon Nov 11 20:11:32 GMT 2013 INFO Task created: Aku_TestProject_data_4.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_4.txt
+
+Mon Nov 11 20:11:35 GMT 2013 INFO Timer for client Aku started
+
+Mon Nov 11 20:11:35 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 20:11:37 GMT 2013 INFO Task: Aku_TestProject_data_2.txt is sent for computation by client: Aku
+
+Mon Nov 11 20:11:38 GMT 2013 INFO Task: Aku_TestProject_data_4.txt is sent for computation by client: Aku
+
+Mon Nov 11 20:11:39 GMT 2013 INFO Task saving: Task Aku_TestProject_data_2.txt has been saved
+
+Mon Nov 11 20:11:39 GMT 2013 INFO Task saving: Task Aku_TestProject_data_4.txt has been saved
+
+Mon Nov 11 20:11:40 GMT 2013 INFO Task: Aku_TestProject_data_3.txt is sent for computation by client: Aku
+
+Mon Nov 11 20:11:40 GMT 2013 INFO Project TestProject by client Aku packed
+
+Mon Nov 11 20:11:40 GMT 2013 INFO Task saving: Task Aku_TestProject_data_3.txt has been saved
+
+Mon Nov 11 20:11:46 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 21:58:09 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 21:58:11 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 21:58:14 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:02:36 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 22:07:52 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:07:56 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:07:59 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:08:41 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 22:09:05 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:09:06 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:09:28 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:10:08 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 22:11:01 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:11:03 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:11:07 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:13:06 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 22:13:43 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:13:44 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:13:47 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:16:14 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 22:17:15 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:17:17 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:17:21 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:18:08 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 22:21:55 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:21:57 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:22:00 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:28:45 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 22:40:48 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:40:50 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:40:53 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:41:19 GMT 2013 INFO Extracting TestProject by Aku from zip archive
+
+Mon Nov 11 22:41:19 GMT 2013 INFO Extraction of TestProject by Aku was sucesfull
+
+Mon Nov 11 22:41:20 GMT 2013 INFO Task created: Aku_TestProject_data_0.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_0.txt
+
+Mon Nov 11 22:41:20 GMT 2013 INFO Task created: Aku_TestProject_data_1.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_1.txt
+
+Mon Nov 11 22:41:21 GMT 2013 INFO Task created: Aku_TestProject_data_2.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_2.txt
+
+Mon Nov 11 22:41:21 GMT 2013 INFO Task created: Aku_TestProject_data_3.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_3.txt
+
+Mon Nov 11 22:41:21 GMT 2013 INFO Task created: Aku_TestProject_data_4.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_4.txt
+
+Mon Nov 11 22:41:22 GMT 2013 INFO Task created: Aku_TestProject_data_5.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_5.txt
+
+Mon Nov 11 22:41:22 GMT 2013 INFO Task created: Aku_TestProject_data_6.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_6.txt
+
+Mon Nov 11 22:41:22 GMT 2013 INFO Task created: Aku_TestProject_data_7.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_7.txt
+
+Mon Nov 11 22:41:23 GMT 2013 INFO Task created: Aku_TestProject_data_8.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_8.txt
+
+Mon Nov 11 22:41:23 GMT 2013 INFO Task created: Aku_TestProject_data_9.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_9.txt
+
+Mon Nov 11 22:42:13 GMT 2013 INFO Timer for client Aku started
+
+Mon Nov 11 22:42:13 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:42:13 GMT 2013 INFO Task: Aku_TestProject_data_1.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:14 GMT 2013 INFO Task: Aku_TestProject_data_6.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:15 GMT 2013 INFO Task saving: Task Aku_TestProject_data_1.txt has been saved
+
+Mon Nov 11 22:42:15 GMT 2013 INFO Task saving: Task Aku_TestProject_data_6.txt has been saved
+
+Mon Nov 11 22:42:16 GMT 2013 INFO Task: Aku_TestProject_data_9.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:16 GMT 2013 INFO Task: Aku_TestProject_data_5.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:17 GMT 2013 INFO Task saving: Task Aku_TestProject_data_9.txt has been saved
+
+Mon Nov 11 22:42:17 GMT 2013 INFO Task saving: Task Aku_TestProject_data_5.txt has been saved
+
+Mon Nov 11 22:42:18 GMT 2013 INFO Task: Aku_TestProject_data_4.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:18 GMT 2013 INFO Task: Aku_TestProject_data_0.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:19 GMT 2013 INFO Task saving: Task Aku_TestProject_data_4.txt has been saved
+
+Mon Nov 11 22:42:19 GMT 2013 INFO Task saving: Task Aku_TestProject_data_0.txt has been saved
+
+Mon Nov 11 22:42:20 GMT 2013 INFO Task: Aku_TestProject_data_3.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:20 GMT 2013 INFO Task: Aku_TestProject_data_8.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:21 GMT 2013 INFO Task saving: Task Aku_TestProject_data_3.txt has been saved
+
+Mon Nov 11 22:42:21 GMT 2013 INFO Task saving: Task Aku_TestProject_data_8.txt has been saved
+
+Mon Nov 11 22:42:22 GMT 2013 INFO Task: Aku_TestProject_data_7.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:22 GMT 2013 INFO Task: Aku_TestProject_data_2.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:42:22 GMT 2013 INFO Task saving: Task Aku_TestProject_data_7.txt has been saved
+
+Mon Nov 11 22:42:23 GMT 2013 INFO Project TestProject by client Aku packed
+
+Mon Nov 11 22:42:23 GMT 2013 INFO Task saving: Task Aku_TestProject_data_2.txt has been saved
+
+Mon Nov 11 22:42:24 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:42:35 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:42:46 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:42:57 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:43:08 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:43:19 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:43:30 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:43:33 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 22:45:39 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:46:24 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:46:29 GMT 2013 INFO Client Petrzel has been connected to the server
+
+Mon Nov 11 22:46:34 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:46:41 GMT 2013 INFO Timer for client Petrzel started
+
+Mon Nov 11 22:46:41 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:46:52 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:46:59 GMT 2013 INFO Extracting TestProject by Aku from zip archive
+
+Mon Nov 11 22:46:59 GMT 2013 INFO Extraction of TestProject by Aku was sucesfull
+
+Mon Nov 11 22:47:00 GMT 2013 INFO Task created: Aku_TestProject_data_0.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_0.txt
+
+Mon Nov 11 22:47:00 GMT 2013 INFO Task created: Aku_TestProject_data_1.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_1.txt
+
+Mon Nov 11 22:47:01 GMT 2013 INFO Task created: Aku_TestProject_data_2.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_2.txt
+
+Mon Nov 11 22:47:01 GMT 2013 INFO Task created: Aku_TestProject_data_3.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_3.txt
+
+Mon Nov 11 22:47:01 GMT 2013 INFO Task created: Aku_TestProject_data_4.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_4.txt
+
+Mon Nov 11 22:47:02 GMT 2013 INFO Task created: Aku_TestProject_data_5.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_5.txt
+
+Mon Nov 11 22:47:02 GMT 2013 INFO Task created: Aku_TestProject_data_6.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_6.txt
+
+Mon Nov 11 22:47:02 GMT 2013 INFO Task created: Aku_TestProject_data_7.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_7.txt
+
+Mon Nov 11 22:47:03 GMT 2013 INFO Task created: Aku_TestProject_data_8.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_8.txt
+
+Mon Nov 11 22:47:03 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:47:03 GMT 2013 INFO Task created: Aku_TestProject_data_9.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_9.txt
+
+Mon Nov 11 22:47:11 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:47:14 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:47:22 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:47:25 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:47:32 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:47:36 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:47:42 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:47:47 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:47:53 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:47:58 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:48:03 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:48:09 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:48:13 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:48:20 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:48:24 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:48:31 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:48:34 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:48:42 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:48:44 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:48:46 GMT 2013 INFO Client Aku has been disconnected form the server
+
+Mon Nov 11 22:48:53 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:49:00 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:49:04 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:49:15 GMT 2013 INFO Client Petrzel is active
+
+Mon Nov 11 22:49:28 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:49:40 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:49:49 GMT 2013 INFO Client Aku has been connected to the server
+
+Mon Nov 11 22:50:00 GMT 2013 INFO Client Pavel has been connected to the server
+
+Mon Nov 11 22:50:24 GMT 2013 INFO Extracting TestProject by Aku from zip archive
+
+Mon Nov 11 22:50:24 GMT 2013 INFO Extraction of TestProject by Aku was sucesfull
+
+Mon Nov 11 22:50:25 GMT 2013 INFO Task created: Aku_TestProject_data_0.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_0.txt
+
+Mon Nov 11 22:50:25 GMT 2013 INFO Timer for client Pavel started
+
+Mon Nov 11 22:50:25 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:50:26 GMT 2013 INFO Task created: Aku_TestProject_data_1.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_1.txt
+
+Mon Nov 11 22:50:26 GMT 2013 INFO Task created: Aku_TestProject_data_2.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_2.txt
+
+Mon Nov 11 22:50:26 GMT 2013 INFO Task created: Aku_TestProject_data_3.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_3.txt
+
+Mon Nov 11 22:50:27 GMT 2013 INFO Task created: Aku_TestProject_data_4.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_4.txt
+
+Mon Nov 11 22:50:27 GMT 2013 INFO Task created: Aku_TestProject_data_5.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_5.txt
+
+Mon Nov 11 22:50:28 GMT 2013 INFO Task created: Aku_TestProject_data_6.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_6.txt
+
+Mon Nov 11 22:50:28 GMT 2013 INFO Task created: Aku_TestProject_data_7.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_7.txt
+
+Mon Nov 11 22:50:29 GMT 2013 INFO Task created: Aku_TestProject_data_8.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_8.txt
+
+Mon Nov 11 22:50:29 GMT 2013 INFO Task created: Aku_TestProject_data_9.txt, D:\BC\server_base\Projects\Aku\TestProject\readydata_9.txt
+
+Mon Nov 11 22:50:36 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:50:36 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:50:46 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Mon Nov 11 22:50:47 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:50:48 GMT 2013 INFO Timer for client Aku started
+
+Mon Nov 11 22:50:48 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:50:48 GMT 2013 INFO Task: Aku_TestProject_data_9.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:50:49 GMT 2013 INFO Task: Aku_TestProject_data_5.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:50:50 GMT 2013 INFO Task saving: Task Aku_TestProject_data_9.txt has been saved
+
+Mon Nov 11 22:50:51 GMT 2013 INFO Task saving: Task Aku_TestProject_data_5.txt has been saved
+
+Mon Nov 11 22:50:51 GMT 2013 INFO Task: Aku_TestProject_data_4.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:50:52 GMT 2013 INFO Task: Aku_TestProject_data_0.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:50:52 GMT 2013 INFO Task saving: Task Aku_TestProject_data_4.txt has been saved
+
+Mon Nov 11 22:50:53 GMT 2013 INFO Task saving: Task Aku_TestProject_data_0.txt has been saved
+
+Mon Nov 11 22:50:53 GMT 2013 INFO Task: Aku_TestProject_data_3.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:50:54 GMT 2013 INFO Task: Aku_TestProject_data_8.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:50:54 GMT 2013 INFO Task saving: Task Aku_TestProject_data_3.txt has been saved
+
+Mon Nov 11 22:50:55 GMT 2013 INFO Task saving: Task Aku_TestProject_data_8.txt has been saved
+
+Mon Nov 11 22:50:55 GMT 2013 INFO Task: Aku_TestProject_data_7.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:50:56 GMT 2013 INFO Task: Aku_TestProject_data_2.txt is sent for computation by client: Aku
+
+Mon Nov 11 22:50:56 GMT 2013 INFO Task saving: Task Aku_TestProject_data_7.txt has been saved
+
+Mon Nov 11 22:50:57 GMT 2013 INFO Task saving: Task Aku_TestProject_data_2.txt has been saved
+
+Mon Nov 11 22:50:58 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:50:59 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:51:09 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:51:10 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:51:20 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:51:21 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:51:31 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:51:32 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:51:42 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:51:43 GMT 2013 INFO Client Aku is active
+
+Mon Nov 11 22:58:24 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 22:58:26 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 22:58:30 GMT 2013 INFO Client Pavel has been connected to the server
+
+Mon Nov 11 22:58:46 GMT 2013 INFO Extracting TestProject by Pavel from zip archive
+
+Mon Nov 11 22:58:46 GMT 2013 INFO Extraction of TestProject by Pavel was sucesfull
+
+Mon Nov 11 22:58:47 GMT 2013 INFO Task created: Pavel_TestProject_data_0.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_0.txt
+
+Mon Nov 11 22:58:48 GMT 2013 INFO Task created: Pavel_TestProject_data_1.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_1.txt
+
+Mon Nov 11 22:58:48 GMT 2013 INFO Task created: Pavel_TestProject_data_2.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_2.txt
+
+Mon Nov 11 22:58:48 GMT 2013 INFO Task created: Pavel_TestProject_data_3.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_3.txt
+
+Mon Nov 11 22:58:49 GMT 2013 INFO Task created: Pavel_TestProject_data_4.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_4.txt
+
+Mon Nov 11 22:58:49 GMT 2013 INFO Task created: Pavel_TestProject_data_5.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_5.txt
+
+Mon Nov 11 22:58:50 GMT 2013 INFO Task created: Pavel_TestProject_data_6.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_6.txt
+
+Mon Nov 11 22:58:50 GMT 2013 INFO Task created: Pavel_TestProject_data_7.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_7.txt
+
+Mon Nov 11 22:58:50 GMT 2013 INFO Task created: Pavel_TestProject_data_8.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_8.txt
+
+Mon Nov 11 22:58:51 GMT 2013 INFO Task created: Pavel_TestProject_data_9.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_9.txt
+
+Mon Nov 11 22:59:41 GMT 2013 INFO Timer for client Pavel started
+
+Mon Nov 11 22:59:41 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:59:42 GMT 2013 INFO Task: Pavel_TestProject_data_1.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:43 GMT 2013 INFO Task: Pavel_TestProject_data_8.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:44 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_1.txt has been saved
+
+Mon Nov 11 22:59:45 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_8.txt has been saved
+
+Mon Nov 11 22:59:45 GMT 2013 INFO Task: Pavel_TestProject_data_0.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:46 GMT 2013 INFO Task: Pavel_TestProject_data_6.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:46 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_0.txt has been saved
+
+Mon Nov 11 22:59:47 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_6.txt has been saved
+
+Mon Nov 11 22:59:47 GMT 2013 INFO Task: Pavel_TestProject_data_3.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:48 GMT 2013 INFO Task: Pavel_TestProject_data_2.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:49 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_3.txt has been saved
+
+Mon Nov 11 22:59:49 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_2.txt has been saved
+
+Mon Nov 11 22:59:49 GMT 2013 INFO Task: Pavel_TestProject_data_4.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:50 GMT 2013 INFO Task: Pavel_TestProject_data_5.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:50 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_4.txt has been saved
+
+Mon Nov 11 22:59:51 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_5.txt has been saved
+
+Mon Nov 11 22:59:51 GMT 2013 INFO Task: Pavel_TestProject_data_7.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:52 GMT 2013 INFO Task: Pavel_TestProject_data_9.txt is sent for computation by client: Pavel
+
+Mon Nov 11 22:59:52 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 22:59:52 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_7.txt has been saved
+
+Mon Nov 11 22:59:53 GMT 2013 INFO Project TestProject by client Pavel packed
+
+Mon Nov 11 22:59:53 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_9.txt has been saved
+
+Mon Nov 11 23:00:03 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:00:14 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:00:25 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:00:36 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:00:47 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:00:58 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:01:09 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:01:20 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:01:31 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:01:42 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:01:53 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:02:04 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:02:15 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:02:26 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:02:37 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:02:48 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:02:59 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:03:10 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:03:21 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:34:07 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 23:34:09 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 23:34:12 GMT 2013 INFO Client Pavel has been connected to the server
+
+Mon Nov 11 23:34:27 GMT 2013 INFO Client Pavel has been disconnected form the server
+
+Mon Nov 11 23:34:42 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 23:34:44 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 23:34:52 GMT 2013 INFO Client Pavel has been connected to the server
+
+Mon Nov 11 23:35:08 GMT 2013 INFO Extracting TestProject by Pavel from zip archive
+
+Mon Nov 11 23:35:08 GMT 2013 INFO Extraction of TestProject by Pavel was sucesfull
+
+Mon Nov 11 23:35:08 GMT 2013 INFO Task created: Pavel_TestProject_data_0.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_0.txt
+
+Mon Nov 11 23:35:09 GMT 2013 INFO Task created: Pavel_TestProject_data_1.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_1.txt
+
+Mon Nov 11 23:35:09 GMT 2013 INFO Task created: Pavel_TestProject_data_2.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_2.txt
+
+Mon Nov 11 23:35:10 GMT 2013 INFO Task created: Pavel_TestProject_data_3.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_3.txt
+
+Mon Nov 11 23:35:10 GMT 2013 INFO Task created: Pavel_TestProject_data_4.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_4.txt
+
+Mon Nov 11 23:35:10 GMT 2013 INFO Task created: Pavel_TestProject_data_5.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_5.txt
+
+Mon Nov 11 23:35:11 GMT 2013 INFO Task created: Pavel_TestProject_data_6.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_6.txt
+
+Mon Nov 11 23:35:11 GMT 2013 INFO Task created: Pavel_TestProject_data_7.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_7.txt
+
+Mon Nov 11 23:35:12 GMT 2013 INFO Task created: Pavel_TestProject_data_8.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_8.txt
+
+Mon Nov 11 23:35:12 GMT 2013 INFO Task created: Pavel_TestProject_data_9.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_9.txt
+
+Mon Nov 11 23:35:30 GMT 2013 INFO Timer for client Pavel started
+
+Mon Nov 11 23:35:30 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:35:30 GMT 2013 INFO Task: Pavel_TestProject_data_1.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:31 GMT 2013 INFO Task: Pavel_TestProject_data_8.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:32 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_1.txt has been saved
+
+Mon Nov 11 23:35:32 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_8.txt has been saved
+
+Mon Nov 11 23:35:33 GMT 2013 INFO Task: Pavel_TestProject_data_0.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:33 GMT 2013 INFO Task: Pavel_TestProject_data_6.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:34 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_0.txt has been saved
+
+Mon Nov 11 23:35:34 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_6.txt has been saved
+
+Mon Nov 11 23:35:34 GMT 2013 INFO Task: Pavel_TestProject_data_3.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:35 GMT 2013 INFO Task: Pavel_TestProject_data_2.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:35 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_3.txt has been saved
+
+Mon Nov 11 23:35:36 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_2.txt has been saved
+
+Mon Nov 11 23:35:36 GMT 2013 INFO Task: Pavel_TestProject_data_4.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:37 GMT 2013 INFO Task: Pavel_TestProject_data_5.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:37 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_4.txt has been saved
+
+Mon Nov 11 23:35:37 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_5.txt has been saved
+
+Mon Nov 11 23:35:38 GMT 2013 INFO Task: Pavel_TestProject_data_7.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:38 GMT 2013 INFO Task: Pavel_TestProject_data_9.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:35:39 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_7.txt has been saved
+
+Mon Nov 11 23:35:39 GMT 2013 INFO Project TestProject by client Pavel packed
+
+Mon Nov 11 23:35:39 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_9.txt has been saved
+
+Mon Nov 11 23:35:41 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:35:52 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:36:03 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:36:14 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:36:25 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:36:27 GMT 2013 INFO Client Pavel has been disconnected form the server
+
+Mon Nov 11 23:36:36 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:36:47 GMT 2013 WARNING Client  Pavel has not sent ping message, disconnected
+
+Mon Nov 11 23:39:12 GMT 2013 INFO Loading properties file
+
+Mon Nov 11 23:39:13 GMT 2013 INFO Server is listening for incoming sessions
+
+Mon Nov 11 23:39:28 GMT 2013 INFO Client Pavel has been connected to the server
+
+Mon Nov 11 23:39:43 GMT 2013 INFO Extracting TestProject by Pavel from zip archive
+
+Mon Nov 11 23:39:44 GMT 2013 INFO Extraction of TestProject by Pavel was sucesfull
+
+Mon Nov 11 23:39:44 GMT 2013 INFO Task created: Pavel_TestProject_data_0.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_0.txt
+
+Mon Nov 11 23:39:45 GMT 2013 INFO Task created: Pavel_TestProject_data_1.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_1.txt
+
+Mon Nov 11 23:39:45 GMT 2013 INFO Task created: Pavel_TestProject_data_2.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_2.txt
+
+Mon Nov 11 23:39:45 GMT 2013 INFO Task created: Pavel_TestProject_data_3.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_3.txt
+
+Mon Nov 11 23:39:46 GMT 2013 INFO Task created: Pavel_TestProject_data_4.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_4.txt
+
+Mon Nov 11 23:39:46 GMT 2013 INFO Task created: Pavel_TestProject_data_5.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_5.txt
+
+Mon Nov 11 23:39:46 GMT 2013 INFO Task created: Pavel_TestProject_data_6.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_6.txt
+
+Mon Nov 11 23:39:47 GMT 2013 INFO Task created: Pavel_TestProject_data_7.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_7.txt
+
+Mon Nov 11 23:39:47 GMT 2013 INFO Task created: Pavel_TestProject_data_8.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_8.txt
+
+Mon Nov 11 23:39:48 GMT 2013 INFO Task created: Pavel_TestProject_data_9.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_9.txt
+
+Mon Nov 11 23:40:15 GMT 2013 INFO Timer for client Pavel started
+
+Mon Nov 11 23:40:15 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:40:16 GMT 2013 INFO Task: Pavel_TestProject_data_1.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:17 GMT 2013 INFO Task: Pavel_TestProject_data_8.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:18 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_1.txt has been saved
+
+Mon Nov 11 23:40:18 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_8.txt has been saved
+
+Mon Nov 11 23:40:18 GMT 2013 INFO Task: Pavel_TestProject_data_0.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:19 GMT 2013 INFO Task: Pavel_TestProject_data_6.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:19 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_0.txt has been saved
+
+Mon Nov 11 23:40:20 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_6.txt has been saved
+
+Mon Nov 11 23:40:20 GMT 2013 INFO Task: Pavel_TestProject_data_3.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:21 GMT 2013 INFO Task: Pavel_TestProject_data_2.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:21 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_3.txt has been saved
+
+Mon Nov 11 23:40:22 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_2.txt has been saved
+
+Mon Nov 11 23:40:22 GMT 2013 INFO Task: Pavel_TestProject_data_4.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:22 GMT 2013 INFO Task: Pavel_TestProject_data_5.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:23 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_4.txt has been saved
+
+Mon Nov 11 23:40:23 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_5.txt has been saved
+
+Mon Nov 11 23:40:24 GMT 2013 INFO Task: Pavel_TestProject_data_7.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:24 GMT 2013 INFO Task: Pavel_TestProject_data_9.txt is sent for computation by client: Pavel
+
+Mon Nov 11 23:40:25 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_7.txt has been saved
+
+Mon Nov 11 23:40:25 GMT 2013 INFO Project TestProject by client Pavel packed
+
+Mon Nov 11 23:40:25 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_9.txt has been saved
+
+Mon Nov 11 23:40:26 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:40:37 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:40:48 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:40:59 GMT 2013 INFO Client Pavel is active
+
+Mon Nov 11 23:41:05 GMT 2013 INFO Client Pavel has been disconnected form the server
+
+Tue Nov 12 00:10:30 GMT 2013 INFO Loading properties file
+
+Tue Nov 12 00:10:32 GMT 2013 INFO Server is listening for incoming sessions
+
+Tue Nov 12 00:10:35 GMT 2013 INFO Client Pavel has been connected to the server
+
+Tue Nov 12 00:11:00 GMT 2013 INFO Extracting TestProject by Pavel from zip archive
+
+Tue Nov 12 00:11:00 GMT 2013 INFO Extraction of TestProject by Pavel was sucesfull
+
+Tue Nov 12 00:11:00 GMT 2013 INFO Task created: Pavel_TestProject_data_0.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_0.txt
+
+Tue Nov 12 00:11:01 GMT 2013 INFO Task created: Pavel_TestProject_data_1.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_1.txt
+
+Tue Nov 12 00:11:01 GMT 2013 INFO Task created: Pavel_TestProject_data_2.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_2.txt
+
+Tue Nov 12 00:11:02 GMT 2013 INFO Task created: Pavel_TestProject_data_3.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_3.txt
+
+Tue Nov 12 00:11:02 GMT 2013 INFO Task created: Pavel_TestProject_data_4.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_4.txt
+
+Tue Nov 12 00:11:02 GMT 2013 INFO Task created: Pavel_TestProject_data_5.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_5.txt
+
+Tue Nov 12 00:11:03 GMT 2013 INFO Task created: Pavel_TestProject_data_6.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_6.txt
+
+Tue Nov 12 00:11:03 GMT 2013 INFO Task created: Pavel_TestProject_data_7.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_7.txt
+
+Tue Nov 12 00:11:03 GMT 2013 INFO Task created: Pavel_TestProject_data_8.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_8.txt
+
+Tue Nov 12 00:11:04 GMT 2013 INFO Task created: Pavel_TestProject_data_9.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_9.txt
+
+Tue Nov 12 00:11:14 GMT 2013 INFO Timer for client Pavel started
+
+Tue Nov 12 00:11:14 GMT 2013 INFO Client Pavel is active
+
+Tue Nov 12 00:11:14 GMT 2013 INFO Task: Pavel_TestProject_data_1.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:15 GMT 2013 INFO Task: Pavel_TestProject_data_8.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:16 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_1.txt has been saved
+
+Tue Nov 12 00:11:16 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_8.txt has been saved
+
+Tue Nov 12 00:11:17 GMT 2013 INFO Task: Pavel_TestProject_data_0.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:17 GMT 2013 INFO Task: Pavel_TestProject_data_6.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:18 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_0.txt has been saved
+
+Tue Nov 12 00:11:18 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_6.txt has been saved
+
+Tue Nov 12 00:11:18 GMT 2013 INFO Task: Pavel_TestProject_data_3.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:19 GMT 2013 INFO Task: Pavel_TestProject_data_2.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:19 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_3.txt has been saved
+
+Tue Nov 12 00:11:20 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_2.txt has been saved
+
+Tue Nov 12 00:11:20 GMT 2013 INFO Task: Pavel_TestProject_data_4.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:21 GMT 2013 INFO Task: Pavel_TestProject_data_5.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:21 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_4.txt has been saved
+
+Tue Nov 12 00:11:22 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_5.txt has been saved
+
+Tue Nov 12 00:11:22 GMT 2013 INFO Task: Pavel_TestProject_data_7.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:22 GMT 2013 INFO Task: Pavel_TestProject_data_9.txt is sent for computation by client: Pavel
+
+Tue Nov 12 00:11:23 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_7.txt has been saved
+
+Tue Nov 12 00:11:23 GMT 2013 INFO Project TestProject by client Pavel packed
+
+Tue Nov 12 00:11:23 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_9.txt has been saved
+
+Tue Nov 12 00:11:25 GMT 2013 INFO Client Pavel is active
+
+Tue Nov 12 00:11:36 GMT 2013 INFO Client Pavel is active
+
+Tue Nov 12 00:11:47 GMT 2013 INFO Client Pavel is active
+
+Tue Nov 12 00:11:58 GMT 2013 INFO Client Pavel is active
+
+Tue Nov 12 00:12:09 GMT 2013 INFO Client Pavel is active
+
+Tue Nov 12 00:15:51 GMT 2013 INFO Loading properties file
+
+Tue Nov 12 00:15:52 GMT 2013 INFO Server is listening for incoming sessions
+
+Tue Nov 12 00:15:57 GMT 2013 INFO Client Pavel has been connected to the server
+
+Tue Nov 12 00:16:35 GMT 2013 INFO Client petr has been connected to the server
+
+Tue Nov 12 00:16:39 GMT 2013 INFO Timer for client petr started
+
+Tue Nov 12 00:16:39 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:16:50 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:16:59 GMT 2013 INFO Extracting TestProject by Pavel from zip archive
+
+Tue Nov 12 00:16:59 GMT 2013 INFO Extraction of TestProject by Pavel was sucesfull
+
+Tue Nov 12 00:17:00 GMT 2013 INFO Task created: Pavel_TestProject_data_0.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_0.txt
+
+Tue Nov 12 00:17:00 GMT 2013 INFO Task created: Pavel_TestProject_data_1.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_1.txt
+
+Tue Nov 12 00:17:00 GMT 2013 INFO Task created: Pavel_TestProject_data_2.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_2.txt
+
+Tue Nov 12 00:17:01 GMT 2013 INFO Task created: Pavel_TestProject_data_3.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_3.txt
+
+Tue Nov 12 00:17:01 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:17:01 GMT 2013 INFO Task created: Pavel_TestProject_data_4.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_4.txt
+
+Tue Nov 12 00:17:01 GMT 2013 INFO Task created: Pavel_TestProject_data_5.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_5.txt
+
+Tue Nov 12 00:17:02 GMT 2013 INFO Task created: Pavel_TestProject_data_6.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_6.txt
+
+Tue Nov 12 00:17:02 GMT 2013 INFO Task created: Pavel_TestProject_data_7.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_7.txt
+
+Tue Nov 12 00:17:02 GMT 2013 INFO Task created: Pavel_TestProject_data_8.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_8.txt
+
+Tue Nov 12 00:17:03 GMT 2013 INFO Task created: Pavel_TestProject_data_9.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_9.txt
+
+Tue Nov 12 00:17:10 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:17:12 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:17:20 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:17:23 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:17:30 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:17:34 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:17:41 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:17:45 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:17:51 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:17:56 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:18:01 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:18:07 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:18:12 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:18:18 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:18:22 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:18:29 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:18:32 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:18:40 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:18:43 GMT 2013 WARNING Problem during unpacking task: java.lang.ClassNotFoundException: with.comput.clazz.ComputationClassExample
+
+Tue Nov 12 00:18:51 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:19:02 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:19:13 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:19:24 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:19:35 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:19:46 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:19:57 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:20:08 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:20:19 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:20:30 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:20:41 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:20:52 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:21:03 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:21:14 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:21:25 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:21:36 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:21:47 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:21:58 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:22:09 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:22:20 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:22:31 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:22:42 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:22:53 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:23:04 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:23:15 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:23:26 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:23:37 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:23:48 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:23:59 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:24:10 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:24:21 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:24:32 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:24:43 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:24:54 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:25:05 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:25:16 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:25:27 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:25:38 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:25:49 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:26:00 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:26:11 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:26:22 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:26:33 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:26:44 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:26:55 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:27:06 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:27:17 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:27:28 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:27:39 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:27:50 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:28:01 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:28:12 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:28:23 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:28:34 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:28:45 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:28:56 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:29:07 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:29:18 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:29:29 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:29:40 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:29:51 GMT 2013 INFO Client petr is active
+
+Tue Nov 12 00:31:44 GMT 2013 INFO Loading properties file
+
+Tue Nov 12 00:31:46 GMT 2013 INFO Server is listening for incoming sessions
+
+Tue Nov 12 00:32:17 GMT 2013 INFO Client petra has been connected to the server
+
+Tue Nov 12 00:32:22 GMT 2013 INFO Client Pavel has been connected to the server
+
+Tue Nov 12 00:32:29 GMT 2013 INFO Timer for client petra started
+
+Tue Nov 12 00:32:29 GMT 2013 INFO Client petra is active
+
+Tue Nov 12 00:32:40 GMT 2013 INFO Client petra is active
+
+Tue Nov 12 00:32:48 GMT 2013 INFO Extracting TestProject by Pavel from zip archive
+
+Tue Nov 12 00:32:48 GMT 2013 INFO Extraction of TestProject by Pavel was sucesfull
+
+Tue Nov 12 00:32:48 GMT 2013 INFO Task created: Pavel_TestProject_data_0.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_0.txt
+
+Tue Nov 12 00:32:49 GMT 2013 INFO Task created: Pavel_TestProject_data_1.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_1.txt
+
+Tue Nov 12 00:32:49 GMT 2013 INFO Task created: Pavel_TestProject_data_2.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_2.txt
+
+Tue Nov 12 00:32:50 GMT 2013 INFO Task created: Pavel_TestProject_data_3.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_3.txt
+
+Tue Nov 12 00:32:50 GMT 2013 INFO Task created: Pavel_TestProject_data_4.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_4.txt
+
+Tue Nov 12 00:32:50 GMT 2013 INFO Task created: Pavel_TestProject_data_5.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_5.txt
+
+Tue Nov 12 00:32:51 GMT 2013 INFO Task created: Pavel_TestProject_data_6.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_6.txt
+
+Tue Nov 12 00:32:51 GMT 2013 INFO Client petra is active
+
+Tue Nov 12 00:32:51 GMT 2013 INFO Task created: Pavel_TestProject_data_7.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_7.txt
+
+Tue Nov 12 00:32:51 GMT 2013 INFO Task created: Pavel_TestProject_data_8.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_8.txt
+
+Tue Nov 12 00:32:52 GMT 2013 INFO Task created: Pavel_TestProject_data_9.txt, D:\BC\server_base\Projects\Pavel\TestProject\readydata_9.txt
+
+Tue Nov 12 00:32:59 GMT 2013 INFO Task: Pavel_TestProject_data_1.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:00 GMT 2013 INFO Task: Pavel_TestProject_data_8.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:00 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_1.txt has been saved
+
+Tue Nov 12 00:33:01 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_8.txt has been saved
+
+Tue Nov 12 00:33:01 GMT 2013 INFO Task: Pavel_TestProject_data_0.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:02 GMT 2013 INFO Task: Pavel_TestProject_data_6.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:02 GMT 2013 INFO Client petra is active
+
+Tue Nov 12 00:33:02 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_0.txt has been saved
+
+Tue Nov 12 00:33:02 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_6.txt has been saved
+
+Tue Nov 12 00:33:03 GMT 2013 INFO Task: Pavel_TestProject_data_3.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:03 GMT 2013 INFO Task: Pavel_TestProject_data_2.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:04 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_3.txt has been saved
+
+Tue Nov 12 00:33:04 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_2.txt has been saved
+
+Tue Nov 12 00:33:04 GMT 2013 INFO Task: Pavel_TestProject_data_4.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:05 GMT 2013 INFO Task: Pavel_TestProject_data_5.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:05 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_4.txt has been saved
+
+Tue Nov 12 00:33:06 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_5.txt has been saved
+
+Tue Nov 12 00:33:06 GMT 2013 INFO Task: Pavel_TestProject_data_7.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:07 GMT 2013 INFO Task: Pavel_TestProject_data_9.txt is sent for computation by client: petra
+
+Tue Nov 12 00:33:07 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_7.txt has been saved
+
+Tue Nov 12 00:33:08 GMT 2013 INFO Project TestProject by client Pavel packed
+
+Tue Nov 12 00:33:08 GMT 2013 INFO Task saving: Task Pavel_TestProject_data_9.txt has been saved
+
+Tue Nov 12 00:33:13 GMT 2013 INFO Client petra is active
+
+Tue Nov 12 00:33:24 GMT 2013 INFO Client petra is active
+
+Tue Nov 12 00:33:35 GMT 2013 INFO Client petra is active
+
+Tue Nov 12 00:33:37 GMT 2013 INFO Client Pavel has been disconnected form the server
+

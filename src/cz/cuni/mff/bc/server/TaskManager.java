@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -89,13 +90,6 @@ public class TaskManager {
         }
     }
 
-    /*   public Class<?> getClassData(TaskID ID) throws IOException {
-     return classManager.getClassData(ID.getProjectUID(), ID.getClassName());
-     }*/
-    private String taskIDToPath(TaskID ID) {
-        return TaskManager.getDirInProject(ID.getClientID(), ID.getProjectID(), "ready") + ID.getTaskID();
-    }
-
     public boolean isTaskCompleted(TaskID ID) {
         return projectsAll.get(ID.getProjectUID()).isTaskCompleted(ID);
     }
@@ -114,49 +108,6 @@ public class TaskManager {
         } else {
             return false;
         }
-    }
-
-    private void prepareFolders(String projectID, String clientID) {
-        //creation of user folder
-        String userFolderPath = getClientDir(clientID);
-        File userFolder = new File(userFolderPath);
-        if (!userFolder.exists()) {
-            userFolder.mkdir();
-        }
-        //creation project folder inside user folder
-        String projectFolderPath = getProjectDir(clientID, projectID);
-        File projectFolder = new File(projectFolderPath);
-        projectFolder.mkdir();
-
-        // creation of calculation folders
-        String readyFolderPath = getDirInProject(clientID, projectID, "ready");
-        String completeFolderPath = getDirInProject(clientID, projectID, "complete");
-        String tempFolderPath = getDirInProject(clientID, projectID, "temp");
-
-        File readyFolder = new File(readyFolderPath);
-        File completeFolder = new File(completeFolderPath);
-        File tempFolder = new File(tempFolderPath);
-
-        readyFolder.mkdir();
-        completeFolder.mkdir();
-        tempFolder.mkdir();
-
-    }
-
-    public static String getClientDir(String clientID) {
-        return Server.getProjectsDir() + File.separator + clientID + File.separator;
-    }
-
-    public static String getProjectDir(String clientID, String projectID) {
-        return getClientDir(clientID) + projectID + File.separator;
-    }
-
-    public static String getDirInProject(String clientID, String projectID, String dir) {
-        return getProjectDir(clientID, projectID) + dir + File.separator;
-    }
-
-    public static File getDirInUploaded(String clientName, String projectName) {
-        return new File(getUploadedDir() + File.separator + clientName + "_" + projectName + File.separator);
     }
 
     private boolean zeroTasks() {
@@ -269,45 +220,39 @@ public class TaskManager {
 
     }
 
-    public Path createTaskSavePath(TaskID id) {
-        return Paths.get(getDirInProject(id.getClientID(), id.getProjectID(), "complete") + id.getTaskID());
-    }
-
-    public Path createTaskLoadPath(TaskID id) {
-        return Paths.get(getDirInProject(id.getClientID(), id.getProjectID(), "ready") + id.getTaskID());
-    }
-
-    public Path createTaskLoadDataPath(TaskID id) {
-        return Paths.get(getDirInProject(id.getClientID(), id.getProjectID(), "temp") + id.getTaskID());
-    }
-
     public Task getTask(String clientID, TaskID id) {
-        File f = new File(taskIDToPath(id));
-        // classManager.getClassLoader(clientID).setProjectUID(id.getProjectUID());
-        try (CustObjectInputStream ois = new CustObjectInputStream(new FileInputStream(f), classManager.getClassLoader(clientID))) {
-            Task task = (Task) ois.readObject();
-            associateClientWithTask(clientID, id);
-            tasksBeforeCalc.remove(id);
-            tasksInProgress.add(id);
-            LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientID});
-            return task;
-        } catch (ClassNotFoundException | IOException e) {
-            LOG.log(Level.WARNING, "Problem during unpacking task: {0}", e.toString());
+        File f = FilesStructure.getTaskLoadPath(id).toFile();
+        File jar = FilesStructure.getProjectJarFile(id.getClientID(), id.getProjectID());
+        try {
+            classManager.getClassLoader(clientID).addNewUrl(jar.toURI().toURL());
+            try (CustObjectInputStream ois = new CustObjectInputStream(new FileInputStream(f), classManager.getClassLoader(clientID))) {
+                Task task = (Task) ois.readObject();
+                associateClientWithTask(clientID, id);
+                tasksBeforeCalc.remove(id);
+                tasksInProgress.add(id);
+                LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientID});
+                return task;
+            } catch (ClassNotFoundException | IOException e) {
+                LOG.log(Level.WARNING, "Problem during unpacking task: {0}", e.toString());
+                return null;
+            }
+        } catch (MalformedURLException e) {
+            LOG.log(Level.WARNING, "Problem during accessing jar file needed to computation: {0}", e.toString());
             return null;
         }
     }
 
     private void createTasks(Project project) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-        File dataFolder = new File(getDirInProject(project.getClientName(), project.getProjectName(), "temp"));
-        String saveFolder = getDirInProject(project.getClientName(), project.getProjectName(), "ready");
+        File dataFolder = FilesStructure.getTempDirInProject(project.getClientName(), project.getProjectName());
+        File saveFolder = FilesStructure.getReadyDirInProject(project.getClientName(), project.getProjectName());
         File[] dataFiles = dataFolder.listFiles();
-        String className = project.getClassName();
         int numberOfTasks = 0;
         for (File file : dataFiles) {
-            Task task = new Task(project.getProjectName(), project.getClientName(), file.getName(), project.getPriority(), className);
+            Task task = new Task(project.getProjectName(), project.getClientName(), file.getName(), project.getPriority());
             task.setClass(classManager.loadClass(task.getClientID(), task.getProjectUID()));
-            task.loadData(createTaskLoadDataPath(task.getUnicateID()));
-            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFolder + file.getName()))) {
+            task.loadData(FilesStructure.getTaskLoadDataPath(task.getUnicateID()));
+            File output = new File(saveFolder, file.getName());
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(output))) {
                 out.writeObject(task);
                 project.addTask(task.getUnicateID());
                 //tasksPool.add(task.getUnicateID()); //- pridano do commentu protoze je tam pak pridavam vsechny najednou
@@ -321,12 +266,11 @@ public class TaskManager {
     }
 
     private void moveJarAndExtractTasks(Project project) throws ExtractionException, NotSupportedArchiveException, IOException {
-        File inUploadDir = getDirInUploaded(project.getClientName(), project.getProjectName());
-        File inProjectDir = new File(getProjectDir(project.getClientName(), project.getProjectName()));
+        File inUploadDir = FilesStructure.getClientUploadedDir(project.getClientName(), project.getProjectName());
         File[] files = inUploadDir.listFiles();
         for (File file : files) {
             if (file.getName().endsWith(".jar")) {
-                CustomIO.copyFile(file, new File(inProjectDir, file.getName()));
+                CustomIO.copyFile(file, FilesStructure.getProjectJarFile(project.getClientName(), project.getProjectName()));
             } else {
                 new Extractor(file, project, logHandler).unpack();
             }
@@ -360,7 +304,7 @@ public class TaskManager {
     public void addProject(String clientID, String projectID, int priority) {
         Project project = new Project(ProjectState.PREPARING, priority, clientID, projectID);
         //preparation of folders for client's project
-        prepareFolders(projectID, clientID);
+        FilesStructure.createClientProjectDirs(clientID, projectID);
         try {
             putProjectIntoAllPreparing(project);
             moveJarAndExtractTasks(project);
@@ -387,10 +331,9 @@ public class TaskManager {
     }
 
     private void deleteProject(String clientID, String projectID) {
-        final String pattern = clientID + "_" + projectID + "\\..*";
-        File projectDir = new File(getProjectDir(clientID, projectID));
-        File uploadedDir = new File(Server.getUploadedDir() + File.separator);
-        CustomIO.deleteWithPattern(uploadedDir, pattern);
+        File projectDir = FilesStructure.getClientProjectsDir(clientID, projectID);
+        File uploadedDir = FilesStructure.getClientUploadedDir(clientID, projectID);
+        CustomIO.deleteDirectory(uploadedDir);
         CustomIO.deleteDirectory(projectDir);
     }
 

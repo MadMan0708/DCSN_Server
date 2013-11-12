@@ -37,24 +37,10 @@ public class ProjectPacker implements Callable<Boolean> {
         LOG.addHandler(logHandler);
     }
 
-    private String getOriginalDataName() {
-        File[] files = TaskManager.getDirInUploaded(clientID, projectID).listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                if (!name.endsWith(".jar")) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-        return files[0].getName().substring(0, files[0].getName().length() - 4);
-    }
-
     private Boolean packProject() {
-        File completeDir = new File(TaskManager.getDirInProject(clientID, projectID, "complete"));
+        File completeDir = FilesStructure.getCompleteDirInProject(clientID, projectID);
         File[] files = completeDir.listFiles();
-        File output = new File(TaskManager.getProjectDir(clientID, projectID) + getOriginalDataName() + "_completed" + ".zip");
+        File output = FilesStructure.getCalculatedDataFile(clientID, projectID);
         try {
             CustomIO.zipFiles(output, files);
             LOG.log(Level.INFO, "Project {0} by client {1} packed", new Object[]{projectID, clientID});
