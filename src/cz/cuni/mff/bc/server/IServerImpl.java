@@ -68,16 +68,15 @@ public class IServerImpl implements IServer {
                 break;
         }
     }
-    /*
-     @Override
-     public Class<?> getClassData(TaskID taskID) throws RemoteException {
-     try {
-     return taskManager.getClassData(taskID);
-     } catch (IOException e) {
-     LOG.log(Level.WARNING, "Data for class: {0} could not be load; {1}", new Object[]{taskID.getClassName(), e.toString()});
-     return null;
-     }
-     }*/
+
+    @Override
+    public boolean isConnected(String clientName) throws RemoteException {
+        if (activeConnections.contains(clientName)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /*    @Override
      public EUserAddingState addClient(String client) throws RemoteException {

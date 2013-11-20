@@ -34,6 +34,7 @@ public class Server implements IConsole {
     private static TaskManager taskManager;
     private IServerImpl remoteMethods;
     private Handler logHandler;
+    private final int port = 1099;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     public Server() {
@@ -50,7 +51,11 @@ public class Server implements IConsole {
     }
 
     public void initialize() {
-        basedir = propManager.getProperty("basedir");
+        if (propManager.getProperty("basedir") == null) {
+            setBaseDir(System.getProperty("user.home") + File.separator + "DCSN_base");
+        } else {
+            setBaseDir(propManager.getProperty("basedir"));
+        }
     }
 
     public static TaskManager getTaskManager() {
@@ -82,7 +87,6 @@ public class Server implements IConsole {
 
     }
 
- 
     public static String getUploadedDir() {
         return propManager.getProperty("basedir") + File.separator + "Uploaded";
     }
@@ -115,16 +119,21 @@ public class Server implements IConsole {
         }
     }
 
-    private static boolean setBaseDir(String newBaseDir) {
-        File f = new File(newBaseDir);
+    private static boolean setBaseDir(String dir) {
+        File f = new File(dir);
         if (f.exists() && f.isDirectory()) {
-            basedir = newBaseDir;
+            basedir = f.getAbsolutePath();
+            LOG.log(Level.INFO, "Basedir is now set to: {0}", basedir);
+            propManager.setProperty("basedir", basedir);
             return true;
         } else {
             if (f.mkdirs()) {
-                basedir = newBaseDir;
+                basedir = f.getAbsolutePath();
+                LOG.log(Level.INFO, "Basedir is now set to: {0}", basedir);
+                propManager.setProperty("basedir", basedir);
                 return true;
             } else {
+                LOG.log(Level.WARNING, "Path {0} is not correct path", dir);
                 return false;
             }
         }
@@ -139,17 +148,12 @@ public class Server implements IConsole {
                 LOG.log(Level.INFO, "Server is listening for incoming sessions");
                 break;
             }
+            case "getInfo": {
+                LOG.log(Level.INFO, "Server port:{0}", port);
+                break;
+            }
             case "setBaseDir": {
-                try {
-                    File f = new File(cmd[1]);
-                    if (!setBaseDir(f.getCanonicalPath())) {
-                        throw new IOException();
-                    }
-                    propManager.setProperty("basedir", f.getAbsolutePath());
-                    LOG.log(Level.INFO, "Basedir is now set to: {0}", f.getAbsolutePath());
-                } catch (IOException e) {
-                    LOG.log(Level.WARNING, "Path {0} is not correct path", cmd[1]);
-                }
+                setBaseDir(cmd[1]);
                 break;
             }
             case "getBaseDir": {
@@ -174,7 +178,7 @@ public class Server implements IConsole {
             try {
                 checkFolders();
                 env = new Environment(numThreads);
-                sesAcceptor = env.newSessionAcceptor(1099);
+                sesAcceptor = env.newSessionAcceptor(port);
                 sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor, logHandler));
 
             } catch (IOException e) {

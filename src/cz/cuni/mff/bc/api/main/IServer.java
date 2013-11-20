@@ -30,8 +30,7 @@ public interface IServer extends Remote {
     @Asynchronous
     public Pipe downloadProjectJar(ProjectUID uid, Pipe pipe) throws RemoteException;
 
-   // public Class<?> getClassData(TaskID id) throws RemoteException;
-
+    // public Class<?> getClassData(TaskID id) throws RemoteException;
     public boolean isProjectReadyForDownload(String clientID, String projectID) throws RemoteException;
 
     public long getProjectFileSize(String clientID, String projectID) throws RemoteException;
@@ -52,6 +51,8 @@ public interface IServer extends Remote {
     public boolean cancelProject(String clientID, String projectID) throws RemoteException;
 
     public boolean unpauseProject(String clientID, String projectID) throws RemoteException;
+
+    public boolean isConnected(String clientName) throws RemoteException;
 
     public ArrayList<TaskID> calculatedTasks(String clientID, ArrayList<TaskID> tasks) throws RemoteException;
 
