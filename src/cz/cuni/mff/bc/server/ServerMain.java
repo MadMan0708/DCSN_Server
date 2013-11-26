@@ -5,6 +5,7 @@
 package cz.cuni.mff.bc.server;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  *
@@ -17,10 +18,26 @@ public class ServerMain {
      */
     public static void main(String[] args) throws IOException{
         final Server server = new Server();
-         server.startGUIConsole();
-        server.initialize();
-        if (System.console() != null) {
-            server.startClassicConsole();
+        
+        switch (args.length) {
+            case 0:
+                server.startGUIConsole();
+                server.startClassicConsole();
+                server.initialize();
+                break;
+            case 1:
+                if (args[0].equals("nogui")) {
+                    server.startClassicConsole();
+                    server.initialize();
+                } 
+                else{
+                    System.err.println("Incorrect parameter");
+                }
+                break;
+            default:
+                System.err.println("Wrong number of parameters");
+                break;
         }
+        
     }
 }

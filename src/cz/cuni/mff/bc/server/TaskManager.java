@@ -11,7 +11,6 @@ import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.api.main.Task;
 import cz.cuni.mff.bc.api.enums.ProjectState;
 import cz.cuni.mff.bc.api.main.ProjectInfo;
-import static cz.cuni.mff.bc.server.Server.getUploadedDir;
 import cz.cuni.mff.bc.server.classloading.CustObjectInputStream;
 import cz.cuni.mff.bc.server.exceptions.ExtractionException;
 import cz.cuni.mff.bc.server.exceptions.NotSupportedArchiveException;
@@ -21,8 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -60,6 +57,18 @@ public class TaskManager {
     private ConcurrentHashMap<ProjectUID, Project> projectsForDownload = new ConcurrentHashMap<>();
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(TaskManager.class.getName());
     private Handler logHandler;
+
+   
+
+    public boolean clientInActiveComputation(String clientName) {
+        Set<ProjectUID> projectsUIDs = projectsAll.keySet();
+        for (ProjectUID projectUID : projectsUIDs) {
+            if (projectUID.getClientID().equals(clientName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public TaskManager(Handler logHandler) {
         this.executor = Executors.newCachedThreadPool();
@@ -103,7 +112,7 @@ public class TaskManager {
     }
 
     public boolean isProjectInManager(String clientID, String projectID) {
-        if (projectsAll.contains(new ProjectUID(clientID, projectID))) {
+        if (projectsAll.containsKey(new ProjectUID(clientID, projectID))) {
             return true;
         } else {
             return false;
@@ -369,7 +378,7 @@ public class TaskManager {
         }
     }
 
-    public boolean unpauseProject(String clientID, String projectID) {
+    public boolean  resumeProject(String clientID, String projectID) {
         if (isProjectInManager(clientID, projectID)) {
             Project project = projectsAll.get(new ProjectUID(clientID, projectID));
             project.setState(ProjectState.ACTIVE);

@@ -25,6 +25,7 @@ import java.util.TimerTask;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import org.cojen.dirmi.Pipe;
+import org.cojen.dirmi.Session;
 
 /**
  *
@@ -36,7 +37,7 @@ public class IServerImpl implements IServer {
     private final int timerPeriodSec = 11;
     private HashMap<String, Timer> clientTimers;
     private HashMap<String, Boolean> clientsTimeout;
-    private ArrayList<String> activeConnections;
+    private HashMap<String, Session> activeConnections;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(IServerImpl.class.getName());
 
     public IServerImpl(Handler logHandler) {
@@ -50,6 +51,11 @@ public class IServerImpl implements IServer {
     @Override
     public TaskID getTaskIdBeforeCalculation(String clientID) throws RemoteException {
         return taskManager.getTaskIDBeforeCalculation(clientID);
+    }
+
+    @Override
+    public boolean hasClientTasksInProgress(String clientID) throws RemoteException {
+        return taskManager.clientInActiveComputation(clientID);
     }
 
     @Override
@@ -71,7 +77,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public boolean isConnected(String clientName) throws RemoteException {
-        if (activeConnections.contains(clientName)) {
+        if (activeConnections.containsKey(clientName)) {
             return true;
         } else {
             return false;
@@ -198,8 +204,8 @@ public class IServerImpl implements IServer {
     }
 
     @Override
-    public boolean unpauseProject(String clientID, String projectID) throws RemoteException {
-        return taskManager.unpauseProject(clientID, projectID);
+    public boolean resumeProject(String clientID, String projectID) throws RemoteException {
+        return taskManager. resumeProject(clientID, projectID);
     }
 
     @Override

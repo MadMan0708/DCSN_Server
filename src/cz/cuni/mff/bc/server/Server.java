@@ -9,14 +9,21 @@ import cz.cuni.mff.bc.server.misc.IConsole;
 import cz.cuni.mff.bc.server.misc.PropertiesManager;
 import cz.cuni.mff.bc.server.logging.CustomFormater;
 import cz.cuni.mff.bc.server.logging.CustomHandler;
+import cz.cuni.mff.bc.server.logging.FileLogger;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import org.cojen.dirmi.Environment;
+import org.cojen.dirmi.Session;
 import org.cojen.dirmi.SessionAcceptor;
 
 /**
@@ -30,24 +37,27 @@ public class Server implements IConsole {
     private static final int numThreads = 100;
     private Environment env;
     private SessionAcceptor sesAcceptor;
-    private static ArrayList<String> activeConnections;
+    private static HashMap<String, Session> activeConnections;
+
     private static TaskManager taskManager;
     private IServerImpl remoteMethods;
-    private Handler logHandler;
+    private CustomHandler logHandler;
     private final int port = 1099;
+    private ServerCommands commands;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     public Server() {
-        logHandler = new CustomHandler(new File("server.log"));
+        logHandler = new CustomHandler();
         logHandler.setFormatter(new CustomFormater());
         logHandler.setLevel(Level.ALL);
-
-        activeConnections = new ArrayList<>();
+        logHandler.addLogTarget(new FileLogger(new File("server.log")));
+        activeConnections = new HashMap<>();
         taskManager = new TaskManager(logHandler);
         remoteMethods = new IServerImpl(logHandler);
 
         propManager = new PropertiesManager("server.config.properties", logHandler);
         LOG.addHandler(logHandler);
+        this.commands = new ServerCommands(this);
     }
 
     public void initialize() {
@@ -56,13 +66,14 @@ public class Server implements IConsole {
         } else {
             setBaseDir(propManager.getProperty("basedir"));
         }
+        startListening();
     }
 
     public static TaskManager getTaskManager() {
         return taskManager;
     }
 
-    public static ArrayList<String> getActiveConnections() {
+    public static HashMap<String, Session> getActiveConnections() {
         return activeConnections;
     }
 
@@ -87,6 +98,10 @@ public class Server implements IConsole {
 
     }
 
+    public Handler getLogHandler() {
+        return logHandler;
+    }
+
     public static String getUploadedDir() {
         return propManager.getProperty("basedir") + File.separator + "Uploaded";
     }
@@ -101,25 +116,34 @@ public class Server implements IConsole {
 
     @Override
     public void startGUIConsole() {
-        GConsole con = new GConsole(this, "server");
+        GConsole con = new GConsole(this, "server", new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                exitServer();
+            }
+        });
         con.startConsole();
-
+        logHandler.addLogTarget(con);
     }
 
     @Override
     public void startClassicConsole() {
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            while (true) {
-                System.out.print("Server>");
-                proceedCommand(br.readLine());
+        new Thread() {
+            @Override
+            public void run() {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+                    while (true) {
+                        System.out.print("server>");
+                        proceedCommand(br.readLine());
+                    }
+                } catch (IOException e) {
+                    LOG.log(Level.WARNING, "Problem with reading command from console");
+                }
             }
-        } catch (IOException e) {
-            LOG.log(Level.WARNING, "Proceeding command: {0}", e.getMessage());
-        }
+        }.start();
     }
 
-    private static boolean setBaseDir(String dir) {
+    public boolean setBaseDir(String dir) {
         File f = new File(dir);
         if (f.exists() && f.isDirectory()) {
             basedir = f.getAbsolutePath();
@@ -139,39 +163,35 @@ public class Server implements IConsole {
         }
     }
 
-    @Override
-    public void proceedCommand(String command) {
-        String[] cmd = parseCommand(command);
-        switch (cmd[0]) {
-            case "start": {
-                startListening(numThreads);
-                LOG.log(Level.INFO, "Server is listening for incoming sessions");
-                break;
-            }
-            case "getInfo": {
-                LOG.log(Level.INFO, "Server port:{0}", port);
-                break;
-            }
-            case "setBaseDir": {
-                setBaseDir(cmd[1]);
-                break;
-            }
-            case "getBaseDir": {
-                LOG.log(Level.INFO, "Basedir is set to: {0}", propManager.getProperty("basedir"));
-                break;
-            }
-            case "stop": {
-                stopListening();
-                break;
-            }
-            case "exit": {
-                exitServer();
-                break;
-            }
-        }
+    public void printPort() {
+        LOG.log(Level.INFO, "Server port:{0}", port);
     }
 
-    private void startListening(int numThreads) {
+    public void printBaseDir() {
+        LOG.log(Level.INFO, "Basedir is set to: {0}", basedir);
+    }
+
+    @Override
+    public void proceedCommand(String command) {
+        String[] cmd = ServerCommands.parseCommand(command);
+        String[] params = Arrays.copyOfRange(cmd, 1, cmd.length);
+        try {
+            Class<?> c = Class.forName("cz.cuni.mff.bc.server.ServerCommands");
+            Method method = c.getMethod(cmd[0], new Class[]{String[].class});
+            method.invoke(commands, new Object[]{params});
+        } catch (ClassNotFoundException e) {
+            // will be never thrown
+        } catch (IllegalAccessException e) {
+        } catch (IllegalArgumentException e) {
+        } catch (InvocationTargetException e) {
+        } catch (NoSuchMethodException e) {
+            LOG.log(Level.WARNING, "No such command");
+        } catch (SecurityException e) {
+        }
+
+    }
+
+    public void startListening() {
         if (basedir == null) {
             LOG.log(Level.INFO, "Server base dir has to be set before starting the server");
         } else {
@@ -180,6 +200,7 @@ public class Server implements IConsole {
                 env = new Environment(numThreads);
                 sesAcceptor = env.newSessionAcceptor(port);
                 sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor, logHandler));
+                LOG.log(Level.INFO, "Server is listening for incoming sessions");
 
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Starting server: {0}", e.getMessage());
@@ -187,10 +208,19 @@ public class Server implements IConsole {
         }
     }
 
-    private void stopListening() {
+    public void stopListening() {
         try {
+            Set<String> clients = activeConnections.keySet();
+            for (String client : clients) {
+                activeConnections.get(client).close();
+                activeConnections.remove(client);
+            }
+            if (sesAcceptor != null) {
+                sesAcceptor.close();
+            }
             if (env != null) {
                 env.close();
+
             }
             LOG.log(Level.INFO, "Server succesfully stopped.");
         } catch (IOException e) {
@@ -198,11 +228,7 @@ public class Server implements IConsole {
         }
     }
 
-    private String[] parseCommand(String cmd) {
-        return cmd.split("\\s+");
-    }
-
-    private void exitServer() {
+    public void exitServer() {
         stopListening();
         System.exit(0);
     }

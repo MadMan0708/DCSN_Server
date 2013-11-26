@@ -4,12 +4,7 @@
  */
 package cz.cuni.mff.bc.server.logging;
 
-import cz.cuni.mff.bc.server.misc.GConsole;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
@@ -19,24 +14,17 @@ import java.util.logging.LogRecord;
  */
 public class CustomHandler extends Handler {
 
-    private File log;
+    private ArrayList<ILogTarget> targets = new ArrayList<>();
 
-    public CustomHandler(File log) {
-        this.log = log;
-    }
-
-    private void logToFile(String msg) {
-        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(log, true)))) {
-            pw.println(msg);
-        } catch (IOException e) {
-            GConsole.printToLog("Could't write to log file: " + msg + ": " + e.getMessage());
-        }
+    public void addLogTarget(ILogTarget target) {
+        targets.add(target);
     }
 
     @Override
     public void publish(LogRecord record) {
-        logToFile(getFormatter().format(record));
-        GConsole.printToLog(getFormatter().format(record));
+        for (ILogTarget iLogTarget : targets) {
+            iLogTarget.log(getFormatter().format(record));
+        }
     }
 
     @Override
