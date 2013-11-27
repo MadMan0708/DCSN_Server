@@ -7,7 +7,6 @@ package cz.cuni.mff.bc.server;
 import cz.cuni.mff.bc.api.enums.ProjectState;
 import cz.cuni.mff.bc.api.main.CustomIO;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.logging.Handler;
@@ -23,18 +22,17 @@ public class ProjectPacker implements Callable<Boolean> {
     private Project project;
     private String clientID;
     private String projectID;
-    private static final Logger LOG = Logger.getLogger(ProjectPacker.class.getName());
+    private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     @Override
     public Boolean call() throws Exception {
         return packProject();
     }
 
-    public ProjectPacker(Project project, Handler logHandler) {
+    public ProjectPacker(Project project) {
         this.project = project;
         this.clientID = project.getClientName();
         this.projectID = project.getProjectName();
-        LOG.addHandler(logHandler);
     }
 
     private Boolean packProject() {

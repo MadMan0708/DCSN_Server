@@ -23,14 +23,13 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
     private HashMap<String, Session> activeConnections;
     private IServerImpl remoteMethods;
     private SessionAcceptor sesAcceptor;
-    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(CustomSessionListener.class.getName());
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
-    public CustomSessionListener(IServerImpl remoteMethods, SessionAcceptor sesAcceptor, Handler logHandler) {
+    public CustomSessionListener(IServerImpl remoteMethods, SessionAcceptor sesAcceptor) {
         this.taskManager = Server.getTaskManager();
         this.activeConnections = Server.getActiveConnections();
         this.remoteMethods = remoteMethods;
         this.sesAcceptor = sesAcceptor;
-        LOG.addHandler(logHandler);
     }
 
     @Override

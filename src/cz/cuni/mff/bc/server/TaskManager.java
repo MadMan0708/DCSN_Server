@@ -55,10 +55,7 @@ public class TaskManager {
     private ConcurrentHashMap<ProjectUID, Project> projectsPreparing = new ConcurrentHashMap<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsCompleted = new ConcurrentHashMap<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsForDownload = new ConcurrentHashMap<>();
-    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(TaskManager.class.getName());
-    private Handler logHandler;
-
-   
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     public boolean clientInActiveComputation(String clientName) {
         Set<ProjectUID> projectsUIDs = projectsAll.keySet();
@@ -70,7 +67,7 @@ public class TaskManager {
         return false;
     }
 
-    public TaskManager(Handler logHandler) {
+    public TaskManager() {
         this.executor = Executors.newCachedThreadPool();
         comp = new Comparator<TaskID>() {
             @Override
@@ -86,8 +83,6 @@ public class TaskManager {
                 }
             }
         };
-        this.logHandler = logHandler;
-        LOG.addHandler(logHandler);
         tasksPool = new PriorityBlockingQueue<>(inititalCapacity, comp);
     }
 
@@ -274,6 +269,12 @@ public class TaskManager {
         project.setState(ProjectState.ACTIVE);
     }
 
+    public synchronized Project createPreparingProject(String clientID, String projectID, int priority) {
+        Project project = new Project(ProjectState.PREPARING, priority, clientID, projectID);
+        putProjectIntoAllPreparing(project);
+        return project;
+    }
+
     private void moveJarAndExtractTasks(Project project) throws ExtractionException, NotSupportedArchiveException, IOException {
         File inUploadDir = FilesStructure.getClientUploadedDir(project.getClientName(), project.getProjectName());
         File[] files = inUploadDir.listFiles();
@@ -281,7 +282,7 @@ public class TaskManager {
             if (file.getName().endsWith(".jar")) {
                 CustomIO.copyFile(file, FilesStructure.getProjectJarFile(project.getClientName(), project.getProjectName()));
             } else {
-                new Extractor(file, project, logHandler).unpack();
+                new Extractor(file, project).unpack();
             }
         }
 
@@ -295,12 +296,12 @@ public class TaskManager {
         }
     }
 
-    private void putProjectIntoAllPreparing(Project project) {
+    public void putProjectIntoAllPreparing(Project project) {
         projectsAll.put(project.getProjectUID(), project);
         projectsPreparing.put(project.getProjectUID(), project);
     }
 
-    private void undoProject(Project project) {
+    public void undoProject(Project project) {
         projectsPreparing.remove(project.getProjectUID());
         projectsAll.remove(project.getProjectUID());
     }
@@ -310,33 +311,34 @@ public class TaskManager {
         projectsActive.put(project.getProjectUID(), project);
     }
 
-    public void addProject(String clientID, String projectID, int priority) {
-        Project project = new Project(ProjectState.PREPARING, priority, clientID, projectID);
-        //preparation of folders for client's project
-        FilesStructure.createClientProjectDirs(clientID, projectID);
-        try {
-            putProjectIntoAllPreparing(project);
-            moveJarAndExtractTasks(project);
-            createTasks(project);
-            changePreparingToActive(project);
-            addTasksToPool(clientID, projectID);
-        } catch (ExtractionException | NotSupportedArchiveException e) {
-            LOG.log(Level.WARNING, e.getMessage());
-            undoProject(project);
-        } catch (ClassNotFoundException e) {
-            LOG.log(Level.WARNING, "ClassNotFoundException during task creation : {0}", e.toString());
-            undoProject(project);
-        } catch (IllegalAccessException e) {
-            LOG.log(Level.WARNING, "Illegal access: {0}", e.getMessage());
-            undoProject(project);
-        } catch (InstantiationException e) {
-            LOG.log(Level.WARNING, "Instantiation problem: {0}", e.getMessage());
-            undoProject(project);
-        } catch (IOException e) {
-            LOG.log(Level.WARNING, "Creating tasks: {0}", e.toString());
-            undoProject(project);
-        }
-
+    public void addProject(final Project project) {
+        new Thread() {
+            public void run() {
+                //preparation of folders for client's project
+                FilesStructure.createClientProjectDirs(project.getClientName(), project.getProjectName());
+                try {
+                    moveJarAndExtractTasks(project);
+                    createTasks(project);
+                    changePreparingToActive(project);
+                    addTasksToPool(project.getClientName(), project.getProjectName());
+                } catch (ExtractionException | NotSupportedArchiveException e) {
+                    LOG.log(Level.WARNING, e.getMessage());
+                    undoProject(project);
+                } catch (ClassNotFoundException e) {
+                    LOG.log(Level.WARNING, "ClassNotFoundException during task creation : {0}", e.toString());
+                    undoProject(project);
+                } catch (IllegalAccessException e) {
+                    LOG.log(Level.WARNING, "Illegal access: {0}", e.getMessage());
+                    undoProject(project);
+                } catch (InstantiationException e) {
+                    LOG.log(Level.WARNING, "Instantiation problem: {0}", e.getMessage());
+                    undoProject(project);
+                } catch (IOException e) {
+                    LOG.log(Level.WARNING, "Creating tasks: {0}", e.toString());
+                    undoProject(project);
+                }
+            }
+        }.start();
     }
 
     private void deleteProject(String clientID, String projectID) {
@@ -378,7 +380,7 @@ public class TaskManager {
         }
     }
 
-    public boolean  resumeProject(String clientID, String projectID) {
+    public boolean resumeProject(String clientID, String projectID) {
         if (isProjectInManager(clientID, projectID)) {
             Project project = projectsAll.get(new ProjectUID(clientID, projectID));
             project.setState(ProjectState.ACTIVE);
@@ -420,7 +422,7 @@ public class TaskManager {
             project.setState(ProjectState.COMPLETED);
             projectsCompleted.put(ID.getProjectUID(), project);
             projectsActive.remove(ID.getProjectUID());
-            final Future<Boolean> f = executor.submit(new ProjectPacker(project, logHandler));
+            final Future<Boolean> f = executor.submit(new ProjectPacker(project));
             try {
                 Boolean result = f.get();
                 // if (result == Boolean.TRUE) {

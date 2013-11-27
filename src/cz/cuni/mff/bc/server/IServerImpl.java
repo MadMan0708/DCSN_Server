@@ -38,14 +38,13 @@ public class IServerImpl implements IServer {
     private HashMap<String, Timer> clientTimers;
     private HashMap<String, Boolean> clientsTimeout;
     private HashMap<String, Session> activeConnections;
-    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(IServerImpl.class.getName());
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
-    public IServerImpl(Handler logHandler) {
+    public IServerImpl() {
         this.taskManager = Server.getTaskManager();
         this.clientTimers = new HashMap<>();
         this.clientsTimeout = new HashMap<>();
         this.activeConnections = Server.getActiveConnections();
-        LOG.addHandler(logHandler);
     }
 
     @Override
@@ -112,6 +111,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public Pipe uploadProject(String clientName, String projectName, int priority, Pipe pipe) throws RemoteException {
+        Project project = taskManager.createPreparingProject(clientName, projectName, priority);
         File upDir = CustomIO.createFolder(FilesStructure.getClientUploadedDir(clientName, projectName));
         try {
             File tmp = File.createTempFile(clientName, projectName + ".zip");
@@ -126,10 +126,12 @@ public class IServerImpl implements IServer {
             CustomIO.extractZipFile(tmp, upDir);
             tmp.delete();
         } catch (IOException e) {
+            taskManager.undoProject(project);
             LOG.log(Level.WARNING, "Problem during saving uploaded file: {0}", e.toString());
         }
-        taskManager.addProject(clientName, projectName, priority);
+        taskManager.addProject(project);
         return null;
+
     }
 
     @Override
@@ -205,7 +207,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public boolean resumeProject(String clientID, String projectID) throws RemoteException {
-        return taskManager. resumeProject(clientID, projectID);
+        return taskManager.resumeProject(clientID, projectID);
     }
 
     @Override

@@ -52,8 +52,8 @@ public class Server implements IConsole {
         logHandler.setLevel(Level.ALL);
         logHandler.addLogTarget(new FileLogger(new File("server.log")));
         activeConnections = new HashMap<>();
-        taskManager = new TaskManager(logHandler);
-        remoteMethods = new IServerImpl(logHandler);
+        taskManager = new TaskManager();
+        remoteMethods = new IServerImpl();
 
         propManager = new PropertiesManager("server.config.properties", logHandler);
         LOG.addHandler(logHandler);
@@ -96,10 +96,6 @@ public class Server implements IConsole {
             projects.mkdir();
         }
 
-    }
-
-    public Handler getLogHandler() {
-        return logHandler;
     }
 
     public static String getUploadedDir() {
@@ -199,7 +195,7 @@ public class Server implements IConsole {
                 checkFolders();
                 env = new Environment(numThreads);
                 sesAcceptor = env.newSessionAcceptor(port);
-                sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor, logHandler));
+                sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor));
                 LOG.log(Level.INFO, "Server is listening for incoming sessions");
 
             } catch (IOException e) {

@@ -31,16 +31,15 @@ public class Extractor {//implements Callable<Boolean> {
     private Project project;
     private File archive;
     private File destination;
-    private static final Logger LOG = Logger.getLogger(Extractor.class.getName());
+    private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
-    public Extractor(File archive, Project project, Handler logHandler) {
+    public Extractor(File archive, Project project) {
         projectName = project.getProjectName();
         clientName = project.getClientName();
         extension = CustomIO.getExtension(archive);
         this.project = project;
         this.archive = archive;
         destination = FilesStructure.getTempDirInProject(clientName, projectName);
-        LOG.addHandler(logHandler);
     }
 
     public void unpack() throws NotSupportedArchiveException, ExtractionException {

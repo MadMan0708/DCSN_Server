@@ -13,12 +13,11 @@ import java.util.logging.Logger;
  */
 public class ServerCommands {
 
-    private static final Logger LOG = Logger.getLogger(ServerCommands.class.getName());
+    private static final Logger LOG = Logger.getLogger(Server.class.getName());
     private Server server;
 
     public ServerCommands(Server server) {
         this.server = server;
-        LOG.addHandler(server.getLogHandler());
     }
 
     public static String[] parseCommand(String params) {
