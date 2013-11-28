@@ -16,11 +16,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import org.cojen.dirmi.Environment;
 import org.cojen.dirmi.Session;
@@ -196,7 +194,7 @@ public class Server implements IConsole {
                 env = new Environment(numThreads);
                 sesAcceptor = env.newSessionAcceptor(port);
                 sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor));
-                LOG.log(Level.INFO, "Server is listening for incoming sessions");
+                LOG.log(Level.INFO, "Server is listening for incoming sessions on port {0}",port);
 
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Starting server: {0}", e.getMessage());
