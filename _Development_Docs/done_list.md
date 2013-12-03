@@ -1,3 +1,20 @@
+28.11.2013
+- getInfo method added on server side
+- server is started immediately after application is started
+- non-interactive mode, can be started without GUI
+- method for getting information about one project was added - PrintProjectInfo
+- switch with command identification was replaced by class ServerCommands, commands are identified by Java Reflection API    
+- problem with closing application fixed, it closes java properly now
+- multiple lines to output fixed - it was problem with logging system, which was fixed
+- client GUI shrinking was fixed
+
+19.11.2013
+- library path made relatives
+
+12.11.2013
+- class loading system has changed. Now instead of one class, user upload jar file with classes needed for computation and classes needed for project preparation before it's uploaded and after it's downloaded
+
+
 4.11.2013
 - fix bug with classFormatException truncate error during automatic calculation
 - fix different time padding in log

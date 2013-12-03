@@ -1,5 +1,5 @@
+RELEVANT
+1.10.2013
+- load information about command from external xml file, so they are not part of the code, then, from XML file creates object and these object use with printing out info about commands
 
-
-- Should compute class has same name as project, or it can be independent on project name ?
-Now it is implemented, that tha name can be whatever, but the .class file can be only one in project archive
-
+NOT-RELEVANT
