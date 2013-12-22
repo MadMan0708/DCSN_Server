@@ -30,17 +30,16 @@ import org.cojen.dirmi.SessionAcceptor;
  */
 public class Server implements IConsole {
 
-    private static String basedir;
+    private String basedir;
     private static PropertiesManager propManager;
     private static final int numThreads = 100;
     private Environment env;
     private SessionAcceptor sesAcceptor;
     private static HashMap<String, Session> activeConnections;
-
     private static TaskManager taskManager;
     private IServerImpl remoteMethods;
     private CustomHandler logHandler;
-    private final int port = 1099;
+    private int port;
     private ServerCommands commands;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
@@ -64,7 +63,41 @@ public class Server implements IConsole {
         } else {
             setBaseDir(propManager.getProperty("basedir"));
         }
+
+        if (propManager.getProperty("port") == null) {
+            setDefaultPort();
+        } else {
+            int tmpPort = Integer.parseInt(propManager.getProperty("port"));
+            try {
+                setPort(tmpPort);
+            } catch (IllegalArgumentException e) {
+                LOG.log(Level.WARNING, "INITIALIZING: Port number has to be between 1 - 65535");
+                setDefaultPort();
+            }
+        }
         startListening();
+    }
+
+    private void setDefaultPort() {
+        setPort(1099);
+    }
+
+    public void setPort(int port) throws IllegalArgumentException {
+        if (validatePort(port)) {
+            this.port = port;
+            LOG.log(Level.INFO, "Server port is now set to: {0}", port);
+            propManager.setProperty("port", port + "");
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private boolean validatePort(int port) {
+        if (port >= 1 && port <= 65535) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static TaskManager getTaskManager() {
@@ -104,8 +137,8 @@ public class Server implements IConsole {
         return propManager.getProperty("basedir") + File.separator + "Projects";
     }
 
-    public static String getBaseDir() {
-        return propManager.getProperty("basedir");
+    public String getBaseDir() {
+        return this.basedir;
     }
 
     @Override
@@ -157,12 +190,8 @@ public class Server implements IConsole {
         }
     }
 
-    public void printPort() {
-        LOG.log(Level.INFO, "Server port:{0}", port);
-    }
-
-    public void printBaseDir() {
-        LOG.log(Level.INFO, "Basedir is set to: {0}", basedir);
+    public int getPort() {
+        return this.port;
     }
 
     @Override
@@ -194,7 +223,7 @@ public class Server implements IConsole {
                 env = new Environment(numThreads);
                 sesAcceptor = env.newSessionAcceptor(port);
                 sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor));
-                LOG.log(Level.INFO, "Server is listening for incoming sessions on port {0}",port);
+                LOG.log(Level.INFO, "Server is listening for incoming sessions on port {0}", port);
 
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Starting server: {0}", e.getMessage());
