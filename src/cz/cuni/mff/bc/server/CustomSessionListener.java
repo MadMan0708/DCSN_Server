@@ -6,7 +6,6 @@ package cz.cuni.mff.bc.server;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import org.cojen.dirmi.Link;
 import org.cojen.dirmi.Session;

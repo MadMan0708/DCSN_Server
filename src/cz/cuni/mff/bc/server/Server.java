@@ -41,9 +41,11 @@ public class Server implements IConsole {
     private CustomHandler logHandler;
     private int port;
     private ServerCommands commands;
+    private DiscoveryThread discoveryThread;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     public Server() {
+        this.discoveryThread = new DiscoveryThread(port);
         logHandler = new CustomHandler();
         logHandler.setFormatter(new CustomFormater());
         logHandler.setLevel(Level.ALL);
@@ -224,7 +226,7 @@ public class Server implements IConsole {
                 sesAcceptor = env.newSessionAcceptor(port);
                 sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor));
                 LOG.log(Level.INFO, "Server is listening for incoming sessions on port {0}", port);
-
+                discoveryThread.startDiscovering();
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Starting server: {0}", e.getMessage());
             }
@@ -233,6 +235,9 @@ public class Server implements IConsole {
 
     public void stopListening() {
         try {
+            if (discoveryThread != null) {
+                discoveryThread.startDiscovering();
+            }
             Set<String> clients = activeConnections.keySet();
             for (String client : clients) {
                 activeConnections.get(client).close();
@@ -243,11 +248,11 @@ public class Server implements IConsole {
             }
             if (env != null) {
                 env.close();
-
             }
+
             LOG.log(Level.INFO, "Server succesfully stopped.");
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Stopping server: {0}", e.getMessage());
+            LOG.log(Level.WARNING, "Stopping server problem: {0}", e.getMessage());
         }
     }
 
