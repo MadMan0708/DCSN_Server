@@ -1,3 +1,10 @@
+28.12.2013
+- broadcasting listening and answering of clients was implemented
+
+18.12.2013
+- port now can be set up, default value is 1099
+- method for starting server is overloaded to take parameter which specifies port
+
 28.11.2013
 - getInfo method added on server side
 - server is started immediately after application is started

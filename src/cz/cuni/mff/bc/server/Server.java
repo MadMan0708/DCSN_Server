@@ -45,7 +45,6 @@ public class Server implements IConsole {
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     public Server() {
-        this.discoveryThread = new DiscoveryThread(port);
         logHandler = new CustomHandler();
         logHandler.setFormatter(new CustomFormater());
         logHandler.setLevel(Level.ALL);
@@ -77,6 +76,7 @@ public class Server implements IConsole {
                 setDefaultPort();
             }
         }
+        discoveryThread = new DiscoveryThread(port);
         startListening();
     }
 
@@ -236,7 +236,7 @@ public class Server implements IConsole {
     public void stopListening() {
         try {
             if (discoveryThread != null) {
-                discoveryThread.startDiscovering();
+                discoveryThread.stopDiscovering();
             }
             Set<String> clients = activeConnections.keySet();
             for (String client : clients) {

@@ -17,7 +17,7 @@ import java.util.logging.Level;
 public class DiscoveryThread extends Thread {
 
     private int port;
-    private boolean discovering = false;
+    private boolean discovering = true;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     public DiscoveryThread(int port) {
@@ -29,15 +29,13 @@ public class DiscoveryThread extends Thread {
         try {
             DatagramSocket socket = new DatagramSocket(port, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
-
             while (discovering) {
                 LOG.log(Level.INFO, "Ready to receive broadcast packets.");
 
                 byte[] buffer = new byte[15000];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
-
-
+               
                 LOG.log(Level.INFO, "Discovery packet received from: {0}", packet.getAddress().getHostAddress());
                 LOG.log(Level.INFO, "Packet received; data: {0}", new String(packet.getData()));
 
