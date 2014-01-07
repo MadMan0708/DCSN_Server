@@ -1,3 +1,6 @@
+6.1.2014
+- Parameters time, memory, cores and priority added to the tasks and projects ( preparation for strategy choosing )
+
 28.12.2013
 - broadcasting listening and answering of clients was implemented
 

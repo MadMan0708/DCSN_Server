@@ -17,17 +17,16 @@ import org.cojen.dirmi.Pipe;
 
 public interface IServer extends Remote {
 
-    //  public EUserAddingState addClient(String clientID) throws RemoteException;
     public Task getTask(String clientID, TaskID taskID) throws RemoteException;
 
     public void saveCompletedTask(String clientID, Task task) throws RemoteException;
 
     public boolean isProjectExists(String clientID, String projectID) throws RemoteException;
 
-    @Asynchronous
-    public Pipe uploadProject(String clientName, String projectName, int priority, Pipe pipe) throws RemoteException;
-
     public boolean hasClientTasksInProgress(String clientID) throws RemoteException;
+
+    @Asynchronous
+    public Pipe uploadProject(String clientName, String projectName, int priority, int cores, int memory, int time, Pipe pipe) throws RemoteException;
 
     @Asynchronous
     public Pipe downloadProjectJar(ProjectUID uid, Pipe pipe) throws RemoteException;
@@ -51,7 +50,7 @@ public interface IServer extends Remote {
 
     public boolean cancelProject(String clientID, String projectID) throws RemoteException;
 
-    public boolean  resumeProject(String clientID, String projectID) throws RemoteException;
+    public boolean resumeProject(String clientID, String projectID) throws RemoteException;
 
     public boolean isConnected(String clientName) throws RemoteException;
 

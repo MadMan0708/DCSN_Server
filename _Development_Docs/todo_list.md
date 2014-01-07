@@ -1,3 +1,4 @@
+- IMPORTANT comment code
 - fix problem with synchronisation, one mistake is if calculation on client is started and project is uploaded after then,
   command for starting calculation has to be typed again
 - set priority ranges which will be available

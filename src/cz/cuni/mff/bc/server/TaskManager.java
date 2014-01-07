@@ -32,7 +32,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 
 /**
@@ -252,7 +251,7 @@ public class TaskManager {
         File[] dataFiles = dataFolder.listFiles();
         int numberOfTasks = 0;
         for (File file : dataFiles) {
-            Task task = new Task(project.getProjectName(), project.getClientName(), file.getName(), project.getPriority());
+            Task task = new Task(project.getProjectName(), project.getClientName(), file.getName(), project.getPriority(),project.getCores(),project.getMemory(),project.getTime());
             task.setClass(classManager.loadClass(task.getClientID(), task.getProjectUID()));
             task.loadData(FilesStructure.getTaskLoadDataPath(task.getUnicateID()));
             File output = new File(saveFolder, file.getName());
@@ -269,8 +268,8 @@ public class TaskManager {
         project.setState(ProjectState.ACTIVE);
     }
 
-    public synchronized Project createPreparingProject(String clientID, String projectID, int priority) {
-        Project project = new Project(ProjectState.PREPARING, priority, clientID, projectID);
+    public synchronized Project createPreparingProject(String clientID, String projectID, int priority, int cores, int memory, int time) {
+        Project project = new Project(ProjectState.PREPARING, priority, cores, memory, time, clientID, projectID);
         putProjectIntoAllPreparing(project);
         return project;
     }

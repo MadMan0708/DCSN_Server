@@ -110,8 +110,8 @@ public class IServerImpl implements IServer {
     }
 
     @Override
-    public Pipe uploadProject(String clientName, String projectName, int priority, Pipe pipe) throws RemoteException {
-        Project project = taskManager.createPreparingProject(clientName, projectName, priority);
+    public Pipe uploadProject(String clientName, String projectName, int priority, int cores, int memory, int time, Pipe pipe) throws RemoteException {
+        Project project = taskManager.createPreparingProject(clientName, projectName, priority, cores, memory, time);
         File upDir = CustomIO.createFolder(FilesStructure.getClientUploadedDir(clientName, projectName));
         try {
             File tmp = File.createTempFile(clientName, projectName + ".zip");
@@ -124,6 +124,7 @@ public class IServerImpl implements IServer {
                 pipe.close();
             }
             CustomIO.extractZipFile(tmp, upDir);
+
             tmp.delete();
         } catch (IOException e) {
             taskManager.undoProject(project);

@@ -24,43 +24,60 @@ public class Project implements Serializable {
     private String clientName;
     private String projectName;
     private int priority;
+    private int cores;
+    private int memory;
+    private int time;
     private Set<TaskID> tasksUncompleted;
     private Set<TaskID> tasksCompleted;
-    private String className;
 
     /**
      *
      * @param state project state during creation
      * @param priority project priority
+     * @param cores number of cores used by tasks in this project
+     * @param memory amount of memory used by tasks in this project
+     * @param time average running time of tasks in this project
      * @param clientName owner of project
      * @param projectName project name
      */
-    public Project(ProjectState state, int priority, String clientName, String projectName) {
+    public Project(ProjectState state, int priority, int cores, int memory, int time, String clientName, String projectName) {
         this.tasksUncompleted = java.util.Collections.synchronizedSet(new HashSet<TaskID>());
         this.tasksCompleted = java.util.Collections.synchronizedSet(new HashSet<TaskID>());
         this.state = state;
         this.priority = priority;
+        this.cores = cores;
+        this.memory = memory;
+        this.time = time;
         this.clientName = clientName;
         this.projectName = projectName;
 
     }
 
-    /**
-     *
-     * @param className class name of class which provides calculation methods
-     */
-    public void setClassName(String className) {
-        this.className = className;
+    public int getCores() {
+        return cores;
     }
 
-    /**
-     *
-     * @return class name of class which provides calculation methods
-     */
-    public String getClassName() {
-        return this.className;
+    public void setCores(int cores) {
+        this.cores = cores;
     }
 
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public int getMemory() {
+        return memory;
+    }
+
+    public void setMemory(int memory) {
+        this.memory = memory;
+    }
+
+  
     /**
      *
      * @param taskID task to be checked
