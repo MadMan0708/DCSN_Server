@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.logging.Level;
 import org.cojen.dirmi.Environment;
-import org.cojen.dirmi.Session;
 import org.cojen.dirmi.SessionAcceptor;
 
 /**
@@ -35,8 +34,8 @@ public class Server implements IConsole {
     private static final int numThreads = 100;
     private Environment env;
     private SessionAcceptor sesAcceptor;
-    private static HashMap<String, Session> activeConnections;
-    private static TaskManager taskManager;
+    private HashMap<String, ActiveClient> activeClients;
+    private TaskManager taskManager;
     private IServerImpl remoteMethods;
     private CustomHandler logHandler;
     private int port;
@@ -49,10 +48,9 @@ public class Server implements IConsole {
         logHandler.setFormatter(new CustomFormater());
         logHandler.setLevel(Level.ALL);
         logHandler.addLogTarget(new FileLogger(new File("server.log")));
-        activeConnections = new HashMap<>();
+        activeClients = new HashMap<>();
         taskManager = new TaskManager();
-        remoteMethods = new IServerImpl();
-
+        remoteMethods = new IServerImpl(activeClients, taskManager);
         propManager = new PropertiesManager("server.config.properties", logHandler);
         LOG.addHandler(logHandler);
         this.commands = new ServerCommands(this);
@@ -102,12 +100,8 @@ public class Server implements IConsole {
         }
     }
 
-    public static TaskManager getTaskManager() {
-        return taskManager;
-    }
-
-    public static HashMap<String, Session> getActiveConnections() {
-        return activeConnections;
+    public HashMap<String, ActiveClient> getActiveClients() {
+        return activeClients;
     }
 
     private void checkFolders() {
@@ -224,7 +218,7 @@ public class Server implements IConsole {
                 checkFolders();
                 env = new Environment(numThreads);
                 sesAcceptor = env.newSessionAcceptor(port);
-                sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor));
+                sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor, taskManager));
                 LOG.log(Level.INFO, "Server is listening for incoming sessions on port {0}", port);
                 discoveryThread.startDiscovering();
             } catch (IOException e) {
@@ -238,10 +232,10 @@ public class Server implements IConsole {
             if (discoveryThread != null) {
                 discoveryThread.stopDiscovering();
             }
-            Set<String> clients = activeConnections.keySet();
+            Set<String> clients = activeClients.keySet();
             for (String client : clients) {
-                activeConnections.get(client).close();
-                activeConnections.remove(client);
+                activeClients.get(client).getSession().close();
+                activeClients.remove(client);
             }
             if (sesAcceptor != null) {
                 sesAcceptor.close();

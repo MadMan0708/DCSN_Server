@@ -22,10 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import org.cojen.dirmi.Pipe;
-import org.cojen.dirmi.Session;
 
 /**
  *
@@ -35,16 +33,28 @@ public class IServerImpl implements IServer {
 
     private TaskManager taskManager;
     private final int timerPeriodSec = 11;
-    private HashMap<String, Timer> clientTimers;
-    private HashMap<String, Boolean> clientsTimeout;
-    private HashMap<String, Session> activeConnections;
+    private HashMap<String, ActiveClient> activeClients;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
-    public IServerImpl() {
-        this.taskManager = Server.getTaskManager();
-        this.clientTimers = new HashMap<>();
-        this.clientsTimeout = new HashMap<>();
-        this.activeConnections = Server.getActiveConnections();
+    public IServerImpl(HashMap<String, ActiveClient> activeClients, TaskManager taskManager) {
+        this.taskManager = taskManager;
+        this.activeClients = activeClients;
+    }
+
+    public HashMap<String, ActiveClient> getActiveClients() {
+        return activeClients;
+    }
+
+    @Override
+    public void setClientsMemoryLimit(String clientID, int memory) throws RemoteException {
+        activeClients.get(clientID).setMemoryLimit(memory);
+        LOG.log(Level.INFO, "Memory limit on client {0} is now set to {1}m", new Object[]{clientID, memory});
+    }
+
+    @Override
+    public void setClientsCoresLimit(String clientID, int cores) throws RemoteException {
+        activeClients.get(clientID).setCoresLimit(cores);
+        LOG.log(Level.INFO, "Cores limit on client {0} is now set to {1}", new Object[]{clientID, cores});
     }
 
     @Override
@@ -76,25 +86,14 @@ public class IServerImpl implements IServer {
 
     @Override
     public boolean isConnected(String clientName) throws RemoteException {
-        if (activeConnections.containsKey(clientName)) {
+        if (activeClients.containsKey(clientName)) {
             return true;
         } else {
             return false;
         }
     }
 
-    /*    @Override
-     public EUserAddingState addClient(String client) throws RemoteException {
-     if (activeConnections.contains(client)) {
-     return EUserAddingState.EXIST;
-     } else {
-     this.activeConnections.add(client);
-     logger.log("Client " + client + " has been connected to the server");
-     sessionAcceptor.accept(new CustomSessionListener(this)); // starts listening for possible new session
-     return EUserAddingState.OK;
-     }
-     }
-     */
+  
     @Override
     public void setSessionClassLoaderDetails(String clientSessionID, ProjectUID projectUID) throws RemoteException {
         // taskManager.classManager.getClassLoader(clientSessionID).setProjectUID(projectUID);
@@ -224,20 +223,20 @@ public class IServerImpl implements IServer {
                 toCancel.add(ID);
             }
         }
-        clientsTimeout.put(clientID, Boolean.TRUE);
+        activeClients.get(clientID).setTimeout(Boolean.TRUE);
         return toCancel;
     }
 
     private void startClientTimer(final String clientID) {
         LOG.log(Level.INFO, "Timer for client {0} started", clientID);
         final Timer t = new Timer(clientID);
-        clientsTimeout.put(clientID, Boolean.TRUE);
+        activeClients.get(clientID).setTimeout(Boolean.TRUE);
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (clientsTimeout.get(clientID).equals(Boolean.TRUE)) {
+                if (activeClients.get(clientID).getTimeout().equals(Boolean.TRUE)) {
                     // vse ok, klient se ozval, znovu nastavuju timer
-                    clientsTimeout.put(clientID, Boolean.FALSE);
+                    activeClients.get(clientID).setTimeout(Boolean.FALSE);
                     LOG.log(Level.INFO, "Client {0} is active", clientID);
                 } else {
                     ArrayList<TaskID> tasks = taskManager.cancelTasksAssociation(clientID);
@@ -248,19 +247,18 @@ public class IServerImpl implements IServer {
                         }
                     }
                     stopClientTimer(clientID);
-                    activeConnections.remove(clientID);
-                    // znovu zarazeni uloh pocitanych timto klientem do seznamu in progress
+                    activeClients.remove(clientID);
                 }
             }
         }, 0, timerPeriodSec * 1000);
-        clientTimers.put(clientID, t);
+        activeClients.get(clientID).setTimer(t);
 
     }
 
     private void stopClientTimer(String clientID) {
-        Timer t = clientTimers.get(clientID);
+        Timer t = activeClients.get(clientID).getTimer();
         t.cancel();
-        clientTimers.remove(clientID);
-        clientsTimeout.remove(clientID);
+        activeClients.get(clientID).setTimeout(null);
+        activeClients.get(clientID).setTimer(null);
     }
 }

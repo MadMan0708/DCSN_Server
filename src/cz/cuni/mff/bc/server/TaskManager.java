@@ -180,16 +180,12 @@ public class TaskManager {
                 unassociateClientWithTask(clientID, taskID); // zrusi asociaci zpracovani
                 tasksInProgress.remove(taskID); // odstraneni ze seznamu InProgress
                 Project p = projectsAll.get(taskID.getProjectUID());
-                // for (Project p : projectsAll) {
-                // if (p.isDefinedBy(taskID.getClientName(), taskID.getProjectName())) {
                 p.addTaskAgain(taskID); // prida znovu ulohu do seznamu uncompleted v projectu
                 if (p.getState().equals(ProjectState.ACTIVE)) {
                     tasksPool.add(taskID); // pokud je stav projektu active, prida se uloha znovu do poolu
                     // pokud je cokoli jineho, neprida se do poolu
                 }
 
-                //  }
-                //  }
             }
         }
         return toPrint;
@@ -251,7 +247,7 @@ public class TaskManager {
         File[] dataFiles = dataFolder.listFiles();
         int numberOfTasks = 0;
         for (File file : dataFiles) {
-            Task task = new Task(project.getProjectName(), project.getClientName(), file.getName(), project.getPriority(),project.getCores(),project.getMemory(),project.getTime());
+            Task task = new Task(project.getProjectName(), project.getClientName(), file.getName(), project.getPriority(), project.getCores(), project.getMemory(), project.getTime());
             task.setClass(classManager.loadClass(task.getClientID(), task.getProjectUID()));
             task.loadData(FilesStructure.getTaskLoadDataPath(task.getUnicateID()));
             File output = new File(saveFolder, file.getName());
