@@ -41,6 +41,7 @@ public class Server implements IConsole {
     private int port;
     private ServerCommands commands;
     private DiscoveryThread discoveryThread;
+    private Strategies strategy;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     public Server() {
@@ -63,6 +64,21 @@ public class Server implements IConsole {
             setBaseDir(propManager.getProperty("basedir"));
         }
 
+        if (propManager.getProperty("strategy") == null) {
+            setDefaultStrategy();
+        } else {
+            switch (propManager.getProperty("strategy")) {
+                case "priority":
+                    setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
+                    break;
+                case "max-througput":
+                    setStrategy(Strategies.MAXIMAL_THROUGHPUT);
+                    break;
+                default:
+                    setDefaultStrategy();
+            }
+        }
+
         if (propManager.getProperty("port") == null) {
             setDefaultPort();
         } else {
@@ -80,6 +96,20 @@ public class Server implements IConsole {
 
     private void setDefaultPort() {
         setPort(1099);
+    }
+
+    private void setDefaultStrategy() {
+        setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
+    }
+
+    public void setStrategy(Strategies strategy) {
+        this.strategy = strategy;
+        propManager.setProperty("strategy", strategy.toString());
+        LOG.log(Level.INFO, "Server strategy has been set to: {0}", strategy.toString());
+    }
+
+    public String getStrategy() {
+        return strategy.toString();
     }
 
     public void setPort(int port) throws IllegalArgumentException {

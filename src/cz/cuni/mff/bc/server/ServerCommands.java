@@ -53,6 +53,38 @@ public class ServerCommands {
         }
     }
 
+    public void setStrategy(String[] params) {
+        if (checkParamNum(1, params)) {
+            boolean ok = false;
+            switch (params[0]) {
+                case "priority":
+                    ok = true;
+                    server.setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
+                    break;
+                case "max-througput":
+                    ok = true;
+                    server.setStrategy(Strategies.MAXIMAL_THROUGHPUT);
+                    break;
+            }
+            if (ok) {
+                LOG.log(Level.INFO, "Server strategy is set to: {0}", server.getStrategy());
+            } else {
+                LOG.log(Level.WARNING, "Strategy options are only: priority and max-throughput");
+            }
+        } else {
+            LOG.log(Level.INFO, "Expected parameters: 1");
+            LOG.log(Level.INFO, "1: Server strategy - priority or max-througput");
+        }
+    }
+
+    public void getStrategy(String[] params) {
+        if (checkParamNum(0, params)) {
+            LOG.log(Level.INFO, "Server strategy is set to: {0}", server.getStrategy());
+        } else {
+            LOG.log(Level.INFO, "Command has no parameters");
+        }
+    }
+
     public void start(String[] params) {
         if (checkParamNum(1, params)) {
             setPort(params);
@@ -69,6 +101,7 @@ public class ServerCommands {
         if (checkParamNum(0, params)) {
             getPort(params);
             getBaseDir(params);
+            getStrategy(params);
         } else {
             LOG.log(Level.INFO, "Command has no parameters");
         }
