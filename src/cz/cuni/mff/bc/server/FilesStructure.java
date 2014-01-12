@@ -74,15 +74,15 @@ public class FilesStructure {
     }
 
     public static Path getTaskSavePath(TaskID id) {
-        return new File(getCompleteDirInProject(id.getClientID(), id.getProjectID()), id.getTaskID()).toPath();
+        return new File(getCompleteDirInProject(id.getClientName(), id.getProjectName()), id.getTaskName()).toPath();
     }
 
     public static Path getTaskLoadPath(TaskID id) {
-        return new File(getReadyDirInProject(id.getClientID(), id.getProjectID()), id.getTaskID()).toPath();
+        return new File(getReadyDirInProject(id.getClientName(), id.getProjectName()), id.getTaskName()).toPath();
     }
 
     public static Path getTaskLoadDataPath(TaskID id) {
-        return new File(getTempDirInProject(id.getClientID(), id.getProjectID()), id.getTaskID()).toPath();
+        return new File(getTempDirInProject(id.getClientName(), id.getProjectName()), id.getTaskName()).toPath();
     }
 
     public static void createClientProjectDirs(String clientName, String projectName) {

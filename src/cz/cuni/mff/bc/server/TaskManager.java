@@ -59,7 +59,7 @@ public class TaskManager {
     public boolean clientInActiveComputation(String clientName) {
         Set<ProjectUID> projectsUIDs = projectsAll.keySet();
         for (ProjectUID projectUID : projectsUIDs) {
-            if (projectUID.getClientID().equals(clientName)) {
+            if (projectUID.getClientName().equals(clientName)) {
                 return true;
             }
         }
@@ -221,7 +221,7 @@ public class TaskManager {
 
     public Task getTask(String clientID, TaskID id) {
         File f = FilesStructure.getTaskLoadPath(id).toFile();
-        File jar = FilesStructure.getProjectJarFile(id.getClientID(), id.getProjectID());
+        File jar = FilesStructure.getProjectJarFile(id.getClientName(), id.getProjectName());
         try {
             classManager.getClassLoader(clientID).addNewUrl(jar.toURI().toURL());
             try (CustObjectInputStream ois = new CustObjectInputStream(new FileInputStream(f), classManager.getClassLoader(clientID))) {
@@ -248,7 +248,7 @@ public class TaskManager {
         int numberOfTasks = 0;
         for (File file : dataFiles) {
             Task task = new Task(project.getProjectName(), project.getClientName(), file.getName(), project.getPriority(), project.getCores(), project.getMemory(), project.getTime());
-            task.setClass(classManager.loadClass(task.getClientID(), task.getProjectUID()));
+            task.setClass(classManager.loadClass(task.getClientName(), task.getProjectUID()));
             task.loadData(FilesStructure.getTaskLoadDataPath(task.getUnicateID()));
             File output = new File(saveFolder, file.getName());
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(output))) {
@@ -453,9 +453,9 @@ public class TaskManager {
 
     public void removeDownloadedProject(ProjectUID uid) {
 
-        deleteProject(uid.getClientID(), uid.getProjectID());
+        deleteProject(uid.getClientName(), uid.getProjectName());
         projectsAll.remove(uid);
-        classManager.deleteCustomClassLoader(uid.getClientID());
+        classManager.deleteCustomClassLoader(uid.getClientName());
         projectsForDownload.remove(uid);
     }
 }

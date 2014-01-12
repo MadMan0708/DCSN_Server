@@ -5,9 +5,11 @@
 package cz.cuni.mff.bc.api.enums;
 
 /**
+ * Project states
  *
- * @author Aku
+ * @author Jakub Hava
  */
 public enum ProjectState {
-    ACTIVE,PAUSED,CANCELED,COMPLETED,READY_FOR_DOWNLOAD,PREPARING
+
+    ACTIVE, PAUSED, CANCELED, COMPLETED, READY_FOR_DOWNLOAD, PREPARING
 }

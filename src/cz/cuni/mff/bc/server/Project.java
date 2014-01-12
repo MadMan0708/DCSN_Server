@@ -77,7 +77,6 @@ public class Project implements Serializable {
         this.memory = memory;
     }
 
-  
     /**
      *
      * @param taskID task to be checked
@@ -240,7 +239,7 @@ public class Project implements Serializable {
     }
 
     public ProjectInfo getProjectInfo() {
-        return new ProjectInfo(projectName, clientName, tasksCompleted.size(), numberOfTask, state, priority);
+        return new ProjectInfo(projectName, clientName, tasksCompleted.size(), numberOfTask, state, priority, cores, memory, time);
     }
 
     @Override

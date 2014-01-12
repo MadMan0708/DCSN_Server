@@ -93,12 +93,6 @@ public class IServerImpl implements IServer {
         }
     }
 
-  
-    @Override
-    public void setSessionClassLoaderDetails(String clientSessionID, ProjectUID projectUID) throws RemoteException {
-        // taskManager.classManager.getClassLoader(clientSessionID).setProjectUID(projectUID);
-    }
-
     @Override
     public void saveCompletedTask(String clientID, Task task) throws RemoteException {
         if (!task.hasDataBeenSaved()) {
@@ -141,7 +135,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public Pipe downloadProjectJar(ProjectUID uid, Pipe pipe) throws RemoteException {
-        File input = FilesStructure.getProjectJarFile(uid.getClientID(), uid.getProjectID());
+        File input = FilesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName());
         try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(input))) {
             int n;
             byte[] buffer = new byte[8192];
@@ -211,12 +205,12 @@ public class IServerImpl implements IServer {
     }
 
     @Override
-    public void cancelTaskFromClient(String clientID, TaskID taskToCancel) throws RemoteException {
+    public void cancelTaskOnClient(String clientID, TaskID taskToCancel) throws RemoteException {
         taskManager.cancelTaskAssociation(clientID, taskToCancel);
     }
 
     @Override
-    public ArrayList<TaskID> calculatedTasks(String clientID, ArrayList<TaskID> tasks) throws RemoteException {
+    public ArrayList<TaskID> sendTasksInCalculation(String clientID, ArrayList<TaskID> tasks) throws RemoteException {
         ArrayList<TaskID> toCancel = new ArrayList<>();
         for (TaskID ID : tasks) {
             if (taskManager.isTaskCompleted(ID) && taskManager.isTaskInProgress(ID)) {

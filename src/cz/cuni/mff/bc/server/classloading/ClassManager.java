@@ -23,7 +23,7 @@ public class ClassManager {
 
     public Class<?> loadClass(String clientSessionID, ProjectUID uid) throws ClassNotFoundException, IOException {
         CustomCL cl = getClassLoader(clientSessionID);
-        File jar = FilesStructure.getProjectJarFile(uid.getClientID(), uid.getProjectID());
+        File jar = FilesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName());
         cl.addNewUrl(jar.toURI().toURL());
         String name = JarAPI.getAttributeFromManifest(jar.toPath(), "Main-Comp-Class");
         return cl.loadClass(name);
