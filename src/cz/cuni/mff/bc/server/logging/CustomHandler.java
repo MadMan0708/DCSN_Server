@@ -9,15 +9,28 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 /**
+ * Custom logging handler
  *
- * @author Jakub
+ * @author Jakub Hava
  */
 public class CustomHandler extends Handler {
 
     private ArrayList<ILogTarget> targets = new ArrayList<>();
 
+    /**
+     *Adds new logging target to the log handler
+     * @param target log target
+     */
     public void addLogTarget(ILogTarget target) {
         targets.add(target);
+    }
+
+    /**
+     *Deletes the logging target from the log handler
+     * @param target
+     */
+    public void deleteLogTarger(ILogTarget target) {
+        targets.remove(target);
     }
 
     @Override

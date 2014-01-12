@@ -10,7 +10,7 @@ import java.nio.file.Path;
 
 /**
  *
- * @author Jakub
+ * @author Jakub Hava
  */
 public class FilesStructure {
 

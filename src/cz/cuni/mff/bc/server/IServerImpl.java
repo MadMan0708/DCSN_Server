@@ -221,6 +221,11 @@ public class IServerImpl implements IServer {
         return toCancel;
     }
 
+    @Override
+    public void markProjectAsCorrupted(String clientName, String projectName) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     private void startClientTimer(final String clientID) {
         LOG.log(Level.INFO, "Timer for client {0} started", clientID);
         final Timer t = new Timer(clientID);

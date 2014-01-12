@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cuni.mff.bc.server.classloading;
+package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.server.misc.CustomClassLoader;
 import cz.cuni.mff.bc.api.main.JarAPI;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.server.FilesStructure;
@@ -19,10 +20,10 @@ import java.util.Map;
  */
 public class ClassManager {
 
-    private Map<String, CustomCL> loaderCache = Collections.synchronizedMap(new HashMap<String, CustomCL>());
+    private Map<String, CustomClassLoader> loaderCache = Collections.synchronizedMap(new HashMap<String, CustomClassLoader>());
 
     public Class<?> loadClass(String clientSessionID, ProjectUID uid) throws ClassNotFoundException, IOException {
-        CustomCL cl = getClassLoader(clientSessionID);
+        CustomClassLoader cl = getClassLoader(clientSessionID);
         File jar = FilesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName());
         cl.addNewUrl(jar.toURI().toURL());
         String name = JarAPI.getAttributeFromManifest(jar.toPath(), "Main-Comp-Class");
@@ -34,13 +35,13 @@ public class ClassManager {
         // insert new CustomClassLoader
         synchronized (loaderCache) {
             if (!loaderCache.containsKey(clientSessionID)) {
-                loaderCache.put(clientSessionID, new CustomCL());
+                loaderCache.put(clientSessionID, new CustomClassLoader());
             }
 
         }
     }
 
-    public CustomCL getClassLoader(String clientSessionID) {
+    public CustomClassLoader getClassLoader(String clientSessionID) {
         setCustomClassLoader(clientSessionID);
         // it is surely there, becouse setCustomClassLoader possible inserted new ClassLoader
         return loaderCache.get(clientSessionID);

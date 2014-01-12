@@ -4,16 +4,13 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.server.classloading.ClassManager;
 import cz.cuni.mff.bc.api.main.CustomIO;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.api.main.Task;
 import cz.cuni.mff.bc.api.enums.ProjectState;
 import cz.cuni.mff.bc.api.main.ProjectInfo;
-import cz.cuni.mff.bc.server.classloading.CustObjectInputStream;
-import cz.cuni.mff.bc.server.exceptions.ExtractionException;
-import cz.cuni.mff.bc.server.exceptions.NotSupportedArchiveException;
+import cz.cuni.mff.bc.server.misc.CustomObjectInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -54,6 +51,7 @@ public class TaskManager {
     private ConcurrentHashMap<ProjectUID, Project> projectsPreparing = new ConcurrentHashMap<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsCompleted = new ConcurrentHashMap<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsForDownload = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<ProjectUID, Project> projectsCorrupted = new ConcurrentHashMap<>();
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     public boolean clientInActiveComputation(String clientName) {
@@ -224,7 +222,7 @@ public class TaskManager {
         File jar = FilesStructure.getProjectJarFile(id.getClientName(), id.getProjectName());
         try {
             classManager.getClassLoader(clientID).addNewUrl(jar.toURI().toURL());
-            try (CustObjectInputStream ois = new CustObjectInputStream(new FileInputStream(f), classManager.getClassLoader(clientID))) {
+            try (CustomObjectInputStream ois = new CustomObjectInputStream(new FileInputStream(f), classManager.getClassLoader(clientID))) {
                 Task task = (Task) ois.readObject();
                 associateClientWithTask(clientID, id);
                 tasksBeforeCalc.remove(id);
@@ -270,7 +268,7 @@ public class TaskManager {
         return project;
     }
 
-    private void moveJarAndExtractTasks(Project project) throws ExtractionException, NotSupportedArchiveException, IOException {
+    private void moveJarAndExtractTasks(Project project) throws IOException {
         File inUploadDir = FilesStructure.getClientUploadedDir(project.getClientName(), project.getProjectName());
         File[] files = inUploadDir.listFiles();
         for (File file : files) {
@@ -316,9 +314,6 @@ public class TaskManager {
                     createTasks(project);
                     changePreparingToActive(project);
                     addTasksToPool(project.getClientName(), project.getProjectName());
-                } catch (ExtractionException | NotSupportedArchiveException e) {
-                    LOG.log(Level.WARNING, e.getMessage());
-                    undoProject(project);
                 } catch (ClassNotFoundException e) {
                     LOG.log(Level.WARNING, "ClassNotFoundException during task creation : {0}", e.toString());
                     undoProject(project);

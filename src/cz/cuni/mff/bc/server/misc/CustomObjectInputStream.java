@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cuni.mff.bc.server.classloading;
+package cz.cuni.mff.bc.server.misc;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,14 +11,23 @@ import java.io.ObjectStreamClass;
 import java.lang.reflect.Proxy;
 
 /**
+ * Custom object input stream with custom class loader
  *
- * @author Jakub
+ * @author Jakub Hava
  */
 public class CustomObjectInputStream extends ObjectInputStream {
 
-    CustomCL cl;
+    private CustomClassLoader cl;
 
-    public CustomObjectInputStream(InputStream in, CustomCL cl) throws IOException {
+    /**
+     * Constructor
+     *
+     * @param in input stream from the file where the serialised object is
+     * stored
+     * @param cl custom class loader
+     * @throws IOException
+     */
+    public CustomObjectInputStream(InputStream in, CustomClassLoader cl) throws IOException {
         super(in);
         this.cl = cl;
     }
