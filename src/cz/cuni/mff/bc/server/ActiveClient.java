@@ -9,7 +9,7 @@ import org.cojen.dirmi.Session;
 
 /**
  *
- * @author UP711643
+ * @author Jakub Hava
  */
 public class ActiveClient {
 
