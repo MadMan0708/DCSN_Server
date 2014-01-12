@@ -342,7 +342,6 @@ public class TaskManager {
         if (isProjectInManager(clientID, projectID)) {
 
             Project project = projectsAll.get(new ProjectUID(clientID, projectID));
-            project.setState(ProjectState.CANCELED);
             projectsAll.remove(project.getProjectUID());
             projectsCompleted.remove(project.getProjectUID());
             projectsActive.remove(project.getProjectUID());
