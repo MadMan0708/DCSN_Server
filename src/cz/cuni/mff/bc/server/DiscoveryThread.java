@@ -11,8 +11,10 @@ import java.net.InetAddress;
 import java.util.logging.Level;
 
 /**
+ * Class which waits for incoming broadcast client's connection requests and
+ * answers them
  *
- * @author Jakub
+ * @author Jakub Hava
  */
 public class DiscoveryThread extends Thread {
 
@@ -20,6 +22,11 @@ public class DiscoveryThread extends Thread {
     private boolean discovering = true;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
+    /**
+     * Constructor
+     *
+     * @param port port on which server is running
+     */
     public DiscoveryThread(int port) {
         this.port = port;
     }
@@ -31,11 +38,10 @@ public class DiscoveryThread extends Thread {
             socket.setBroadcast(true);
             while (discovering) {
                 LOG.log(Level.INFO, "Ready to receive broadcast packets.");
-
                 byte[] buffer = new byte[15000];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
-               
+
                 LOG.log(Level.INFO, "Discovery packet received from: {0}", packet.getAddress().getHostAddress());
                 LOG.log(Level.INFO, "Packet received; data: {0}", new String(packet.getData()));
 
@@ -43,11 +49,9 @@ public class DiscoveryThread extends Thread {
                 String message = new String(packet.getData()).trim();
                 if (message.equals("DISCOVER_SERVER_REQUEST")) {
                     byte[] sendData = "DISCOVER_SERVER_RESPONSE".getBytes();
-
                     //Send a response
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                     socket.send(sendPacket);
-
                     LOG.log(Level.INFO, "Sent packet to: {0}", sendPacket.getAddress().getHostAddress());
                 }
             }
@@ -56,10 +60,16 @@ public class DiscoveryThread extends Thread {
         }
     }
 
+    /**
+     * Stops listening for incoming broadcast packets
+     */
     public void stopDiscovering() {
         discovering = false;
     }
 
+    /**
+     * Starts listening for incoming broadcast packets
+     */
     public void startDiscovering() {
         discovering = true;
         this.start();

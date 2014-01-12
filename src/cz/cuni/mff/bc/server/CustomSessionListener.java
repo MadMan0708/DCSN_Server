@@ -13,8 +13,9 @@ import org.cojen.dirmi.SessionAcceptor;
 import org.cojen.dirmi.SessionCloseListener;
 
 /**
+ * Session listener
  *
- * @author Jakub
+ * @author Jakub Hava
  */
 public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
 
@@ -24,6 +25,13 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
     private SessionAcceptor sesAcceptor;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
+    /**
+     * Constructor
+     *
+     * @param remoteMethods implementation of remote interface
+     * @param sesAcceptor session acceptor
+     * @param taskManager task manager
+     */
     public CustomSessionListener(IServerImpl remoteMethods, SessionAcceptor sesAcceptor, TaskManager taskManager) {
         this.taskManager = taskManager;
         this.remoteMethods = remoteMethods;
@@ -33,7 +41,7 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
 
     @Override
     public synchronized void established(Session session) throws IOException {
-        sesAcceptor.accept(this); // starts listening for possible new session on same session listener
+        sesAcceptor.accept(this); // starts listening for possible new session on the same session listener
         final String clientID = (String) session.receive();
         if (!activeClients.containsKey(clientID)) {
             ActiveClient activeClient = new ActiveClient(clientID, session);
@@ -55,7 +63,6 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
                     } catch (IOException e) {
                         LOG.log(Level.WARNING, "Closing session; Cause: {0}; {1}", new Object[]{cause.name(), e.getMessage()});
                     }
-
                 }
             });
 
@@ -66,12 +73,11 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
 
     @Override
     public void establishFailed(IOException cause) throws IOException {
-        //TODO
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void acceptFailed(IOException cause) throws IOException {
-        // closing acception of new clients
+        // it's not happening
     }
 }
