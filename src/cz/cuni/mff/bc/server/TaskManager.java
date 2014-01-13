@@ -40,6 +40,7 @@ public class TaskManager {
 
     private ExecutorService executor;
     private FilesStructure filesStructure;
+    private HashMap<String, ActiveClient> activeClients;
     private ClassManager classManager;
     private final int inititalCapacity = 1000;
     private Comparator<TaskID> comp;
@@ -61,8 +62,9 @@ public class TaskManager {
      *
      * @param filesStructure files structure
      */
-    public TaskManager(FilesStructure filesStructure) {
+    public TaskManager(FilesStructure filesStructure, HashMap<String, ActiveClient> activeClients) {
         this.filesStructure = filesStructure;
+        this.activeClients = activeClients;
         this.classManager = new ClassManager(filesStructure);
         this.executor = Executors.newCachedThreadPool();
         comp = new Comparator<TaskID>() {

@@ -47,7 +47,7 @@ public class IServerImpl implements IServer {
     public IServerImpl(HashMap<String, ActiveClient> activeClients, FilesStructure filesStructure) {
         this.activeClients = activeClients;
         this.filesStructure = filesStructure;
-        this.taskManager = new TaskManager(filesStructure);
+        this.taskManager = new TaskManager(filesStructure, activeClients);
     }
 
     /**
