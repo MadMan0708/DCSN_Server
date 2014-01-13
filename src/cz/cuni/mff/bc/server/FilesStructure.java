@@ -17,6 +17,16 @@ public class FilesStructure {
 
     private static String jarFilesName = "project";
     private static String dataFilesName = "data";
+    private ServerParams serverParams;
+
+    /**
+     * Constructor
+     *
+     * @param serverParams server parameters
+     */
+    public FilesStructure(ServerParams serverParams) {
+        this.serverParams = serverParams;
+    }
 
     /**
      *
@@ -51,19 +61,21 @@ public class FilesStructure {
     }
 
     /**
+     * Gets projects directory
      *
      * @return projects directory
      */
-    public static File getProjectsDir() {
-        return new File(Server.getProjectsDir());
+    public File getProjectsDir() {
+        return new File(serverParams.getBaseDir() + File.separator + "Projects");
     }
 
     /**
+     * Gets uploaded directory
      *
      * @return uploaded directory
      */
-    public static File getUploadedDir() {
-        return new File(Server.getUploadedDir());
+    public File getUploadedDir() {
+        return new File(serverParams.getBaseDir() + File.separator + "Uploaded");
     }
 
     /**
@@ -71,8 +83,8 @@ public class FilesStructure {
      * @param clientName client's name
      * @return client's directory
      */
-    public static File getClientDir(String clientName) {
-        return new File(Server.getProjectsDir(), clientName);
+    public File getClientDir(String clientName) {
+        return new File(getProjectsDir(), clientName);
     }
 
     /**
@@ -81,7 +93,7 @@ public class FilesStructure {
      * @param projectName project name
      * @return project directory inside client's directory
      */
-    public static File getClientProjectsDir(String clientName, String projectName) {
+    public File getClientProjectsDir(String clientName, String projectName) {
         return new File(getClientDir(clientName), projectName);
     }
 
@@ -92,7 +104,7 @@ public class FilesStructure {
      * @return complete directory in the project directory inside client's
      * directory
      */
-    public static File getCompleteDirInProject(String clientName, String projectName) {
+    public File getCompleteDirInProject(String clientName, String projectName) {
         return new File(getClientProjectsDir(clientName, projectName), "complete");
     }
 
@@ -103,7 +115,7 @@ public class FilesStructure {
      * @return ready directory in the project directory inside client's
      * directory
      */
-    public static File getReadyDirInProject(String clientName, String projectName) {
+    public File getReadyDirInProject(String clientName, String projectName) {
         return new File(getClientProjectsDir(clientName, projectName), "ready");
     }
 
@@ -114,7 +126,7 @@ public class FilesStructure {
      * @return temp task directory in the project directory inside client's
      * directory
      */
-    public static File getTempDirInProject(String clientName, String projectName) {
+    public File getTempDirInProject(String clientName, String projectName) {
         return new File(getClientProjectsDir(clientName, projectName), "temp");
     }
 
@@ -124,7 +136,7 @@ public class FilesStructure {
      * @param projectName project name
      * @return client's directory in uploaded directory
      */
-    public static File getClientUploadedDir(String clientName, String projectName) {
+    public File getClientUploadedDir(String clientName, String projectName) {
         return new File(getUploadedDir() + File.separator + clientName + "_" + projectName + File.separator);
     }
 
@@ -134,7 +146,7 @@ public class FilesStructure {
      * @param projectName project name
      * @return project jar file
      */
-    public static File getProjectJarFile(String clientName, String projectName) {
+    public File getProjectJarFile(String clientName, String projectName) {
         return new File(getClientProjectsDir(clientName, projectName), dataFilesName + ".jar");
     }
 
@@ -144,7 +156,7 @@ public class FilesStructure {
      * @param projectName project name
      * @return archive with packed data after the calculation finished
      */
-    public static File getCalculatedDataFile(String clientName, String projectName) {
+    public File getCalculatedDataFile(String clientName, String projectName) {
         return new File(getClientProjectsDir(clientName, projectName), dataFilesName + "_completed.zip");
     }
 
@@ -154,7 +166,7 @@ public class FilesStructure {
      * @param id unique task id
      * @return path to the task in complete directory
      */
-    public static Path getTaskSavePath(TaskID id) {
+    public Path getTaskSavePath(TaskID id) {
         return new File(getCompleteDirInProject(id.getClientName(), id.getProjectName()), id.getTaskName()).toPath();
     }
 
@@ -164,7 +176,7 @@ public class FilesStructure {
      * @param id unique task id
      * @return path to the task in ready directory
      */
-    public static Path getTaskLoadPath(TaskID id) {
+    public Path getTaskLoadPath(TaskID id) {
         return new File(getReadyDirInProject(id.getClientName(), id.getProjectName()), id.getTaskName()).toPath();
     }
 
@@ -174,7 +186,7 @@ public class FilesStructure {
      * @param id unique task id
      * @return path to the task in temp directory
      */
-    public static Path getTaskLoadDataPath(TaskID id) {
+    public Path getTaskLoadDataPath(TaskID id) {
         return new File(getTempDirInProject(id.getClientName(), id.getProjectName()), id.getTaskName()).toPath();
     }
 
@@ -185,7 +197,7 @@ public class FilesStructure {
      * @param clientName client's name
      * @param projectName project name
      */
-    public static void createClientProjectDirs(String clientName, String projectName) {
+    public void createClientProjectDirs(String clientName, String projectName) {
         //creating user folder
         File clientDir = getClientDir(clientName);
         if (!clientDir.exists()) {

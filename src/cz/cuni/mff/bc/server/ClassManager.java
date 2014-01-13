@@ -21,6 +21,16 @@ import java.util.Map;
 public class ClassManager {
 
     private Map<String, CustomClassLoader> loaderCache = Collections.synchronizedMap(new HashMap<String, CustomClassLoader>());
+    private FilesStructure filesStructure;
+
+    /**
+     * Constructor
+     *
+     * @param filesStructure files structure
+     */
+    public ClassManager(FilesStructure filesStructure) {
+        this.filesStructure = filesStructure;
+    }
 
     /**
      * Loads class
@@ -33,7 +43,7 @@ public class ClassManager {
      */
     public Class<?> loadClass(String clientSessionID, ProjectUID uid) throws ClassNotFoundException, IOException {
         CustomClassLoader cl = getClassLoader(clientSessionID);
-        File jar = FilesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName());
+        File jar = filesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName());
         cl.addNewUrl(jar.toURI().toURL());
         String name = JarAPI.getAttributeFromManifest(jar.toPath(), "Main-Comp-Class");
         return cl.loadClass(name);
@@ -76,6 +86,5 @@ public class ClassManager {
         if (loaderCache.containsKey(clientSessionID)) {
             loaderCache.remove(clientSessionID);
         }
-
     }
 }

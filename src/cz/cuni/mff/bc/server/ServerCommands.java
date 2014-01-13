@@ -8,22 +8,41 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Contains console commands
  *
- * @author UP711643
+ * @author Jakub Hava
  */
 public class ServerCommands {
 
-    private static final Logger LOG = Logger.getLogger(Server.class.getName());
     private Server server;
+    private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
+    /**
+     * Constructor
+     *
+     * @param server server
+     */
     public ServerCommands(Server server) {
         this.server = server;
     }
 
+    /**
+     * Splits the parameters into the array
+     *
+     * @param params string of parameters
+     * @return parameters split in the array
+     */
     public static String[] parseCommand(String params) {
         return params.split("\\s+");
     }
 
+    /**
+     * Checks if the number of parameters is correct
+     *
+     * @param expected expected number of parameters
+     * @param params array of parameters
+     * @return true if number of parameters is correct, false otherwise
+     */
     public static boolean checkParamNum(int expected, String[] params) {
         if (expected == params.length) {
             return true;
@@ -32,10 +51,15 @@ public class ServerCommands {
         }
     }
 
+    /**
+     * Sets the port
+     *
+     * @param params array of parameters
+     */
     public void setPort(String[] params) {
         if (checkParamNum(1, params)) {
             try {
-                server.setPort(Integer.parseInt(params[0]));
+                server.getServerParams().setPort(Integer.parseInt(params[0]));
             } catch (IllegalArgumentException e) {
                 LOG.log(Level.WARNING, "Port number has to be integer between 1 - 65535");
             }
@@ -45,29 +69,39 @@ public class ServerCommands {
         }
     }
 
+    /**
+     * Gets server port
+     *
+     * @param params array of parameters
+     */
     public void getPort(String[] params) {
         if (checkParamNum(0, params)) {
-            LOG.log(Level.INFO, "Server port is set to : {0}", server.getPort());
+            LOG.log(Level.INFO, "Server port is set to : {0}", server.getServerParams().getPort());
         } else {
             LOG.log(Level.INFO, "Command has no parameters");
         }
     }
 
+    /**
+     * Sets the strategy
+     *
+     * @param params array of parameters
+     */
     public void setStrategy(String[] params) {
         if (checkParamNum(1, params)) {
             boolean ok = false;
             switch (params[0]) {
                 case "priority":
                     ok = true;
-                    server.setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
+                    server.getServerParams().setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
                     break;
                 case "max-througput":
                     ok = true;
-                    server.setStrategy(Strategies.MAXIMAL_THROUGHPUT);
+                    server.getServerParams().setStrategy(Strategies.MAXIMAL_THROUGHPUT);
                     break;
             }
             if (ok) {
-                LOG.log(Level.INFO, "Server strategy is set to: {0}", server.getStrategy());
+                LOG.log(Level.INFO, "Server strategy is set to: {0}", server.getServerParams().getStrategy());
             } else {
                 LOG.log(Level.WARNING, "Strategy options are only: priority and max-throughput");
             }
@@ -77,14 +111,66 @@ public class ServerCommands {
         }
     }
 
+    /**
+     * Gets the strategy
+     *
+     * @param params array of parameters
+     */
     public void getStrategy(String[] params) {
         if (checkParamNum(0, params)) {
-            LOG.log(Level.INFO, "Server strategy is set to: {0}", server.getStrategy());
+            LOG.log(Level.INFO, "Server strategy is set to: {0}", server.getServerParams().getStrategy());
         } else {
             LOG.log(Level.INFO, "Command has no parameters");
         }
     }
 
+    /**
+     * Prints information about server
+     *
+     * @param params array of parameters
+     */
+    public void getInfo(String[] params) {
+        if (checkParamNum(0, params)) {
+            getPort(params);
+            getBaseDir(params);
+            getStrategy(params);
+        } else {
+            LOG.log(Level.INFO, "Command has no parameters");
+        }
+    }
+
+    /**
+     * Sets the base directory
+     *
+     * @param params array of parameters
+     */
+    public void setBaseDir(String[] params) {
+        if (checkParamNum(1, params)) {
+            server.getServerParams().setBaseDir(params[0]);
+        } else {
+            LOG.log(Level.INFO, "Expected parameters: 1");
+            LOG.log(Level.INFO, "1: new base dir");
+        }
+    }
+
+    /**
+     * Gets the base directory
+     *
+     * @param params array of parameters
+     */
+    public void getBaseDir(String[] params) {
+        if (checkParamNum(0, params)) {
+            LOG.log(Level.INFO, "Base dir is set to : {0}", server.getServerParams().getBaseDir());
+        } else {
+            LOG.log(Level.INFO, "Command has no parameters");
+        }
+    }
+
+    /**
+     * Starts listening for incoming sessions
+     *
+     * @param params array of parameters
+     */
     public void start(String[] params) {
         if (checkParamNum(1, params)) {
             setPort(params);
@@ -97,33 +183,11 @@ public class ServerCommands {
         }
     }
 
-    public void getInfo(String[] params) {
-        if (checkParamNum(0, params)) {
-            getPort(params);
-            getBaseDir(params);
-            getStrategy(params);
-        } else {
-            LOG.log(Level.INFO, "Command has no parameters");
-        }
-    }
-
-    public void setBaseDir(String[] params) {
-        if (checkParamNum(1, params)) {
-            server.setBaseDir(params[0]);
-        } else {
-            LOG.log(Level.INFO, "Expected parameters: 1");
-            LOG.log(Level.INFO, "1: new base dir");
-        }
-    }
-
-    public void getBaseDir(String[] params) {
-        if (checkParamNum(0, params)) {
-            LOG.log(Level.INFO, "Base dir is set to : {0}", server.getBaseDir());
-        } else {
-            LOG.log(Level.INFO, "Command has no parameters");
-        }
-    }
-
+    /**
+     * Stops listening for incoming sessions
+     *
+     * @param params array of parameters
+     */
     public void stop(String[] params) {
         if (checkParamNum(0, params)) {
             server.stopListening();
@@ -132,6 +196,11 @@ public class ServerCommands {
         }
     }
 
+    /**
+     * Exits the server
+     *
+     * @param params array of parameters
+     */
     public void exit(String[] params) {
         if (checkParamNum(0, params)) {
             server.exitServer();

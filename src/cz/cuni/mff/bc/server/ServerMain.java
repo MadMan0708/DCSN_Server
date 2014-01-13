@@ -5,32 +5,34 @@
 package cz.cuni.mff.bc.server;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 /**
+ * Main entry point of the server side
  *
- * @author Aku
+ * @author Jakub Hava
  */
 public class ServerMain {
 
     /**
+     * Main method
+     *
      * @param args the command line arguments
+     * @throws RemoteException
      */
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         final Server server = new Server();
-        
+
         switch (args.length) {
             case 0:
                 server.startGUIConsole();
                 server.startClassicConsole();
-                server.initialize();
+                server.initialise();
                 break;
             case 1:
                 if (args[0].equals("nogui")) {
                     server.startClassicConsole();
-                    server.initialize();
-                } 
-                else{
+                    server.initialise();
+                } else {
                     System.err.println("Incorrect parameter");
                 }
                 break;
@@ -38,6 +40,5 @@ public class ServerMain {
                 System.err.println("Wrong number of parameters");
                 break;
         }
-        
     }
 }

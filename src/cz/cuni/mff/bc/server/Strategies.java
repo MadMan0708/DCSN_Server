@@ -5,9 +5,18 @@
 package cz.cuni.mff.bc.server;
 
 /**
+ * Server strategies
  *
  * @author Jakub Hava
  */
 public enum Strategies {
-    HIGHEST_PRIORITY_FIRST,MAXIMAL_THROUGHPUT
+
+    /**
+     * Task with highest priority goes first
+     */
+    HIGHEST_PRIORITY_FIRST,
+    /**
+     * Plan is optimalised for maximal throughput
+     */
+    MAXIMAL_THROUGHPUT
 }

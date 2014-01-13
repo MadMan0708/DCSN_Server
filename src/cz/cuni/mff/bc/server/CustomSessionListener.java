@@ -30,11 +30,10 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
      *
      * @param remoteMethods implementation of remote interface
      * @param sesAcceptor session acceptor
-     * @param taskManager task manager
      */
-    public CustomSessionListener(IServerImpl remoteMethods, SessionAcceptor sesAcceptor, TaskManager taskManager) {
-        this.taskManager = taskManager;
+    public CustomSessionListener(IServerImpl remoteMethods, SessionAcceptor sesAcceptor) {
         this.remoteMethods = remoteMethods;
+        this.taskManager = remoteMethods.getTaskManager();
         this.activeClients = remoteMethods.getActiveClients();
         this.sesAcceptor = sesAcceptor;
     }
@@ -46,15 +45,15 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
         if (!activeClients.containsKey(clientID)) {
             ActiveClient activeClient = new ActiveClient(clientID, session);
             activeClients.put(clientID, activeClient);
-            taskManager.classManager.setCustomClassLoader(clientID);
-            session.setClassLoader(taskManager.classManager.getClassLoader(clientID));
+            taskManager.getClassManager().setCustomClassLoader(clientID);
+            session.setClassLoader(taskManager.getClassManager().getClassLoader(clientID));
             session.send(Boolean.TRUE);
             session.send(remoteMethods);
             LOG.log(Level.INFO, "Client {0} has been connected to the server", clientID);
             session.addCloseListener(new SessionCloseListener() {
                 @Override
                 public void closed(Link sessionLink, SessionCloseListener.Cause cause) {
-                    taskManager.classManager.deleteCustomClassLoader(clientID);
+                    taskManager.getClassManager().deleteCustomClassLoader(clientID);
                     try {
                         activeClients.get(clientID).getSession().close();
                         activeClients.remove(clientID);

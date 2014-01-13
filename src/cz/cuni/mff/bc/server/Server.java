@@ -6,7 +6,6 @@ package cz.cuni.mff.bc.server;
 
 import cz.cuni.mff.bc.server.misc.GConsole;
 import cz.cuni.mff.bc.server.misc.IConsole;
-import cz.cuni.mff.bc.server.misc.PropertiesManager;
 import cz.cuni.mff.bc.server.logging.CustomFormater;
 import cz.cuni.mff.bc.server.logging.CustomHandler;
 import cz.cuni.mff.bc.server.logging.FileLogger;
@@ -24,159 +23,117 @@ import org.cojen.dirmi.Environment;
 import org.cojen.dirmi.SessionAcceptor;
 
 /**
+ * Main server class, handles basic server behaviour
  *
- * @author Aku
+ * @author Jakub Hava
  */
 public class Server implements IConsole {
 
-    private String basedir;
-    private static PropertiesManager propManager;
     private static final int numThreads = 100;
     private Environment env;
     private SessionAcceptor sesAcceptor;
     private HashMap<String, ActiveClient> activeClients;
-    private TaskManager taskManager;
     private IServerImpl remoteMethods;
     private CustomHandler logHandler;
-    private int port;
+    private ServerParams serverParams;
     private ServerCommands commands;
     private DiscoveryThread discoveryThread;
-    private Strategies strategy;
+    private FilesStructure filesStructure;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
+    /**
+     * Constructor
+     */
     public Server() {
         logHandler = new CustomHandler();
         logHandler.setFormatter(new CustomFormater());
         logHandler.setLevel(Level.ALL);
         logHandler.addLogTarget(new FileLogger(new File("server.log")));
-        activeClients = new HashMap<>();
-        taskManager = new TaskManager();
-        remoteMethods = new IServerImpl(activeClients, taskManager);
-        propManager = new PropertiesManager("server.config.properties", logHandler);
         LOG.addHandler(logHandler);
-        this.commands = new ServerCommands(this);
+
+        activeClients = new HashMap<>();
+        serverParams = new ServerParams(logHandler);
+        filesStructure = new FilesStructure(serverParams);
+        remoteMethods = new IServerImpl(activeClients, filesStructure);
+        commands = new ServerCommands(this);
     }
 
-    public void initialize() {
-        if (propManager.getProperty("basedir") == null) {
-            setBaseDir(System.getProperty("user.home") + File.separator + "DCSN_base");
-        } else {
-            setBaseDir(propManager.getProperty("basedir"));
-        }
-
-        if (propManager.getProperty("strategy") == null) {
-            setDefaultStrategy();
-        } else {
-            switch (propManager.getProperty("strategy")) {
-                case "priority":
-                    setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
-                    break;
-                case "max-througput":
-                    setStrategy(Strategies.MAXIMAL_THROUGHPUT);
-                    break;
-                default:
-                    setDefaultStrategy();
-            }
-        }
-
-        if (propManager.getProperty("port") == null) {
-            setDefaultPort();
-        } else {
-            int tmpPort = Integer.parseInt(propManager.getProperty("port"));
-            try {
-                setPort(tmpPort);
-            } catch (IllegalArgumentException e) {
-                LOG.log(Level.WARNING, "INITIALIZING: Port number has to be between 1 - 65535");
-                setDefaultPort();
-            }
-        }
-        discoveryThread = new DiscoveryThread(port);
+    /**
+     * Initialises server
+     */
+    public void initialise() {
+        serverParams.initialiseParameters();
+        discoveryThread = new DiscoveryThread(serverParams.getPort());
         startListening();
     }
 
-    private void setDefaultPort() {
-        setPort(1099);
+    /**
+     * Gets server parameters
+     *
+     * @return server parameters
+     */
+    public ServerParams getServerParams() {
+        return serverParams;
     }
 
-    private void setDefaultStrategy() {
-        setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
-    }
-
-    public void setStrategy(Strategies strategy) {
-        this.strategy = strategy;
-        propManager.setProperty("strategy", strategy.toString());
-        LOG.log(Level.INFO, "Server strategy has been set to: {0}", strategy.toString());
-    }
-
-    public String getStrategy() {
-        return strategy.toString();
-    }
-
-    public void setPort(int port) throws IllegalArgumentException {
-        if (validatePort(port)) {
-            this.port = port;
-            LOG.log(Level.INFO, "Server port is now set to: {0}", port);
-            propManager.setProperty("port", port + "");
-        } else {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private boolean validatePort(int port) {
-        if (port >= 1 && port <= 65535) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    /**
+     * Gets active clients
+     *
+     * @return list with active clients
+     */
     public HashMap<String, ActiveClient> getActiveClients() {
         return activeClients;
     }
 
+    /*
+     * Checks if all basic server directories exist
+     */
     private void checkFolders() {
-        File base = new File(getBaseDir());
+        File base = new File(serverParams.getBaseDir());
         if (base.exists() && base.isDirectory()) {
         } else {
             base.mkdir();
         }
 
-        File uploaded = new File(getUploadedDir());
+        File uploaded = filesStructure.getUploadedDir();
         if (uploaded.exists() && uploaded.isDirectory()) {
         } else {
             uploaded.mkdir();
         }
 
-        File projects = new File(getProjectsDir());
+        File projects = filesStructure.getProjectsDir();
         if (projects.exists() && projects.isDirectory()) {
         } else {
             projects.mkdir();
         }
-
-    }
-
-    public static String getUploadedDir() {
-        return propManager.getProperty("basedir") + File.separator + "Uploaded";
-    }
-
-    public static String getProjectsDir() {
-        return propManager.getProperty("basedir") + File.separator + "Projects";
-    }
-
-    public String getBaseDir() {
-        return this.basedir;
     }
 
     @Override
-    public void startGUIConsole() {
-        GConsole con = new GConsole(this, "server", new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                exitServer();
+    public void proceedCommand(String command) {
+        String[] cmd = ServerCommands.parseCommand(command);
+        String[] params = Arrays.copyOfRange(cmd, 1, cmd.length);
+        try {
+            // don't want to execute functions which aren't real console commands
+            switch (command) {
+                case "ServerCommands":
+                    ;
+                case "parseCommand":
+                    ;
+                case "checkParamNum":
+                    throw new NoSuchMethodException();
             }
-        });
-        con.startConsole();
-        logHandler.addLogTarget(con);
+            Class<?> c = Class.forName("cz.cuni.mff.bc.server.ServerCommands");
+            Method method = c.getMethod(cmd[0], new Class[]{String[].class});
+            method.invoke(commands, new Object[]{params});
+        } catch (ClassNotFoundException e) {
+            // will be never thrown
+        } catch (IllegalAccessException e) {
+        } catch (IllegalArgumentException e) {
+        } catch (InvocationTargetException e) {
+        } catch (NoSuchMethodException e) {
+            LOG.log(Level.WARNING, "No such command");
+        } catch (SecurityException e) {
+        }
     }
 
     @Override
@@ -196,60 +153,31 @@ public class Server implements IConsole {
         }.start();
     }
 
-    public boolean setBaseDir(String dir) {
-        File f = new File(dir);
-        if (f.exists() && f.isDirectory()) {
-            basedir = f.getAbsolutePath();
-            LOG.log(Level.INFO, "Basedir is now set to: {0}", basedir);
-            propManager.setProperty("basedir", basedir);
-            return true;
-        } else {
-            if (f.mkdirs()) {
-                basedir = f.getAbsolutePath();
-                LOG.log(Level.INFO, "Basedir is now set to: {0}", basedir);
-                propManager.setProperty("basedir", basedir);
-                return true;
-            } else {
-                LOG.log(Level.WARNING, "Path {0} is not correct path", dir);
-                return false;
-            }
-        }
-    }
-
-    public int getPort() {
-        return this.port;
-    }
-
     @Override
-    public void proceedCommand(String command) {
-        String[] cmd = ServerCommands.parseCommand(command);
-        String[] params = Arrays.copyOfRange(cmd, 1, cmd.length);
-        try {
-            Class<?> c = Class.forName("cz.cuni.mff.bc.server.ServerCommands");
-            Method method = c.getMethod(cmd[0], new Class[]{String[].class});
-            method.invoke(commands, new Object[]{params});
-        } catch (ClassNotFoundException e) {
-            // will be never thrown
-        } catch (IllegalAccessException e) {
-        } catch (IllegalArgumentException e) {
-        } catch (InvocationTargetException e) {
-        } catch (NoSuchMethodException e) {
-            LOG.log(Level.WARNING, "No such command");
-        } catch (SecurityException e) {
-        }
-
+    public void startGUIConsole() {
+        GConsole con = new GConsole(this, "server", new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                exitServer();
+            }
+        });
+        con.startConsole();
+        logHandler.addLogTarget(con);
     }
 
+    /**
+     * Server starts listening for incoming sessions
+     */
     public void startListening() {
-        if (basedir == null) {
+        if (serverParams.getBaseDir() == null) {
             LOG.log(Level.INFO, "Server base dir has to be set before starting the server");
         } else {
             try {
                 checkFolders();
                 env = new Environment(numThreads);
-                sesAcceptor = env.newSessionAcceptor(port);
-                sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor, taskManager));
-                LOG.log(Level.INFO, "Server is listening for incoming sessions on port {0}", port);
+                sesAcceptor = env.newSessionAcceptor(serverParams.getPort());
+                sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor));
+                LOG.log(Level.INFO, "Server is listening for incoming sessions on port {0}", serverParams.getPort());
                 discoveryThread.startDiscovering();
             } catch (IOException e) {
                 LOG.log(Level.WARNING, "Starting server: {0}", e.getMessage());
@@ -257,6 +185,9 @@ public class Server implements IConsole {
         }
     }
 
+    /**
+     * Server stops listening for incoming sessions
+     */
     public void stopListening() {
         try {
             if (discoveryThread != null) {
@@ -273,13 +204,15 @@ public class Server implements IConsole {
             if (env != null) {
                 env.close();
             }
-
             LOG.log(Level.INFO, "Server succesfully stopped.");
         } catch (IOException e) {
             LOG.log(Level.WARNING, "Stopping server problem: {0}", e.getMessage());
         }
     }
 
+    /**
+     * Exits the server
+     */
     public void exitServer() {
         stopListening();
         System.exit(0);

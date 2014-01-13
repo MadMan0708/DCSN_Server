@@ -14,8 +14,9 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
+ * Represents a project
  *
- * @author Aku
+ * @author Jakub Hava
  */
 public class Project implements Serializable {
 
@@ -50,37 +51,67 @@ public class Project implements Serializable {
         this.time = time;
         this.clientName = clientName;
         this.projectName = projectName;
-
     }
 
+    /**
+     * Gets the cores limit
+     *
+     * @return cores limit
+     */
     public int getCores() {
         return cores;
     }
 
+    /**
+     * Sets the cores limit
+     *
+     * @param cores cores limit
+     */
     public void setCores(int cores) {
         this.cores = cores;
     }
 
+    /**
+     * Gets average task time
+     *
+     * @return average task time
+     */
     public int getTime() {
         return time;
     }
 
+    /**
+     * Sets average task time
+     *
+     * @param time average task time
+     */
     public void setTime(int time) {
         this.time = time;
     }
 
+    /**
+     * Gets the memory limit
+     *
+     * @return memory limit
+     */
     public int getMemory() {
         return memory;
     }
 
+    /**
+     * Sets the memory limit
+     *
+     * @param memory memory limit
+     */
     public void setMemory(int memory) {
         this.memory = memory;
     }
 
     /**
+     * Checks if task is completed
      *
      * @param taskID task to be checked
-     * @return true if tasks is completed, else false
+     * @return true if tasks is completed, false otherwise
      */
     public boolean isTaskCompleted(TaskID taskID) {
         if (tasksCompleted.contains(taskID)) {
@@ -91,14 +122,16 @@ public class Project implements Serializable {
     }
 
     /**
+     * Gets all uncompleted tasks
      *
-     * @return all uncompletedTasks
+     * @return all uncompleted tasks
      */
     public Set<TaskID> getUncompletedTasks() {
         return tasksUncompleted;
     }
 
     /**
+     * Gets number of all completed tasks
      *
      * @return number of completed tasks
      */
@@ -107,6 +140,7 @@ public class Project implements Serializable {
     }
 
     /**
+     * Gets number of all uncompleted tasks
      *
      * @return number of uncompleted tasks
      */
@@ -115,6 +149,7 @@ public class Project implements Serializable {
     }
 
     /**
+     * Gets number of all tasks
      *
      * @return number of all tasks
      */
@@ -123,6 +158,7 @@ public class Project implements Serializable {
     }
 
     /**
+     * Sets number of all tasks
      *
      * @param numberOfTasks number of all tasks
      */
@@ -131,20 +167,22 @@ public class Project implements Serializable {
     }
 
     /**
+     * Adds task to the project uncompleted list
      *
-     * @param task add project task
+     * @param task task to add
      */
     public void addTask(TaskID task) {
         tasksUncompleted.add(task);
     }
 
     /**
+     * Adds again task to the project uncompleted list
      *
      * @param task task to be re-added
      */
     public void addTaskAgain(TaskID task) {
         if (tasksCompleted.contains(task)) {
-            return; // leave, task is allready completed
+            return; // exit, task is already completed
         } else {
             synchronized (tasksUncompleted) {
                 if (!tasksUncompleted.contains(task)) {
@@ -152,12 +190,12 @@ public class Project implements Serializable {
                 }
             }
         }
-
     }
 
     /**
+     * Adds completed task
      *
-     * @param task add completed task
+     * @param task task to add
      */
     public void addCompletedTask(TaskID task) {
         tasksCompleted.add(task);
@@ -166,8 +204,9 @@ public class Project implements Serializable {
     }
 
     /**
+     * Checks if there are tasks to be calculated
      *
-     * @return checks if there are tasks to be calculated
+     * @return true if there are no more tasks to be calculated, false otherwise
      */
     public boolean zeroTasks() {
         if (tasksUncompleted.isEmpty()) {
@@ -178,8 +217,9 @@ public class Project implements Serializable {
     }
 
     /**
+     * Checks if all tasks are completed
      *
-     * @return checks if all tasks are completed
+     * @return true if all tasks are completed, false otherwise
      */
     public boolean allTasksCompleted() {
         if (tasksCompleted.size() == numberOfTask) {
@@ -190,15 +230,16 @@ public class Project implements Serializable {
     }
 
     /**
-     * sets project state
+     * Sets the project state
      *
-     * @param state new state
+     * @param state project state
      */
     public void setState(ProjectState state) {
         this.state = state;
     }
 
     /**
+     * Gets the project state
      *
      * @return project state
      */
@@ -207,6 +248,7 @@ public class Project implements Serializable {
     }
 
     /**
+     * Gets project name
      *
      * @return project name
      */
@@ -215,6 +257,7 @@ public class Project implements Serializable {
     }
 
     /**
+     * Gets project owner name
      *
      * @return project owner name
      */
@@ -223,6 +266,7 @@ public class Project implements Serializable {
     }
 
     /**
+     * Gets project priority
      *
      * @return project priority
      */
@@ -231,6 +275,7 @@ public class Project implements Serializable {
     }
 
     /**
+     * Gets project unique ID
      *
      * @return project unique ID
      */
@@ -238,6 +283,11 @@ public class Project implements Serializable {
         return new ProjectUID(clientName, projectName);
     }
 
+    /**
+     * Gets project info object
+     *
+     * @return project info object
+     */
     public ProjectInfo getProjectInfo() {
         return new ProjectInfo(projectName, clientName, tasksCompleted.size(), numberOfTask, state, priority, cores, memory, time);
     }

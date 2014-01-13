@@ -27,15 +27,17 @@ public class Extractor {
     /**
      * Constructor
      *
-     * @param archive archive data file
-     * @param project project
+     * @param archive archive with data
+     * @param projectName project name
+     * @param clientName client's name
+     * @param destination file where to unpack the data
      */
-    public Extractor(File archive, Project project) {
-        projectName = project.getProjectName();
-        clientName = project.getClientName();
-        extension = CustomIO.getExtension(archive);
+    public Extractor(File archive, String projectName, String clientName, File destination) {
+        this.projectName = projectName;
+        this.clientName = clientName;
+        this.extension = CustomIO.getExtension(archive);
         this.archive = archive;
-        destination = FilesStructure.getTempDirInProject(clientName, projectName);
+        this.destination = destination;
     }
 
     /**

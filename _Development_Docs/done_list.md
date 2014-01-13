@@ -1,3 +1,8 @@
+13.1.2014
+- code refactoring and commenting
+- BUG: if if calculation on client is started and project is uploaded after then,
+  command for starting calculation has to be typed again
+
 6.1.2014
 - Parameters time, memory, cores and priority added to the tasks and projects ( preparation for strategy choosing )
 

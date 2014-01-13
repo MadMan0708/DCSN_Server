@@ -26,23 +26,46 @@ import java.util.logging.Level;
 import org.cojen.dirmi.Pipe;
 
 /**
+ * Implementation of remote interface
  *
- * @author Jakub
+ * @author Jakub Hava
  */
 public class IServerImpl implements IServer {
 
     private TaskManager taskManager;
     private final int timerPeriodSec = 11;
     private HashMap<String, ActiveClient> activeClients;
+    private FilesStructure filesStructure;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
-    public IServerImpl(HashMap<String, ActiveClient> activeClients, TaskManager taskManager) {
-        this.taskManager = taskManager;
+    /**
+     * Constructor
+     *
+     * @param activeClients list of active client's
+     * @param filesStructure files structure
+     */
+    public IServerImpl(HashMap<String, ActiveClient> activeClients, FilesStructure filesStructure) {
         this.activeClients = activeClients;
+        this.filesStructure = filesStructure;
+        this.taskManager = new TaskManager(filesStructure);
     }
 
+    /**
+     * Gets active clients
+     *
+     * @return list with active clients
+     */
     public HashMap<String, ActiveClient> getActiveClients() {
         return activeClients;
+    }
+
+    /**
+     * Gets task manager
+     *
+     * @return task manager
+     */
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 
     @Override
@@ -96,7 +119,7 @@ public class IServerImpl implements IServer {
     @Override
     public void saveCompletedTask(String clientID, Task task) throws RemoteException {
         if (!task.hasDataBeenSaved()) {
-            task.saveData(FilesStructure.getTaskSavePath(task.getUnicateID()));
+            task.saveData(filesStructure.getTaskSavePath(task.getUnicateID()));
             taskManager.addCompletedTask(clientID, task.getUnicateID());
             LOG.log(Level.INFO, "Task saving: Task {0} has been saved", task.getUnicateID());
         }
@@ -105,7 +128,7 @@ public class IServerImpl implements IServer {
     @Override
     public Pipe uploadProject(String clientName, String projectName, int priority, int cores, int memory, int time, Pipe pipe) throws RemoteException {
         Project project = taskManager.createPreparingProject(clientName, projectName, priority, cores, memory, time);
-        File upDir = CustomIO.createFolder(FilesStructure.getClientUploadedDir(clientName, projectName));
+        File upDir = CustomIO.createFolder(filesStructure.getClientUploadedDir(clientName, projectName));
         try {
             File tmp = File.createTempFile(clientName, projectName + ".zip");
             try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tmp))) {
@@ -125,7 +148,6 @@ public class IServerImpl implements IServer {
         }
         taskManager.addProject(project);
         return null;
-
     }
 
     @Override
@@ -135,7 +157,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public Pipe downloadProjectJar(ProjectUID uid, Pipe pipe) throws RemoteException {
-        File input = FilesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName());
+        File input = filesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName());
         try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(input))) {
             int n;
             byte[] buffer = new byte[8192];
@@ -152,7 +174,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public Pipe downloadProject(String clientID, String projectID, Pipe pipe) throws RemoteException {
-        File input = FilesStructure.getCalculatedDataFile(clientID, projectID);
+        File input = filesStructure.getCalculatedDataFile(clientID, projectID);
         try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(input))) {
 
             int n;
@@ -171,7 +193,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public long getProjectFileSize(String clientID, String projectID) throws RemoteException {
-        File output = FilesStructure.getCalculatedDataFile(clientID, projectID);
+        File output = filesStructure.getCalculatedDataFile(clientID, projectID);
         return output.length();
     }
 
@@ -226,6 +248,9 @@ public class IServerImpl implements IServer {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /* 
+     * Starts the client timer
+     */
     private void startClientTimer(final String clientID) {
         LOG.log(Level.INFO, "Timer for client {0} started", clientID);
         final Timer t = new Timer(clientID);
@@ -254,6 +279,9 @@ public class IServerImpl implements IServer {
 
     }
 
+    /*
+     * Stops the client timer
+     */
     private void stopClientTimer(String clientID) {
         Timer t = activeClients.get(clientID).getTimer();
         t.cancel();
