@@ -43,8 +43,7 @@ public class Extractor {
     /**
      * Unpacks the archive
      *
-     * @throws NotSupportedArchiveException
-     * @throws ExtractionException
+     * @throws IOException
      */
     public void unpack() throws IOException {
         switch (extension.toLowerCase()) {

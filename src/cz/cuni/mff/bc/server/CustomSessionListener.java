@@ -38,6 +38,12 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
         this.sesAcceptor = sesAcceptor;
     }
 
+    /**
+     * Method called when connection is established
+     *
+     * @param session client's session
+     * @throws IOException
+     */
     @Override
     public synchronized void established(Session session) throws IOException {
         sesAcceptor.accept(this); // starts listening for possible new session on the same session listener
@@ -70,11 +76,23 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
         }
     }
 
+    /**
+     * Method called when establishing failed
+     *
+     * @param cause cause
+     * @throws IOException
+     */
     @Override
     public void establishFailed(IOException cause) throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Method called when session is not accepted
+     *
+     * @param cause cause
+     * @throws IOException
+     */
     @Override
     public void acceptFailed(IOException cause) throws IOException {
         // it's not happening

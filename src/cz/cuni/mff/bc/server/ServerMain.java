@@ -17,7 +17,7 @@ public class ServerMain {
      * Main method
      *
      * @param args the command line arguments
-     * @throws RemoteException
+     * @throws IOException
      */
     public static void main(String[] args) throws IOException {
         final Server server = new Server();
