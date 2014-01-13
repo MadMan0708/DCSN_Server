@@ -100,9 +100,11 @@ public class IServerImpl implements IServer {
         switch (message) {
             case CALCULATION_STARTED:
                 startClientTimer(clientID);
+                activeClients.get(clientID).setComputing(true);
                 break;
             case CALCULATION_ENDED:
                 stopClientTimer(clientID);
+                activeClients.get(clientID).setComputing(false);
                 break;
         }
     }

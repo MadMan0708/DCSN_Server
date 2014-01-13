@@ -45,7 +45,6 @@ public class TaskManager {
     private final int inititalCapacity = 1000;
     private Comparator<TaskID> comp;
     private final BlockingQueue<TaskID> tasksPool;
-    private ConcurrentHashMap<String, CopyOnWriteArrayList<TaskID>> tasksByClients = new ConcurrentHashMap<>();
     private CopyOnWriteArrayList<TaskID> tasksBeforeCalc = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<TaskID> tasksInProgress = new CopyOnWriteArrayList<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsActive = new ConcurrentHashMap<>();
@@ -258,37 +257,25 @@ public class TaskManager {
         }
     }
 
-    /**
-     * Gets task associated with client
-     *
-     * @param clientName client's name
-     * @return tasks associated with client
-     */
-    public CopyOnWriteArrayList<TaskID> getClientAssociatedTasks(String clientName) {
-        return tasksByClients.get(clientName);
-    }
-
     /*
-     * Unassociates client with the given task
+     * Checks if the client is in list of active clients
      */
-    private void unassociateClientWithTask(String clientName, TaskID id) {
-        if (tasksByClients.get(clientName) != null) { //if client has some tasks associated
-            tasksByClients.get(clientName).remove(id);
-            if (tasksByClients.get(clientName).isEmpty()) {
-                tasksByClients.remove(clientName);
-            }
+    private boolean isClientActive(String clientName) {
+        if (activeClients.containsKey(clientName)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
     /*
-     * Associates client with the given task
+     * Checks if the client is active and computing tasks
      */
-    private void associateClientWithTask(String clientName, TaskID taskID) {
-        synchronized (tasksByClients) {
-            if (tasksByClients.get(clientName) == null) {
-                tasksByClients.put(clientName, new CopyOnWriteArrayList<TaskID>());
-            }
-            tasksByClients.get(clientName).add(taskID);
+    private boolean isClientComputing(String clientName) {
+        if (isClientActive(clientName) && activeClients.get(clientName).isComputing()) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -299,7 +286,9 @@ public class TaskManager {
      * @param taskID task ID
      */
     public void cancelTaskAssociation(String clientName, TaskID taskID) {
-        unassociateClientWithTask(clientName, taskID); // unassociate them
+        if (isClientActive(clientName)) { // othwerwise the client is not in the list and nothing can be unassociated from his lists
+            activeClients.get(clientName).unassociateClientWithTask(taskID);
+        }
         tasksInProgress.remove(taskID);
         Project p = projectsAll.get(taskID.getProjectUID());
         p.addTaskAgain(taskID); // adds task again to the project's uncompleted list
@@ -317,7 +306,11 @@ public class TaskManager {
      * @return list of unassociated tasks
      */
     public ArrayList<TaskID> cancelTasksAssociation(String clientName) {
-        CopyOnWriteArrayList<TaskID> tasks = tasksByClients.get(clientName);
+        ArrayList<TaskID> tasks = null;
+        if (isClientActive(clientName)) {
+            tasks = activeClients.get(clientName).getCurrentTasks();
+        }
+
         ArrayList<TaskID> toPrint = new ArrayList<>();
         if (tasks != null) {
             toPrint.addAll(tasks);
@@ -359,7 +352,8 @@ public class TaskManager {
             classManager.getClassLoader(clientName).addNewUrl(jar.toURI().toURL());
             try (CustomObjectInputStream ois = new CustomObjectInputStream(new FileInputStream(f), classManager.getClassLoader(clientName))) {
                 Task task = (Task) ois.readObject();
-                associateClientWithTask(clientName, id);
+                // client is in the list for sure, because he just asked for new task to compute, therefore is connected
+                activeClients.get(clientName).associateClientWithTask(id);
                 tasksBeforeCalc.remove(id);
                 tasksInProgress.add(id);
                 LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientName});
@@ -616,7 +610,7 @@ public class TaskManager {
         pausedActive.putAll(projectsActive);
         final Project project = pausedActive.get(ID.getProjectUID());
         project.addCompletedTask(ID);
-        tasksByClients.get(clientName).remove(ID);
+        activeClients.get(clientName).unassociateClientWithTask(ID);
         tasksInProgress.remove(ID);
 
         // IF all project tasks are completed
