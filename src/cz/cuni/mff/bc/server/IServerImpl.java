@@ -245,7 +245,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public void markProjectAsCorrupted(String clientName, String projectName) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        taskManager.markProjectAsCorrupted(clientName, projectName);
     }
 
     /* 

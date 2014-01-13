@@ -502,6 +502,23 @@ public class TaskManager {
     }
 
     /**
+     * Marks the project as corrupted
+     *
+     * @param clientName client's name
+     * @param projectName project name
+     */
+    public void markProjectAsCorrupted(String clientName, String projectName) {
+        if (isProjectInManager(clientName, projectName)) {
+            Project project = projectsAll.get(new ProjectUID(clientName, projectName));
+            project.setState(ProjectState.CORRUPTED);
+            projectsActive.remove(project.getProjectUID());
+            projectsCorrupted.put(project.getProjectUID(), project);
+            cleanTasksPool(clientName, projectName);
+            cleanTasksInProgress(clientName, projectName);
+        }
+    }
+
+    /**
      * Cancels and deletes the project
      *
      * @param clientName client's name
@@ -515,7 +532,7 @@ public class TaskManager {
             projectsCompleted.remove(project.getProjectUID());
             projectsActive.remove(project.getProjectUID());
             projectsPaused.remove(project.getProjectUID());
-
+            projectsCorrupted.remove(project.getProjectUID());
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
             deleteProject(clientName, projectName);

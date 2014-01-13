@@ -78,6 +78,7 @@ public class Server implements IConsole {
 
     /**
      * Gets active clients
+     * 
      *
      * @return list with active clients
      */
