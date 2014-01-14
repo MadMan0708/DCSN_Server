@@ -4,6 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.server.misc.IClient;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -55,6 +56,7 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
             session.setClassLoader(taskManager.getClassManager().getClassLoader(clientID));
             session.send(Boolean.TRUE);
             session.send(remoteMethods);
+            activeClient.setClientMethods((IClient) session.receive());
             LOG.log(Level.INFO, "Client {0} has been connected to the server", clientID);
             session.addCloseListener(new SessionCloseListener() {
                 @Override

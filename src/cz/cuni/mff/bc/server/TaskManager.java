@@ -326,6 +326,7 @@ public class TaskManager {
      * Gets the project from client's current plan from which the client will calculates the tasks
      */
     private ProjectUID getNextProjectForClient(String clientName) {
+        return projectsActive.get(new ProjectUID(clientName, "TestProject")).getProjectUID();
         //TODO
         // implement absolute priority
         // implement when one project hasn't any uncompleted tasks, choose tasks from next one,

@@ -6,6 +6,7 @@ package cz.cuni.mff.bc.server;
 
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.main.TaskID;
+import cz.cuni.mff.bc.server.misc.IClient;
 import java.util.ArrayList;
 import java.util.Timer;
 import org.cojen.dirmi.Session;
@@ -21,6 +22,7 @@ public class ActiveClient {
     private Timer timer;
     private Boolean timeout;
     private Session session;
+    private IClient clientMethods;
     private int memoryLimit;
     private int coresLimit;
     private ArrayList<TaskID> currentTasks;
@@ -38,6 +40,24 @@ public class ActiveClient {
         this.currentTasks = new ArrayList<>();
         this.clientName = clientName;
         this.session = session;
+    }
+
+    /**
+     * Gets client implementation of remote interface
+     *
+     * @return client implementation of remote interface
+     */
+    public IClient getClientMethods() {
+        return clientMethods;
+    }
+
+    /**
+     * Sets client implementation of client remote interface
+     *
+     * @param clientMethods client implementation of remote interface
+     */
+    public void setClientMethods(IClient clientMethods) {
+        this.clientMethods = clientMethods;
     }
 
     /**
