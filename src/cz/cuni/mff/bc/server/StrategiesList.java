@@ -9,7 +9,7 @@ package cz.cuni.mff.bc.server;
  *
  * @author Jakub Hava
  */
-public enum Strategies {
+public enum StrategiesList {
 
     /**
      * Task with highest priority goes first

@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class ServerParams {
 
     private static PropertiesManager propManager;
-    private Strategies strategy;
+    private StrategiesList strategy;
     private int port;
     private String basedir;
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
@@ -37,7 +37,7 @@ public class ServerParams {
     }
 
     private void setDefaultStrategy() {
-        setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
+        setStrategy(StrategiesList.HIGHEST_PRIORITY_FIRST);
     }
 
     /**
@@ -78,7 +78,7 @@ public class ServerParams {
      *
      * @param strategy server strategy
      */
-    public void setStrategy(Strategies strategy) {
+    public void setStrategy(StrategiesList strategy) {
         this.strategy = strategy;
         propManager.setProperty("strategy", strategy.toString());
         LOG.log(Level.INFO, "Server strategy has been set to: {0}", strategy.toString());
@@ -143,10 +143,10 @@ public class ServerParams {
         } else {
             switch (propManager.getProperty("strategy")) {
                 case "priority":
-                    setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
+                    setStrategy(StrategiesList.HIGHEST_PRIORITY_FIRST);
                     break;
                 case "max-througput":
-                    setStrategy(Strategies.MAXIMAL_THROUGHPUT);
+                    setStrategy(StrategiesList.MAXIMAL_THROUGHPUT);
                     break;
                 default:
                     setDefaultStrategy();

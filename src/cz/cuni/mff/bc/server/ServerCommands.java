@@ -93,11 +93,11 @@ public class ServerCommands {
             switch (params[0]) {
                 case "priority":
                     ok = true;
-                    server.getServerParams().setStrategy(Strategies.HIGHEST_PRIORITY_FIRST);
+                    server.getServerParams().setStrategy(StrategiesList.HIGHEST_PRIORITY_FIRST);
                     break;
                 case "max-througput":
                     ok = true;
-                    server.getServerParams().setStrategy(Strategies.MAXIMAL_THROUGHPUT);
+                    server.getServerParams().setStrategy(StrategiesList.MAXIMAL_THROUGHPUT);
                     break;
             }
             if (ok) {
