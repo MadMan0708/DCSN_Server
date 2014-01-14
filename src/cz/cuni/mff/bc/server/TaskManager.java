@@ -43,8 +43,6 @@ public class TaskManager {
     private FilesStructure filesStructure;
     private HashMap<String, ActiveClient> activeClients;
     private ClassManager classManager;
-    private final int inititalCapacity = 1000;
-    private Comparator<TaskID> comp;
     private final ConcurrentHashMap<ProjectUID, BlockingQueue<TaskID>> tasksPool;
     private CopyOnWriteArrayList<TaskID> tasksInProgress = new CopyOnWriteArrayList<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsActive = new ConcurrentHashMap<>();
@@ -301,6 +299,9 @@ public class TaskManager {
      */
     private ProjectUID getNextProjectForClient(String clientName) {
         //TODO
+        // implement absolute priority
+        // implement when one project hasn't any uncompleted tasks, choose tasks from next one,
+        // cause tasks from this project will be usualy completed in close time
     }
 
     /**
@@ -327,9 +328,10 @@ public class TaskManager {
      * @return task
      */
     public Task getTask(String clientName, ProjectUID projectUID) {
-        // returns null if this queue is empty, in thar case we need to wait for completition
-        // of other task from this project till it's completed completly
         TaskID id = tasksPool.get(projectUID).poll();
+        if (id == null) {
+            return null; // the pool for this project is empty, in thath case client checker will wait for a while
+        }
         File f = filesStructure.getTaskLoadPath(id).toFile();
         File jar = filesStructure.getProjectJarFile(id.getClientName(), id.getProjectName());
         try {
@@ -343,10 +345,12 @@ public class TaskManager {
                 return task;
             } catch (ClassNotFoundException | IOException e) {
                 LOG.log(Level.WARNING, "Problem during unpacking task: {0}", e.toString());
+                addTaskBackToPool(id);
                 return null;
             }
         } catch (MalformedURLException e) {
             LOG.log(Level.WARNING, "Problem during accessing jar file needed to computation: {0}", e.toString());
+            addTaskBackToPool(id);
             return null;
         }
     }

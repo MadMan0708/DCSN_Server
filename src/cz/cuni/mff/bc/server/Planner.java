@@ -16,6 +16,11 @@ import java.util.Collection;
  */
 public class Planner {
 
+    /**
+     * This limit says when any project has less then TASK_LIMIT uncompleted
+     * tasks, the absolute priority is given to the project
+     */
+    public static int TASK_LIMIT = 3;
     private int replanned = 0;
 
     public int getNumberOfReplanning() {
