@@ -81,8 +81,8 @@ public class IServerImpl implements IServer {
     }
 
     @Override
-    public TaskID getTaskIdBeforeCalculation(String clientID) throws RemoteException {
-        return taskManager.getTaskIDBeforeCalculation(clientID);
+    public ProjectUID getProjectIdBeforeCalculation(String clientID) throws RemoteException {
+        return taskManager.getProjectIDBeforeCalculation(clientID);
     }
 
     @Override
@@ -91,8 +91,8 @@ public class IServerImpl implements IServer {
     }
 
     @Override
-    public Task getTask(String clientID, TaskID taskID) throws RemoteException {
-        return taskManager.getTask(clientID, taskID);
+    public Task getTask(String clientID, ProjectUID projectUID) throws RemoteException {
+        return taskManager.getTask(clientID, projectUID);
     }
 
     @Override

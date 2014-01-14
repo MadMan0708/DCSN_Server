@@ -322,12 +322,12 @@ public class TaskManager {
     }
 
     /**
-     * Gets the Task ID before calculation
+     * Gets the Project ID before calculation
      *
      * @param clientName client's name
-     * @return task ID
+     * @return project unique ID
      */
-    public TaskID getTaskIDBeforeCalculation(String clientName) {
+    public ProjectUID getProjectIDBeforeCalculation(String clientName) {
         if (hasNextTask()) {
             TaskID id = getNextTask();
             tasksBeforeCalc.add(id);
