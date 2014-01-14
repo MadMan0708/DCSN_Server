@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.logging.Level;
 
@@ -44,8 +45,7 @@ public class TaskManager {
     private ClassManager classManager;
     private final int inititalCapacity = 1000;
     private Comparator<TaskID> comp;
-    private final BlockingQueue<TaskID> tasksPool;
-    private CopyOnWriteArrayList<TaskID> tasksBeforeCalc = new CopyOnWriteArrayList<>();
+    private final ConcurrentHashMap<ProjectUID, BlockingQueue<TaskID>> tasksPool;
     private CopyOnWriteArrayList<TaskID> tasksInProgress = new CopyOnWriteArrayList<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsActive = new ConcurrentHashMap<>();
     private ConcurrentHashMap<ProjectUID, Project> projectsPaused = new ConcurrentHashMap<>();
@@ -66,21 +66,7 @@ public class TaskManager {
         this.activeClients = activeClients;
         this.classManager = new ClassManager(filesStructure);
         this.executor = Executors.newCachedThreadPool();
-        comp = new Comparator<TaskID>() {
-            @Override
-            public int compare(TaskID o1, TaskID o2) {
-                int p1 = o1.getPriority();
-                int p2 = o2.getPriority();
-                if (p1 < p2) {
-                    return -1;
-                } else if (p1 == p2) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            }
-        };
-        tasksPool = new PriorityBlockingQueue<>(inititalCapacity, comp);
+        this.tasksPool = new ConcurrentHashMap<>();
     }
 
     /**
@@ -187,47 +173,12 @@ public class TaskManager {
     }
 
     /*
-     * Checks if there are no tasks in the task pool
-     */
-    private boolean zeroTasks() {
-        if (tasksPool.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /*
-     * Check if there is next task for the computation
-     */
-    private boolean hasNextTask() {
-        if (!zeroTasks()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /*
-     * Gets next task ID
-     */
-    private TaskID getNextTask() {
-        return tasksPool.poll();
-    }
-
-    /*
      * Cleans task pool. Deletes all task of one project from the tasks pool
      */
     private void cleanTasksPool(String clientName, String projectName) {
-        ArrayList<TaskID> toDel = new ArrayList<>();
-        ProjectUID UID = new ProjectUID(clientName, projectName);
+        ProjectUID projectUID = new ProjectUID(clientName, projectName);
         synchronized (tasksPool) {
-            for (TaskID taskID : tasksPool) {
-                if (taskID.getProjectUID().equals(UID)) {
-                    toDel.add(taskID);
-                }
-            }
-            tasksPool.removeAll(toDel);
+            tasksPool.remove(projectUID);
         }
     }
 
@@ -246,20 +197,30 @@ public class TaskManager {
             tasksInProgress.removeAll(toDel);
         }
     }
+
     /*
      * Adds tasks to the task pool
      */
-
     private void addTasksToPool(String clientName, String projectName) {
-        Set<TaskID> uncompleted = projectsAll.get(new ProjectUID(clientName, projectName)).getUncompletedTasks();
+        ProjectUID projectUID = new ProjectUID(clientName, projectName);
+        Set<TaskID> uncompleted = projectsAll.get(projectUID).getUncompletedTasks();
         synchronized (tasksPool) {
-            tasksPool.addAll(uncompleted);
+            tasksPool.remove(projectUID);
+            tasksPool.put(projectUID, new LinkedBlockingQueue<>(uncompleted));
         }
     }
 
     /*
+     * Adds task back to the task pool
+     */
+    private void addTaskBackToPool(TaskID taskID) {
+        // tasks pool has to contain taskID.getProjectUID()
+        tasksPool.get(taskID.getProjectUID()).add(taskID);
+    }
+    /*
      * Checks if the client is in list of active clients
      */
+
     private boolean isClientActive(String clientName) {
         if (activeClients.containsKey(clientName)) {
             return true;
@@ -294,7 +255,7 @@ public class TaskManager {
         p.addTaskAgain(taskID); // adds task again to the project's uncompleted list
         LOG.log(Level.INFO, "Task {0} calculated by {1} is again in tasks pool", new Object[]{taskID, clientName});
         if (p.getState().equals(ProjectState.ACTIVE)) {
-            tasksPool.add(taskID);// if the project is active, the tasks is added to the task pool
+            addTaskBackToPool(taskID);// if the project is active, the tasks is added to the task pool
             // otherwise no
         }
     }
@@ -321,6 +282,27 @@ public class TaskManager {
         return toPrint;
     }
 
+    /*
+     * Check if there are unassigned tasks in projects which are in current client plan
+     */
+    private boolean plannedProjectsHasTasks(String clientName) {
+        ArrayList<ProjectUID> currentPlan = activeClients.get(clientName).getCurrentPlan();
+
+        for (ProjectUID projectUID : currentPlan) {
+            if (projectsAll.get(projectUID).getNumOfTasksUncompleted() != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
+     * Gets the project from client's current plan from which the client will calculates the tasks
+     */
+    private ProjectUID getNextProjectForClient(String clientName) {
+        //TODO
+    }
+
     /**
      * Gets the Project ID before calculation
      *
@@ -328,10 +310,9 @@ public class TaskManager {
      * @return project unique ID
      */
     public ProjectUID getProjectIDBeforeCalculation(String clientName) {
-        if (hasNextTask()) {
-            TaskID id = getNextTask();
-            tasksBeforeCalc.add(id);
-            return id;
+        if (plannedProjectsHasTasks(clientName)) {
+            ProjectUID projectID = getNextProjectForClient(clientName);
+            return projectID;
         } else {
             // No more tasks, checkers on clients will be forced to sleep for a while
             return null;
@@ -342,10 +323,13 @@ public class TaskManager {
      * Gets the task and associates it with the client
      *
      * @param clientName client's name
-     * @param id task ID
+     * @param projectUID unique project ID from which task will be gotten
      * @return task
      */
-    public Task getTask(String clientName, TaskID id) {
+    public Task getTask(String clientName, ProjectUID projectUID) {
+        // returns null if this queue is empty, in thar case we need to wait for completition
+        // of other task from this project till it's completed completly
+        TaskID id = tasksPool.get(projectUID).poll();
         File f = filesStructure.getTaskLoadPath(id).toFile();
         File jar = filesStructure.getProjectJarFile(id.getClientName(), id.getProjectName());
         try {
@@ -354,7 +338,6 @@ public class TaskManager {
                 Task task = (Task) ois.readObject();
                 // client is in the list for sure, because he just asked for new task to compute, therefore is connected
                 activeClients.get(clientName).associateClientWithTask(id);
-                tasksBeforeCalc.remove(id);
                 tasksInProgress.add(id);
                 LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientName});
                 return task;
