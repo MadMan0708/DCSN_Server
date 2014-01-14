@@ -130,6 +130,21 @@ public class TaskManager {
     }
 
     /**
+     * Checks of the project is corrupted
+     *
+     * @param clientName client's name
+     * @param projectName project name
+     * @return true if the project is corrupted, false otherwise
+     */
+    public boolean isProjectCorrupted(String clientName, String projectName) {
+        if (projectsCorrupted.containsKey(new ProjectUID(clientName, projectName))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Checks if the project is completed
      *
      * @param clientName client's name
@@ -515,7 +530,7 @@ public class TaskManager {
     }
 
     /**
-     * Cancels and deletes the project
+     * Cancels and deletes the project, creates new plan after
      *
      * @param clientName client's name
      * @param projectName project name
@@ -532,6 +547,7 @@ public class TaskManager {
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
             deleteProject(clientName, projectName);
+            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
             return true;
         } else {
             return false;
@@ -609,30 +625,32 @@ public class TaskManager {
         pausedActive.putAll(projectsPaused);
         pausedActive.putAll(projectsActive);
         final Project project = pausedActive.get(ID.getProjectUID());
-        project.addCompletedTask(ID);
         activeClients.get(clientName).unassociateClientWithTask(ID);
-        tasksInProgress.remove(ID);
+        if (project != null) { // if the project still exists ( it may have been cancelled but client didn't know about that
+            project.addCompletedTask(ID);
+            tasksInProgress.remove(ID);
 
-        // if all project tasks are completed, the task is packed
-        // and new plan for active client is created
-        if (project.allTasksCompleted()) {
-            project.setState(ProjectState.COMPLETED);
-            projectsCompleted.put(ID.getProjectUID(), project);
-            projectsActive.remove(ID.getProjectUID());
-            File sourceDirectory = filesStructure.getCompleteDirInProject(project.getClientName(), project.getProjectName());
-            File destination = filesStructure.getCalculatedDataFile(project.getClientName(), project.getProjectName());
-            final Future<Boolean> f = executor.submit(new ProjectPacker(project, sourceDirectory, destination));
-            try {
-                Boolean result = f.get(); // waits utill the packing is done
-                projectsCompleted.remove(project.getProjectUID());
-                projectsForDownload.put(project.getProjectUID(), project);
-            } catch (ExecutionException e) {
-                LOG.log(Level.WARNING, "Error durong project packing: {0}", ((Exception) e.getCause()).toString());
-            } catch (InterruptedException e) {
-                LOG.log(Level.WARNING, "Interpution during project packing");
+            // if all project tasks are completed, the task is packed
+            // and new plan for active client is created
+            if (project.allTasksCompleted()) {
+                project.setState(ProjectState.COMPLETED);
+                projectsCompleted.put(ID.getProjectUID(), project);
+                projectsActive.remove(ID.getProjectUID());
+                File sourceDirectory = filesStructure.getCompleteDirInProject(project.getClientName(), project.getProjectName());
+                File destination = filesStructure.getCalculatedDataFile(project.getClientName(), project.getProjectName());
+                final Future<Boolean> f = executor.submit(new ProjectPacker(project, sourceDirectory, destination));
+                try {
+                    Boolean result = f.get(); // waits utill the packing is done
+                    projectsCompleted.remove(project.getProjectUID());
+                    projectsForDownload.put(project.getProjectUID(), project);
+                } catch (ExecutionException e) {
+                    LOG.log(Level.WARNING, "Error durong project packing: {0}", ((Exception) e.getCause()).toString());
+                } catch (InterruptedException e) {
+                    LOG.log(Level.WARNING, "Interpution during project packing");
+                }
+                // create new plan for tasks
+                planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
             }
-            // create new plan for tasks
-            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
         }
     }
 

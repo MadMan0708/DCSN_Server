@@ -238,7 +238,11 @@ public class IServerImpl implements IServer {
     public ArrayList<TaskID> sendTasksInCalculation(String clientID, ArrayList<TaskID> tasks) throws RemoteException {
         ArrayList<TaskID> toCancel = new ArrayList<>();
         for (TaskID ID : tasks) {
-            if (taskManager.isTaskCompleted(ID) && taskManager.isTaskInProgress(ID)) {
+            if (taskManager.isProjectInManager(ID.getClientName(), ID.getProjectName())) {
+                toCancel.add(ID);
+            }else if(taskManager.isProjectCorrupted(ID.getClientName(), ID.getProjectName())){
+                toCancel.add(ID);
+            }else if (taskManager.isTaskCompleted(ID) && taskManager.isTaskInProgress(ID)) {
                 toCancel.add(ID);
             }
         }
