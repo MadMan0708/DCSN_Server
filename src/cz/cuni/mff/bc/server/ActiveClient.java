@@ -6,7 +6,7 @@ package cz.cuni.mff.bc.server;
 
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.main.TaskID;
-import cz.cuni.mff.bc.server.misc.IClient;
+import cz.cuni.mff.bc.misc.IClient;
 import java.util.ArrayList;
 import java.util.Timer;
 import org.cojen.dirmi.Session;
@@ -50,6 +50,7 @@ public class ActiveClient {
     public IClient getClientMethods() {
         return clientMethods;
     }
+
 
     /**
      * Sets client implementation of client remote interface
@@ -104,7 +105,6 @@ public class ActiveClient {
      */
     public synchronized void unassociateClientWithTask(TaskID id) {
         currentTasks.remove(id);
-
     }
 
     /**
@@ -114,6 +114,15 @@ public class ActiveClient {
      */
     public ArrayList<ProjectUID> getCurrentPlan() {
         return currentPlan;
+    }
+
+    /**
+     * Sets the current plan
+     *
+     * @param currentPlan list with projects planned
+     */
+    public void setCurrentPlan(ArrayList<ProjectUID> currentPlan) {
+        this.currentPlan = currentPlan;
     }
 
     /**

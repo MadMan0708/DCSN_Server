@@ -4,8 +4,8 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.server.misc.GConsole;
-import cz.cuni.mff.bc.server.misc.IConsole;
+import cz.cuni.mff.bc.misc.GConsole;
+import cz.cuni.mff.bc.misc.IConsole;
 import cz.cuni.mff.bc.server.logging.CustomFormater;
 import cz.cuni.mff.bc.server.logging.CustomHandler;
 import cz.cuni.mff.bc.server.logging.FileLogger;

@@ -4,7 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.server.misc.IClient;
+import cz.cuni.mff.bc.misc.IClient;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Level;

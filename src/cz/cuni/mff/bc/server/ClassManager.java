@@ -4,7 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
-import cz.cuni.mff.bc.server.misc.CustomClassLoader;
+import cz.cuni.mff.bc.misc.CustomClassLoader;
 import cz.cuni.mff.bc.api.main.JarAPI;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import java.io.File;

@@ -10,7 +10,7 @@ import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.api.main.Task;
 import cz.cuni.mff.bc.api.enums.ProjectState;
 import cz.cuni.mff.bc.api.main.ProjectInfo;
-import cz.cuni.mff.bc.server.misc.CustomObjectInputStream;
+import cz.cuni.mff.bc.misc.CustomObjectInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -326,7 +326,7 @@ public class TaskManager {
      * Gets the project from client's current plan from which the client will calculates the tasks
      */
     private ProjectUID getNextProjectForClient(String clientName) {
-        return projectsActive.get(new ProjectUID(clientName, "TestProject")).getProjectUID();
+        return null;
         //TODO
         // implement absolute priority
         // implement when one project hasn't any uncompleted tasks, choose tasks from next one,
@@ -415,7 +415,6 @@ public class TaskManager {
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(output))) {
                 out.writeObject(task);
                 project.addTask(task.getUnicateID());
-                //tasksPool.add(task.getUnicateID()); //- pridano do commentu protoze je tam pak pridavam vsechny najednou
                 LOG.log(Level.INFO, "Task created: {0}, {1}{2}", new Object[]{task.getUnicateID(), saveFolder, file.getName()});
                 out.close();
             }
@@ -527,6 +526,7 @@ public class TaskManager {
             projectsCorrupted.put(project.getProjectUID(), project);
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
+            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
         }
     }
 
@@ -562,13 +562,15 @@ public class TaskManager {
      * @param projectName project name
      * @return true if project has been successfully paused, false otherwise
      */
-    public boolean pauseProject(String clientID, String projectID) {
-        if (isProjectInManager(clientID, projectID)) {
-            Project project = projectsAll.get(new ProjectUID(clientID, projectID));
+    public boolean pauseProject(String clientName, String projectName) {
+        if (isProjectInManager(clientName, projectName)) {
+            Project project = projectsAll.get(new ProjectUID(clientName, projectName));
             project.setState(ProjectState.PAUSED);
             projectsActive.remove(project.getProjectUID());
             projectsPaused.put(project.getProjectUID(), project);
-            cleanTasksPool(clientID, projectID);
+            cleanTasksPool(clientName, projectName);
+            cleanTasksInProgress(clientName, projectName);
+            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
             return true;
         } else {
             return false;
@@ -589,6 +591,7 @@ public class TaskManager {
             projectsActive.put(project.getProjectUID(), project);
             projectsPaused.remove(project.getProjectUID());
             addTasksToPool(clientID, projectID);
+            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
             return true;
         } else {
             return false;
@@ -619,7 +622,6 @@ public class TaskManager {
      * @param ID task ID
      */
     public void addCompletedTask(String clientName, TaskID ID) {
-
         HashMap<ProjectUID, Project> pausedActive = new HashMap<>();
         // if the project is paused, tasks on the clients are let to finish computation and saved after
         // if computation fails on the client, the task is then returned to the project uncompleted list
