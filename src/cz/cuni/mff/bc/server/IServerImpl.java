@@ -43,11 +43,12 @@ public class IServerImpl implements IServer {
      *
      * @param activeClients list of active client's
      * @param filesStructure files structure
+     * @param serverParams server parameters
      */
-    public IServerImpl(HashMap<String, ActiveClient> activeClients, FilesStructure filesStructure) {
+    public IServerImpl(HashMap<String, ActiveClient> activeClients, FilesStructure filesStructure, ServerParams serverParams) {
         this.activeClients = activeClients;
         this.filesStructure = filesStructure;
-        this.taskManager = new TaskManager(filesStructure, activeClients);
+        this.taskManager = new TaskManager(activeClients, filesStructure, serverParams);
     }
 
     /**

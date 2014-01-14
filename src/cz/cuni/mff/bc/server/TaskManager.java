@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -29,7 +28,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
 import java.util.logging.Level;
 
 /**
@@ -44,22 +42,38 @@ public class TaskManager {
     private HashMap<String, ActiveClient> activeClients;
     private ClassManager classManager;
     private final ConcurrentHashMap<ProjectUID, BlockingQueue<TaskID>> tasksPool;
-    private CopyOnWriteArrayList<TaskID> tasksInProgress = new CopyOnWriteArrayList<>();
-    private ConcurrentHashMap<ProjectUID, Project> projectsActive = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<ProjectUID, Project> projectsPaused = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<ProjectUID, Project> projectsAll = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<ProjectUID, Project> projectsPreparing = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<ProjectUID, Project> projectsCompleted = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<ProjectUID, Project> projectsForDownload = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<ProjectUID, Project> projectsCorrupted = new ConcurrentHashMap<>();
+    private CopyOnWriteArrayList<TaskID> tasksInProgress;
+    private ConcurrentHashMap<ProjectUID, Project> projectsActive;
+    private ConcurrentHashMap<ProjectUID, Project> projectsPaused;
+    private ConcurrentHashMap<ProjectUID, Project> projectsAll;
+    private ConcurrentHashMap<ProjectUID, Project> projectsPreparing;
+    private ConcurrentHashMap<ProjectUID, Project> projectsCompleted;
+    private ConcurrentHashMap<ProjectUID, Project> projectsForDownload;
+    private ConcurrentHashMap<ProjectUID, Project> projectsCorrupted;
+    private Planner planner;
+    private ServerParams serverParams;
+    private StrategiesList actualStrategy = StrategiesList.HIGHEST_PRIORITY_FIRST;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     /**
      * Constructor
      *
+     * @param activeClients list of active client's
      * @param filesStructure files structure
+     * @param serverParams server parameters
      */
-    public TaskManager(FilesStructure filesStructure, HashMap<String, ActiveClient> activeClients) {
+    public TaskManager(HashMap<String, ActiveClient> activeClients, FilesStructure filesStructure, ServerParams serverParams) {
+        this.projectsCorrupted = new ConcurrentHashMap<>();
+        this.projectsForDownload = new ConcurrentHashMap<>();
+        this.projectsCompleted = new ConcurrentHashMap<>();
+        this.projectsPreparing = new ConcurrentHashMap<>();
+        this.projectsAll = new ConcurrentHashMap<>();
+        this.projectsPaused = new ConcurrentHashMap<>();
+        this.projectsActive = new ConcurrentHashMap<>();
+        this.tasksInProgress = new CopyOnWriteArrayList<>();
+
+        this.planner = new Planner();
+        this.serverParams = serverParams;
         this.filesStructure = filesStructure;
         this.activeClients = activeClients;
         this.classManager = new ClassManager(filesStructure);
@@ -330,7 +344,7 @@ public class TaskManager {
     public Task getTask(String clientName, ProjectUID projectUID) {
         TaskID id = tasksPool.get(projectUID).poll();
         if (id == null) {
-            return null; // the pool for this project is empty, in thath case client checker will wait for a while
+            return null; // the pool for this project is empty, in that case client checker will wait for a while
         }
         File f = filesStructure.getTaskLoadPath(id).toFile();
         File jar = filesStructure.getProjectJarFile(id.getClientName(), id.getProjectName());
@@ -600,7 +614,8 @@ public class TaskManager {
         activeClients.get(clientName).unassociateClientWithTask(ID);
         tasksInProgress.remove(ID);
 
-        // IF all project tasks are completed
+        // if all project tasks are completed, the task is packed
+        // and new plan for active client is created
         if (project.allTasksCompleted()) {
             project.setState(ProjectState.COMPLETED);
             projectsCompleted.put(ID.getProjectUID(), project);
@@ -609,7 +624,7 @@ public class TaskManager {
             File destination = filesStructure.getCalculatedDataFile(project.getClientName(), project.getProjectName());
             final Future<Boolean> f = executor.submit(new ProjectPacker(project, sourceDirectory, destination));
             try {
-                Boolean result = f.get();
+                Boolean result = f.get(); // waits utill the packing is done
                 projectsCompleted.remove(project.getProjectUID());
                 projectsForDownload.put(project.getProjectUID(), project);
             } catch (ExecutionException e) {
@@ -617,6 +632,9 @@ public class TaskManager {
             } catch (InterruptedException e) {
                 LOG.log(Level.WARNING, "Interpution during project packing");
             }
+            // create new plan for tasks
+            planner.plan(activeClients.values(), projectsActive.values(), actualStrategy);
+
         }
     }
 

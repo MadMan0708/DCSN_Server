@@ -54,7 +54,7 @@ public class Server implements IConsole {
         activeClients = new HashMap<>();
         serverParams = new ServerParams(logHandler);
         filesStructure = new FilesStructure(serverParams);
-        remoteMethods = new IServerImpl(activeClients, filesStructure);
+        remoteMethods = new IServerImpl(activeClients, filesStructure, serverParams);
         commands = new ServerCommands(this);
     }
 
@@ -78,7 +78,7 @@ public class Server implements IConsole {
 
     /**
      * Gets active clients
-     * 
+     *
      *
      * @return list with active clients
      */
