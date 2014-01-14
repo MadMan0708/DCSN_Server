@@ -495,6 +495,7 @@ public class TaskManager {
                     createTasks(project);
                     changePreparingToActive(project);
                     addTasksToPool(project.getClientName(), project.getProjectName());
+                    planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
                 } catch (ClassNotFoundException e) {
                     LOG.log(Level.WARNING, "ClassNotFoundException during task creation : {0}", e.toString());
                     undoProject(project);
