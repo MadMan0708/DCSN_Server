@@ -52,7 +52,6 @@ public class TaskManager {
     private ConcurrentHashMap<ProjectUID, Project> projectsCorrupted;
     private Planner planner;
     private ServerParams serverParams;
-    private StrategiesList actualStrategy = StrategiesList.HIGHEST_PRIORITY_FIRST;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     /**
@@ -633,8 +632,7 @@ public class TaskManager {
                 LOG.log(Level.WARNING, "Interpution during project packing");
             }
             // create new plan for tasks
-            planner.plan(activeClients.values(), projectsActive.values(), actualStrategy);
-
+            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
         }
     }
 

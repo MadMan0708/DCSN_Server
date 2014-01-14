@@ -89,8 +89,8 @@ public class ServerParams {
      *
      * @return server strategy
      */
-    public String getStrategy() {
-        return strategy.toString();
+    public StrategiesList getStrategy() {
+        return strategy;
     }
 
     /**

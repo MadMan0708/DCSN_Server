@@ -118,7 +118,7 @@ public class ServerCommands {
      */
     public void getStrategy(String[] params) {
         if (checkParamNum(0, params)) {
-            LOG.log(Level.INFO, "Server strategy is set to: {0}", server.getServerParams().getStrategy());
+            LOG.log(Level.INFO, "Server strategy is set to: {0}", server.getServerParams().getStrategy().toString());
         } else {
             LOG.log(Level.INFO, "Command has no parameters");
         }
