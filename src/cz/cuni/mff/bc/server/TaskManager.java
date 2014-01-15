@@ -327,6 +327,8 @@ public class TaskManager {
      */
     private ProjectUID getNextProjectForClient(String clientName) {
         return null;
+        // tady vybrat ktery se prida, pokud vim ze tam bezi 3 jadrovy, a kapacita je 4 jadra, tak tam vrazim
+        // 1 jadrovej task
         //TODO
         // implement absolute priority
         // implement when one project hasn't any uncompleted tasks, choose tasks from next one,

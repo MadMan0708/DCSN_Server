@@ -8,6 +8,8 @@ import static cz.cuni.mff.bc.server.StrategiesList.HIGHEST_PRIORITY_FIRST;
 import static cz.cuni.mff.bc.server.StrategiesList.MAXIMAL_THROUGHPUT;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -89,6 +91,20 @@ public class Planner {
      * Creates the plan for all the clients according the strategy Highest Priority First
      */
     private void planForHighestPriority(ArrayList<ActiveClient> activeClients, Collection<Project> activeProjects) {
+        Collections.sort(activeClients, new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                Project p1 = (Project) o1;
+                Project p2 = (Project) o2;
+                if (p1.getPriority() < p2.getPriority()) {
+                    return -1;
+                } else if (p1.getPriority() == p2.getPriority()) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        });
     }
 
     /*
