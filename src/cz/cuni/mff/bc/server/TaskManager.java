@@ -356,9 +356,9 @@ public class TaskManager {
             int memoryLimit = active.getMemoryLimit();
             for (Project project : finishingProjects) {
                 if (project.getMemory() <= memoryLimit && project.getCores() <= coresAvailable
-                        && project.getNumOfTasksUncompleted()!=0) { // if num of uncompleted tasks is 0, the tasks will be propably
-                                                                    // be soon calculated by different client, it is better to skip
-                                                                    // to the next project
+                        && project.getNumOfTasksUncompleted() != 0) { // if num of uncompleted tasks is 0, the tasks will be propably
+                    // be soon calculated by different client, it is better to skip
+                    // to the next project
                     return project.getProjectUID();
                 }
             }
@@ -377,12 +377,6 @@ public class TaskManager {
             // this part never returns null because of design of planning, but it has to be here to preserve correctness of the function
             return null;
         }
-
-        // tady vybrat ktery se prida, pokud vim ze tam bezi 3 jadrovy, a kapacita je 4 jadra, tak tam vrazim
-        // 1 jadrovej task
-        //TODO
-        // implement when one project hasn't any uncompleted tasks, choose tasks from next one,
-        // cause tasks from this project will be usualy completed in close time
     }
 
     /**
