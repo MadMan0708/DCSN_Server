@@ -541,7 +541,7 @@ public class TaskManager {
                     createTasks(project);
                     changePreparingToActive(project);
                     addTasksToPool(project.getClientName(), project.getProjectName());
-                    plan();
+                    planForAll();
                 } catch (ClassNotFoundException e) {
                     LOG.log(Level.WARNING, "ClassNotFoundException during task creation : {0}", e.toString());
                     undoProject(project);
@@ -573,7 +573,7 @@ public class TaskManager {
             projectsCorrupted.put(project.getProjectUID(), project);
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
-            plan();
+            planForAll();
         }
     }
 
@@ -595,7 +595,7 @@ public class TaskManager {
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
             deleteProject(clientName, projectName);
-            plan();
+            planForAll();
             return true;
         } else {
             return false;
@@ -617,7 +617,7 @@ public class TaskManager {
             projectsPaused.put(project.getProjectUID(), project);
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
-            plan();
+            planForAll();
             return true;
         } else {
             return false;
@@ -638,7 +638,7 @@ public class TaskManager {
             projectsActive.put(project.getProjectUID(), project);
             projectsPaused.remove(project.getProjectUID());
             addTasksToPool(clientID, projectID);
-            plan();
+            planForAll();
             return true;
         } else {
             return false;
@@ -662,10 +662,21 @@ public class TaskManager {
         return projects;
     }
 
+    /**
+     * Create a plan for one client
+     *
+     * @param activeClient active client
+     */
+    public void planForOne(ActiveClient activeClient) {
+        Collection<Project> values = projectsActive.values();
+        values.removeAll(finishingProjects);
+        planner.plan(activeClient, values, serverParams.getStrategy());
+    }
+
     /*
      * Plan
      */
-    private void plan() {
+    private void planForAll() {
         Collection<Project> values = projectsActive.values();
         values.removeAll(finishingProjects);
         // create new plan because finishing projects are not part of the planning process
@@ -691,7 +702,7 @@ public class TaskManager {
             tasksInProgress.remove(ID);
             if (project.getNumOfTasksUncompleted() <= Planner.TASK_LIMIT && !finishingProjects.contains(project)) {
                 finishingProjects.add(project);
-                plan();
+                planForAll();
             }
             // if all project tasks are completed, the task is packed
             // and new plan for active client is created
