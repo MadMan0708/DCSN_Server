@@ -8,6 +8,9 @@ import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.misc.IClient;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 import java.util.Timer;
 import org.cojen.dirmi.Session;
 
@@ -25,8 +28,9 @@ public class ActiveClient {
     private IClient clientMethods;
     private int memoryLimit;
     private int coresLimit;
-    private ArrayList<TaskID> currentTasks;
-    private ArrayList<ProjectUID> currentPlan;
+    private HashMap<ProjectUID, ArrayList<TaskID>> currentTasks;
+    // preserve order of inserted item
+    private LinkedHashMap<ProjectUID, Integer> currentPlan;
     private boolean computing;
 
     /**
@@ -36,8 +40,8 @@ public class ActiveClient {
      * @param session client's session
      */
     public ActiveClient(String clientName, Session session) {
-        this.currentPlan = new ArrayList<>();
-        this.currentTasks = new ArrayList<>();
+        this.currentPlan = new LinkedHashMap<>();
+        this.currentTasks = new HashMap<>();
         this.clientName = clientName;
         this.session = session;
     }
@@ -50,7 +54,6 @@ public class ActiveClient {
     public IClient getClientMethods() {
         return clientMethods;
     }
-
 
     /**
      * Sets client implementation of client remote interface
@@ -80,31 +83,28 @@ public class ActiveClient {
     }
 
     /**
-     * Sets new plan for the client
-     *
-     * @param plan new plan for the client
-     */
-    public void setPlan(ArrayList<ProjectUID> plan) {
-        currentPlan = plan;
-    }
-
-    /**
      * Associates client with the given task
      *
      * @param taskID task to add
      */
     public synchronized void associateClientWithTask(TaskID taskID) {
-        currentTasks.add(taskID);
+        if (!currentTasks.containsKey(taskID.getProjectUID())) {
+            currentTasks.put(taskID.getProjectUID(), new ArrayList<TaskID>());
+        }
+        currentTasks.get(taskID.getProjectUID()).add(taskID);
     }
 
     /**
      *
      * Unassociates client with the given task
      *
-     * @param id task to unassociate
+     * @param taskID task to unassociate
      */
-    public synchronized void unassociateClientWithTask(TaskID id) {
-        currentTasks.remove(id);
+    public synchronized void unassociateClientWithTask(TaskID taskID) {
+        currentTasks.get(taskID.getProjectUID()).remove(taskID);
+        if (currentTasks.get(taskID.getProjectUID()).isEmpty()) {
+            currentTasks.remove(taskID.getProjectUID());
+        }
     }
 
     /**
@@ -112,7 +112,7 @@ public class ActiveClient {
      *
      * @return current plan
      */
-    public ArrayList<ProjectUID> getCurrentPlan() {
+    public LinkedHashMap<ProjectUID, Integer> getCurrentPlan() {
         return currentPlan;
     }
 
@@ -121,7 +121,7 @@ public class ActiveClient {
      *
      * @param currentPlan list with projects planned
      */
-    public void setCurrentPlan(ArrayList<ProjectUID> currentPlan) {
+    public void setCurrentPlan(LinkedHashMap<ProjectUID, Integer> currentPlan) {
         this.currentPlan = currentPlan;
     }
 
@@ -132,8 +132,8 @@ public class ActiveClient {
      */
     public int getCurrentCoresUsed() {
         int coreUsage = 0;
-        for (TaskID taskID : currentTasks) {
-            coreUsage = coreUsage + taskID.getCores();
+        for (Entry<ProjectUID, ArrayList<TaskID>> entry : currentTasks.entrySet()) {
+            coreUsage += entry.getValue().get(0).getPriority() * entry.getValue().size();
         }
         return coreUsage;
     }
@@ -143,7 +143,7 @@ public class ActiveClient {
      *
      * @return current tasks
      */
-    public ArrayList<TaskID> getCurrentTasks() {
+    public HashMap<ProjectUID, ArrayList<TaskID>> getCurrentTasks() {
         return currentTasks;
     }
 

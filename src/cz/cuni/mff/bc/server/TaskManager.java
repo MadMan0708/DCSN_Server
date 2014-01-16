@@ -18,10 +18,16 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -50,6 +56,7 @@ public class TaskManager {
     private ConcurrentHashMap<ProjectUID, Project> projectsCompleted;
     private ConcurrentHashMap<ProjectUID, Project> projectsForDownload;
     private ConcurrentHashMap<ProjectUID, Project> projectsCorrupted;
+    private SortedSet<Project> finishingProjects;
     private Planner planner;
     private ServerParams serverParams;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
@@ -70,6 +77,20 @@ public class TaskManager {
         this.projectsPaused = new ConcurrentHashMap<>();
         this.projectsActive = new ConcurrentHashMap<>();
         this.tasksInProgress = new CopyOnWriteArrayList<>();
+        this.finishingProjects = new ConcurrentSkipListSet<>(new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) { // for highest priority first
+                Project p1 = (Project) o1;
+                Project p2 = (Project) o2;
+                if (p1.getPriority() < p2.getPriority()) {
+                    return 1;
+                } else if (p1.getPriority() == p2.getPriority()) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+        });
 
         this.planner = new Planner();
         this.serverParams = serverParams;
@@ -293,16 +314,18 @@ public class TaskManager {
      * @return list of unassociated tasks
      */
     public ArrayList<TaskID> cancelTasksAssociation(String clientName) {
-        ArrayList<TaskID> tasks = null;
+        HashMap<ProjectUID, ArrayList<TaskID>> tasks = null;
         if (isClientActive(clientName)) {
             tasks = activeClients.get(clientName).getCurrentTasks();
         }
 
         ArrayList<TaskID> toPrint = new ArrayList<>();
         if (tasks != null) {
-            toPrint.addAll(tasks);
-            for (TaskID taskID : tasks) {
-                cancelTaskAssociation(clientName, taskID);
+            for (Entry<ProjectUID, ArrayList<TaskID>> entry : tasks.entrySet()) {
+                for (TaskID taskID : entry.getValue()) {
+                    toPrint.add(taskID);
+                    cancelTaskAssociation(clientName, taskID);
+                }
             }
         }
         return toPrint;
@@ -312,7 +335,7 @@ public class TaskManager {
      * Check if there are unassigned tasks in projects which are in current client plan
      */
     private boolean plannedProjectsHasTasks(String clientName) {
-        ArrayList<ProjectUID> currentPlan = activeClients.get(clientName).getCurrentPlan();
+        Set<ProjectUID> currentPlan = activeClients.get(clientName).getCurrentPlan().keySet();
 
         for (ProjectUID projectUID : currentPlan) {
             if (projectsAll.get(projectUID).getNumOfTasksUncompleted() != 0) {
@@ -326,11 +349,35 @@ public class TaskManager {
      * Gets the project from client's current plan from which the client will calculates the tasks
      */
     private ProjectUID getNextProjectForClient(String clientName) {
-        return null;
+        ActiveClient active = activeClients.get(clientName);
+        if (!finishingProjects.isEmpty()) {
+            // planning for absolute priority tasks
+            int coresAvailable = active.getAvailableCores();
+            int memoryLimit = active.getMemoryLimit();
+            for (Project project : finishingProjects) {
+                if (project.getMemory() <= memoryLimit && project.getCores() <= coresAvailable) {
+                    return project.getProjectUID();
+                }
+            }
+            return null; // return null to wait for current tasks to finish so the
+            // almost finished tasks are calculated as soon as possible
+        } else {
+            // regular planning
+            HashMap<ProjectUID, ArrayList<TaskID>> currentTasks = active.getCurrentTasks();
+            for (Entry<ProjectUID, Integer> entry : active.getCurrentPlan().entrySet()) {
+                if (!currentTasks.containsKey(entry.getKey())) {
+                    return entry.getKey();
+                } else if (currentTasks.get(entry.getKey()).size() < entry.getValue()) { // if there can be more tasks of one project
+                    return entry.getKey();
+                }
+            }
+            // this part never returns null because of design of planning, but it has to be here to preserve correctness of the function
+            return null;
+        }
+
         // tady vybrat ktery se prida, pokud vim ze tam bezi 3 jadrovy, a kapacita je 4 jadra, tak tam vrazim
         // 1 jadrovej task
         //TODO
-        // implement absolute priority
         // implement when one project hasn't any uncompleted tasks, choose tasks from next one,
         // cause tasks from this project will be usualy completed in close time
     }
@@ -497,7 +544,7 @@ public class TaskManager {
                     createTasks(project);
                     changePreparingToActive(project);
                     addTasksToPool(project.getClientName(), project.getProjectName());
-                    planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
+                    plan();
                 } catch (ClassNotFoundException e) {
                     LOG.log(Level.WARNING, "ClassNotFoundException during task creation : {0}", e.toString());
                     undoProject(project);
@@ -529,7 +576,7 @@ public class TaskManager {
             projectsCorrupted.put(project.getProjectUID(), project);
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
-            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
+            plan();
         }
     }
 
@@ -551,7 +598,7 @@ public class TaskManager {
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
             deleteProject(clientName, projectName);
-            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
+            plan();
             return true;
         } else {
             return false;
@@ -573,7 +620,7 @@ public class TaskManager {
             projectsPaused.put(project.getProjectUID(), project);
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
-            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
+            plan();
             return true;
         } else {
             return false;
@@ -594,7 +641,7 @@ public class TaskManager {
             projectsActive.put(project.getProjectUID(), project);
             projectsPaused.remove(project.getProjectUID());
             addTasksToPool(clientID, projectID);
-            planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
+            plan();
             return true;
         } else {
             return false;
@@ -618,6 +665,16 @@ public class TaskManager {
         return projects;
     }
 
+    /*
+     * Plan
+     */
+    private void plan() {
+        Collection<Project> values = projectsActive.values();
+        values.removeAll(finishingProjects);
+        // create new plan because finishing projects are not part of the planning process
+        planner.plan(activeClients.values(), values, serverParams.getStrategy());
+    }
+
     /**
      * Adds completed task to the project list of completed tasks
      *
@@ -635,7 +692,10 @@ public class TaskManager {
         if (project != null) { // if the project still exists ( it may have been cancelled but client didn't know about that
             project.addCompletedTask(ID);
             tasksInProgress.remove(ID);
-
+            if (project.getNumOfTasksUncompleted() <= Planner.TASK_LIMIT && !finishingProjects.contains(project)) {
+                finishingProjects.add(project);
+                plan();
+            }
             // if all project tasks are completed, the task is packed
             // and new plan for active client is created
             if (project.allTasksCompleted()) {
@@ -654,8 +714,6 @@ public class TaskManager {
                 } catch (InterruptedException e) {
                     LOG.log(Level.WARNING, "Interpution during project packing");
                 }
-                // create new plan for tasks
-                planner.plan(activeClients.values(), projectsActive.values(), serverParams.getStrategy());
             }
         }
     }
