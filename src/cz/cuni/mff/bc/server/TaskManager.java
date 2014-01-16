@@ -355,7 +355,10 @@ public class TaskManager {
             int coresAvailable = active.getAvailableCores();
             int memoryLimit = active.getMemoryLimit();
             for (Project project : finishingProjects) {
-                if (project.getMemory() <= memoryLimit && project.getCores() <= coresAvailable) {
+                if (project.getMemory() <= memoryLimit && project.getCores() <= coresAvailable
+                        && project.getNumOfTasksUncompleted()!=0) { // if num of uncompleted tasks is 0, the tasks will be propably
+                                                                    // be soon calculated by different client, it is better to skip
+                                                                    // to the next project
                     return project.getProjectUID();
                 }
             }
