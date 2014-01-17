@@ -4,6 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.api.main.ProjectUID;
 import static cz.cuni.mff.bc.server.StrategiesList.HIGHEST_PRIORITY_FIRST;
 import static cz.cuni.mff.bc.server.StrategiesList.MAXIMAL_THROUGHPUT;
 import java.lang.reflect.Array;
@@ -13,6 +14,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -93,8 +96,9 @@ public class Planner {
     /*
      * Sorts active projects by priorities and returns sorted
      */
-    private List<Project> getSortedListByPriorities(Collection<Project> activeProjects) {
-        List<Project> asList = (List<Project>) Arrays.asList((Project[]) activeProjects.toArray());
+    private LinkedList<Project> getSortedListByPriorities(Collection<Project> activeProjects) {
+
+        LinkedList<Project> asList = new LinkedList<>(activeProjects);
         Collections.sort(asList, new Comparator() {
             @Override
             public int compare(Object o1, Object o2) {
@@ -116,12 +120,23 @@ public class Planner {
      * Creates the plan for all the clients according the strategy Highest Priority First
      */
     private void planForHighestPriority(ArrayList<ActiveClient> activeClients, Collection<Project> activeProjects) {
+        LinkedList<Project> sortedListByPriorities = getSortedListByPriorities(activeProjects);
+        for (ActiveClient active : activeClients) {
+            LinkedHashMap<ProjectUID, Integer> currentPlan = new LinkedHashMap<>();
+            currentPlan.put(sortedListByPriorities.getFirst().getProjectUID(), 2);
+            active.setCurrentPlan(currentPlan);
+        }
+
     }
 
     /*
      * Creates the plan for one client according the strategy Highest Priority First
      */
     private void planForHighestPriority(ActiveClient activeClient, Collection<Project> activeProjects) {
+        LinkedList<Project> sortedListByPriorities = getSortedListByPriorities(activeProjects);
+        LinkedHashMap<ProjectUID, Integer> currentPlan = new LinkedHashMap<>();
+        currentPlan.put(sortedListByPriorities.getFirst().getProjectUID(), 2);
+        activeClient.setCurrentPlan(currentPlan);
     }
 
     /*

@@ -32,6 +32,7 @@ public class ActiveClient {
     // preserve order of inserted item
     private LinkedHashMap<ProjectUID, Integer> currentPlan;
     private boolean computing;
+    private IActiveClientListener listener;
 
     /**
      * Constructor
@@ -39,7 +40,8 @@ public class ActiveClient {
      * @param clientName client's name
      * @param session client's session
      */
-    public ActiveClient(String clientName, Session session) {
+    public ActiveClient(String clientName, Session session, IActiveClientListener listener) {
+        this.listener = listener;
         this.currentPlan = new LinkedHashMap<>();
         this.currentTasks = new HashMap<>();
         this.clientName = clientName;
@@ -70,7 +72,10 @@ public class ActiveClient {
      * @param computing true if client is computing tasks, false if not
      */
     public void setComputing(boolean computing) {
-        this.computing = computing;
+        if (this.computing != computing) {
+            this.computing = computing;
+            listener.afterChange();
+        }
     }
 
     /**

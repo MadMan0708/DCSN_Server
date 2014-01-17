@@ -50,7 +50,12 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
         sesAcceptor.accept(this); // starts listening for possible new session on the same session listener
         final String clientID = (String) session.receive();
         if (!activeClients.containsKey(clientID)) {
-            ActiveClient activeClient = new ActiveClient(clientID, session);
+            ActiveClient activeClient = new ActiveClient(clientID, session, new IActiveClientListener() {
+                @Override
+                public void afterChange() {
+                    taskManager.planForOne(clientID);
+                }
+            });
             activeClients.put(clientID, activeClient);
             taskManager.getClassManager().setCustomClassLoader(clientID);
             session.setClassLoader(taskManager.getClassManager().getClassLoader(clientID));

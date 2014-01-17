@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
@@ -673,14 +672,26 @@ public class TaskManager {
         planner.plan(activeClient, values, serverParams.getStrategy());
     }
 
+    /**
+     * Create a plan for one client
+     *
+     * @param activeClient active client's name
+     */
+    public void planForOne(String activeClient) {
+        Collection<Project> values = projectsActive.values();
+        values.removeAll(finishingProjects);
+        planner.plan(activeClients.get(activeClient), values, serverParams.getStrategy());
+    }
     /*
      * Plan
      */
+
     private void planForAll() {
         Collection<Project> values = projectsActive.values();
         values.removeAll(finishingProjects);
         // create new plan because finishing projects are not part of the planning process
         planner.plan(activeClients.values(), values, serverParams.getStrategy());
+        LOG.log(Level.INFO, "Plans for all clients have been created, stragey used : {0}", serverParams.getStrategy());
     }
 
     /**
