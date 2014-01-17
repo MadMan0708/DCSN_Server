@@ -6,11 +6,14 @@ package cz.cuni.mff.bc.server;
 
 import static cz.cuni.mff.bc.server.StrategiesList.HIGHEST_PRIORITY_FIRST;
 import static cz.cuni.mff.bc.server.StrategiesList.MAXIMAL_THROUGHPUT;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Implementation of strategies plans creating for the clients
@@ -88,10 +91,11 @@ public class Planner {
     }
 
     /*
-     * Creates the plan for all the clients according the strategy Highest Priority First
+     * Sorts active projects by priorities and returns sorted
      */
-    private void planForHighestPriority(ArrayList<ActiveClient> activeClients, Collection<Project> activeProjects) {
-        Collections.sort(activeClients, new Comparator() {
+    private List<Project> getSortedListByPriorities(Collection<Project> activeProjects) {
+        List<Project> asList = (List<Project>) Arrays.asList((Project[]) activeProjects.toArray());
+        Collections.sort(asList, new Comparator() {
             @Override
             public int compare(Object o1, Object o2) {
                 Project p1 = (Project) o1;
@@ -105,6 +109,13 @@ public class Planner {
                 }
             }
         });
+        return asList;
+    }
+
+    /*
+     * Creates the plan for all the clients according the strategy Highest Priority First
+     */
+    private void planForHighestPriority(ArrayList<ActiveClient> activeClients, Collection<Project> activeProjects) {
     }
 
     /*
