@@ -63,8 +63,6 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
             session.send(remoteMethods);
             activeClient.setClientMethods((IClient) session.receive());
             LOG.log(Level.INFO, "Client {0} has been connected to the server", clientID);
-            taskManager.planForOne(activeClient);
-            LOG.log(Level.INFO, "Plan for client {0} has been created", clientID);
             session.addCloseListener(new SessionCloseListener() {
                 @Override
                 public void closed(Link sessionLink, SessionCloseListener.Cause cause) {

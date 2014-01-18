@@ -294,15 +294,16 @@ public class TaskManager {
      * @param taskID task ID
      */
     public void cancelTaskAssociation(String clientName, TaskID taskID) {
-        if (isClientActive(clientName)) { // othwerwise the client is not in the list and nothing can be unassociated from his lists
+        if (isClientComputing(clientName)) { // othwerwise the client is not in the list and nothing can be unassociated from his lists
             activeClients.get(clientName).unassociateClientWithTask(taskID);
         }
         tasksInProgress.remove(taskID);
         Project p = projectsAll.get(taskID.getProjectUID());
         p.addTaskAgain(taskID); // adds task again to the project's uncompleted list
-        LOG.log(Level.INFO, "Task {0} calculated by {1} is again in tasks pool", new Object[]{taskID, clientName});
+
         if (p.getState().equals(ProjectState.ACTIVE)) {
             addTaskBackToPool(taskID);// if the project is active, the tasks is added to the task pool
+            LOG.log(Level.INFO, "Task {0} calculated by {1} is again in tasks pool", new Object[]{taskID, clientName});
             // otherwise no
         }
     }
@@ -313,9 +314,9 @@ public class TaskManager {
      * @param clientName client's name
      * @return list of unassociated tasks
      */
-    public ArrayList<TaskID> cancelTasksAssociation(String clientName) {
+    public synchronized ArrayList<TaskID> cancelTasksAssociation(String clientName) {
         HashMap<ProjectUID, ArrayList<TaskID>> tasks = null;
-        if (isClientActive(clientName)) {
+        if (isClientComputing(clientName)) {
             tasks = activeClients.get(clientName).getCurrentTasks();
         }
 
@@ -668,8 +669,10 @@ public class TaskManager {
      * @param activeClient active client
      */
     public void planForOne(ActiveClient activeClient) {
-        planner.planForOne(activeClient, serverParams.getStrategy());
-        LOG.log(Level.INFO, "Plan for the client {0} have been created, stragey used : {1}", new Object[]{activeClient.getClientName(), serverParams.getStrategy()});
+        if (isClientComputing(activeClient.getClientName())) {
+            planner.planForOne(activeClient, serverParams.getStrategy());
+            LOG.log(Level.INFO, "Plan for the client {0} have been created, strategy used : {1}", new Object[]{activeClient.getClientName(), serverParams.getStrategy()});
+        }
     }
 
     /**
@@ -679,7 +682,6 @@ public class TaskManager {
      */
     public void planForOne(String activeClient) {
         planForOne(activeClients.get(activeClient));
-
     }
 
     /*
@@ -691,7 +693,7 @@ public class TaskManager {
         values.removeAll(finishingProjects);
         // create new plan because finishing projects are not part of the planning process
         planner.planForAll(activeClients.values(), values, serverParams.getStrategy());
-        LOG.log(Level.INFO, "Plans for all clients have been created, stragey used : {0}", serverParams.getStrategy());
+        LOG.log(Level.INFO, "Plans for all clients have been created, strategy used : {0}", serverParams.getStrategy());
     }
 
     /**

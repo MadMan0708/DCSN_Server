@@ -67,15 +67,22 @@ public class ActiveClient {
     }
 
     /**
-     * Sets if the client is computing task or not
+     * Sets client's state to: in task computation
      *
-     * @param computing true if client is computing tasks, false if not
      */
-    public void setComputing(boolean computing) {
-        if (this.computing != computing) {
-            this.computing = computing;
+    public void setToComputing() {
+        if (this.computing == false) {
+            this.computing = true;
             listener.afterChange();
         }
+    }
+
+    /**
+     * Sets client's state to: not in task computation
+     */
+    public void setToNotComputing() {
+        this.computing = false;
+
     }
 
     /**

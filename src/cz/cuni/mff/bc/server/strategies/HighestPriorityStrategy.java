@@ -22,9 +22,15 @@ import java.util.LinkedList;
  */
 public class HighestPriorityStrategy implements IStrategy {
 
-    LinkedList<Project> allProjectsSorted = new LinkedList<>();
-    HashMap<Key, LinkedList<Project>> availableProjects = getAvailableProjectsList(allProjectsSorted);
-    HashMap<Key, LinkedList<Project>> usedProjects = new HashMap<>();
+    LinkedList<Project> allProjectsSorted;
+    HashMap<Key, LinkedList<Project>> availableProjects;
+    HashMap<Key, LinkedList<Project>> usedProjects;
+
+    public HighestPriorityStrategy() {
+        this.allProjectsSorted = new LinkedList<>();
+        this.availableProjects = getAvailableProjectsList(allProjectsSorted);
+        this.usedProjects = new HashMap<>();
+    }
 
     @Override
     public void planForAll(ArrayList<ActiveClient> activeClients, Collection<Project> activeProjects) {

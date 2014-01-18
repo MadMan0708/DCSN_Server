@@ -33,7 +33,7 @@ import org.cojen.dirmi.Pipe;
 public class IServerImpl implements IServer {
 
     private TaskManager taskManager;
-    private final int timerPeriodSec = 11;
+    private final int timerPeriodSec = 40;
     private HashMap<String, ActiveClient> activeClients;
     private FilesStructure filesStructure;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
@@ -101,11 +101,11 @@ public class IServerImpl implements IServer {
         switch (message) {
             case CALCULATION_STARTED:
                 startClientTimer(clientID);
-                activeClients.get(clientID).setComputing(true);
+                activeClients.get(clientID).setToComputing();
                 break;
             case CALCULATION_ENDED:
                 stopClientTimer(clientID);
-                activeClients.get(clientID).setComputing(false);
+                activeClients.get(clientID).setToNotComputing();
                 break;
         }
     }
@@ -244,7 +244,7 @@ public class IServerImpl implements IServer {
             } else if (taskManager.isProjectCorrupted(ID.getClientName(), ID.getProjectName())) {
                 toCancel.add(ID);
                 taskManager.cancelTaskAssociation(clientID, ID);
-            } else if (taskManager.isTaskCompleted(ID) && taskManager.isTaskInProgress(ID)) {
+            } else if (taskManager.isTaskCompleted(ID)) {
                 toCancel.add(ID);
                 taskManager.cancelTaskAssociation(clientID, ID);
             }
@@ -274,7 +274,7 @@ public class IServerImpl implements IServer {
                     LOG.log(Level.INFO, "Client {0} is active", clientID);
                 } else {
                     ArrayList<TaskID> tasks = taskManager.cancelTasksAssociation(clientID);
-                    LOG.log(Level.WARNING, "Client  {0} has not sent ping message, disconnected", clientID);
+                    LOG.log(Level.WARNING, "Client {0} has not sent ping message, disconnected", clientID);
                     if (tasks != null) {
                         for (TaskID taskID : tasks) {
                             LOG.log(Level.INFO, "Task {0} calculated by {1} is again in tasks pool", new Object[]{taskID, clientID});
@@ -286,7 +286,6 @@ public class IServerImpl implements IServer {
             }
         }, 0, timerPeriodSec * 1000);
         activeClients.get(clientID).setTimer(t);
-
     }
 
     /*
