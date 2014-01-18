@@ -4,6 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.api.main.CustomIO;
 import cz.cuni.mff.bc.misc.GConsole;
 import cz.cuni.mff.bc.misc.IConsole;
 import cz.cuni.mff.bc.server.logging.CustomFormater;
@@ -28,7 +29,7 @@ import org.cojen.dirmi.SessionAcceptor;
  * @author Jakub Hava
  */
 public class Server implements IConsole {
-
+    
     private static final int numThreads = 100;
     private Environment env;
     private SessionAcceptor sesAcceptor;
@@ -50,7 +51,7 @@ public class Server implements IConsole {
         logHandler.setLevel(Level.ALL);
         logHandler.addLogTarget(new FileLogger(new File("server.log")));
         LOG.addHandler(logHandler);
-
+        
         activeClients = new HashMap<>();
         serverParams = new ServerParams(logHandler);
         filesStructure = new FilesStructure(serverParams);
@@ -95,20 +96,20 @@ public class Server implements IConsole {
         } else {
             base.mkdir();
         }
-
+        
         File uploaded = filesStructure.getUploadedDir();
         if (uploaded.exists() && uploaded.isDirectory()) {
         } else {
             uploaded.mkdir();
         }
-
+        
         File projects = filesStructure.getProjectsDir();
         if (projects.exists() && projects.isDirectory()) {
         } else {
             projects.mkdir();
         }
     }
-
+    
     @Override
     public void proceedCommand(String command) {
         String[] cmd = ServerCommands.parseCommand(command);
@@ -136,7 +137,7 @@ public class Server implements IConsole {
         } catch (SecurityException e) {
         }
     }
-
+    
     @Override
     public void startClassicConsole() {
         new Thread() {
@@ -153,7 +154,7 @@ public class Server implements IConsole {
             }
         }.start();
     }
-
+    
     @Override
     public void startGUIConsole() {
         GConsole con = new GConsole(this, "server", new java.awt.event.WindowAdapter() {
@@ -216,6 +217,7 @@ public class Server implements IConsole {
      */
     public void exitServer() {
         stopListening();
+        CustomIO.deleteDirectory(new File(serverParams.getBaseDir()));
         System.exit(0);
     }
 }

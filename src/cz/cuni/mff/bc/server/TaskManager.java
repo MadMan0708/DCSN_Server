@@ -373,11 +373,14 @@ public class TaskManager {
                     return entry.getKey();
                 } else if (currentTasks.get(entry.getKey()).size() < entry.getValue()) { // if there can be more tasks of one project
                     return entry.getKey();
+                } else {
+                    continue;
                 }
             }
             // this part never returns null because of design of planning, but it has to be here to preserve correctness of the function
             return null;
         }
+
     }
 
     /**
@@ -403,7 +406,7 @@ public class TaskManager {
      * @param projectUID unique project ID from which task will be gotten
      * @return task
      */
-    public Task getTask(String clientName, ProjectUID projectUID) {
+    public synchronized Task getTask(String clientName, ProjectUID projectUID) {
         TaskID id = tasksPool.get(projectUID).poll();
         if (id == null) {
             return null; // the pool for this project is empty, in that case client checker will wait for a while
@@ -709,10 +712,10 @@ public class TaskManager {
         pausedActive.putAll(projectsPaused);
         pausedActive.putAll(projectsActive);
         final Project project = pausedActive.get(ID.getProjectUID());
-        activeClients.get(clientName).unassociateClientWithTask(ID);
         if (project != null) { // if the project still exists ( it may have been cancelled but client didn't know about that
             project.addCompletedTask(ID);
             tasksInProgress.remove(ID);
+            activeClients.get(clientName).unassociateClientWithTask(ID);
             if (project.getNumOfTasksUncompleted() <= Planner.TASK_LIMIT_FOR_ABSOLUTE_PROCCESING && !finishingProjects.contains(project)) {
                 finishingProjects.add(project);
                 planForAll();
