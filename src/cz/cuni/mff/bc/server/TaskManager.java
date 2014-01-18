@@ -349,7 +349,7 @@ public class TaskManager {
     /*
      * Gets the project from client's current plan from which the client will calculates the tasks
      */
-    private ProjectUID getNextProjectForClient(String clientName) {
+    private synchronized ProjectUID getNextProjectForClient(String clientName) {
         ActiveClient active = activeClients.get(clientName);
         if (!finishingProjects.isEmpty()) {
             // planning for absolute priority tasks
@@ -691,7 +691,7 @@ public class TaskManager {
      * Plan for all clients. Removes project with absolute priority from the list of active
      * projects, because faster processing is done for them
      */
-    private void planForAll() {
+    private synchronized void planForAll() {
         Collection<Project> values = projectsActive.values();
         values.removeAll(finishingProjects);
         // create new plan because finishing projects are not part of the planning process

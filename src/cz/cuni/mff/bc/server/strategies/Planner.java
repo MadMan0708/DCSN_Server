@@ -23,7 +23,7 @@ public class Planner {
      * This limit says when any project has less then TASK_LIMIT uncompleted
      * tasks, the absolute priority is given to the project
      */
-    public static int TASK_LIMIT_FOR_ABSOLUTE_PROCCESING = 5;
+    public static int TASK_LIMIT_FOR_ABSOLUTE_PROCCESING = 2;
     private HashMap<StrategiesList, IStrategy> strategies;
 
     public Planner() {
@@ -41,7 +41,7 @@ public class Planner {
      */
     public synchronized void planForAll(Collection<ActiveClient> activeClients, Collection<Project> activeProjects, StrategiesList strategy) {
         ArrayList<ActiveClient> computing = getClientsInComputation(activeClients);
-
+        
         strategies.get(strategy).planForAll(computing, activeProjects);
     }
 
