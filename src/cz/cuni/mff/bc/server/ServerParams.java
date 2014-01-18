@@ -4,6 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.server.strategies.StrategiesList;
 import cz.cuni.mff.bc.misc.PropertiesManager;
 import java.io.File;
 import java.util.HashMap;

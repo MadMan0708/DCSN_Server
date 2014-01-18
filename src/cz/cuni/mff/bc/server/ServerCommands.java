@@ -4,6 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.server.strategies.StrategiesList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

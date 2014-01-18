@@ -4,6 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.server.strategies.Planner;
 import cz.cuni.mff.bc.api.main.CustomIO;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.main.TaskID;
@@ -662,35 +663,34 @@ public class TaskManager {
     }
 
     /**
-     * Create a plan for one client
+     * Creates a plan for one client
      *
      * @param activeClient active client
      */
     public void planForOne(ActiveClient activeClient) {
-        Collection<Project> values = projectsActive.values();
-        values.removeAll(finishingProjects);
-        planner.plan(activeClient, values, serverParams.getStrategy());
+        planner.planForOne(activeClient, serverParams.getStrategy());
+        LOG.log(Level.INFO, "Plan for the client {0} have been created, stragey used : {1}", new Object[]{activeClient.getClientName(), serverParams.getStrategy()});
     }
 
     /**
-     * Create a plan for one client
+     * Creates a plan for one client
      *
      * @param activeClient active client's name
      */
     public void planForOne(String activeClient) {
-        Collection<Project> values = projectsActive.values();
-        values.removeAll(finishingProjects);
-        planner.plan(activeClients.get(activeClient), values, serverParams.getStrategy());
-    }
-    /*
-     * Plan
-     */
+        planForOne(activeClients.get(activeClient));
 
+    }
+
+    /*
+     * Plan for all clients. Removes project with absolute priority from the list of active
+     * projects, because faster processing is done for them
+     */
     private void planForAll() {
         Collection<Project> values = projectsActive.values();
         values.removeAll(finishingProjects);
         // create new plan because finishing projects are not part of the planning process
-        planner.plan(activeClients.values(), values, serverParams.getStrategy());
+        planner.planForAll(activeClients.values(), values, serverParams.getStrategy());
         LOG.log(Level.INFO, "Plans for all clients have been created, stragey used : {0}", serverParams.getStrategy());
     }
 
@@ -711,7 +711,7 @@ public class TaskManager {
         if (project != null) { // if the project still exists ( it may have been cancelled but client didn't know about that
             project.addCompletedTask(ID);
             tasksInProgress.remove(ID);
-            if (project.getNumOfTasksUncompleted() <= Planner.TASK_LIMIT && !finishingProjects.contains(project)) {
+            if (project.getNumOfTasksUncompleted() <= Planner.TASK_LIMIT_FOR_ABSOLUTE_PROCCESING && !finishingProjects.contains(project)) {
                 finishingProjects.add(project);
                 planForAll();
             }
