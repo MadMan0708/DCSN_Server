@@ -66,7 +66,7 @@ public class Server implements IConsole {
         serverParams.initialiseParameters();
         deleteContentOfBaseDirectory();
         discoveryThread = new DiscoveryThread(serverParams.getPort());
-        CustomIO.deleteDirectory(new File(serverParams.getBaseDir())); // delete directories from last run of the server
+        CustomIO.deleteDirectory(serverParams.getBaseDir()); // delete directories from last run of the server
         startListening();
     }
 
@@ -74,9 +74,9 @@ public class Server implements IConsole {
      * Deletes content of temporary directory
      */
     private void deleteContentOfBaseDirectory() {
-        File[] files = new File(serverParams.getBaseDir()).listFiles();
+        File[] files = serverParams.getBaseDir().toFile().listFiles();
         for (File file : files) {
-            CustomIO.deleteDirectory(file);
+            CustomIO.deleteDirectory(file.toPath());
         }
     }
 
@@ -103,7 +103,7 @@ public class Server implements IConsole {
      * Checks if all basic server directories exist
      */
     private void checkFolders() {
-        File base = new File(serverParams.getBaseDir());
+        File base = serverParams.getBaseDir().toFile();
         if (base.exists() && base.isDirectory()) {
         } else {
             base.mkdir();

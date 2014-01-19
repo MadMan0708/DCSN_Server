@@ -538,8 +538,8 @@ public class TaskManager {
     private void deleteProject(String clientName, String projectName) {
         File projectDir = filesStructure.getClientProjectsDir(clientName, projectName);
         File uploadedDir = filesStructure.getClientUploadedDir(clientName, projectName);
-        CustomIO.deleteDirectory(uploadedDir);
-        CustomIO.deleteDirectory(projectDir);
+        CustomIO.deleteDirectory(uploadedDir.toPath());
+        CustomIO.deleteDirectory(projectDir.toPath());
     }
 
     /*

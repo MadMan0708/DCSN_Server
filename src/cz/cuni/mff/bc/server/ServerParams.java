@@ -7,7 +7,7 @@ package cz.cuni.mff.bc.server;
 import cz.cuni.mff.bc.server.strategies.StrategiesList;
 import cz.cuni.mff.bc.misc.PropertiesManager;
 import java.io.File;
-import java.util.HashMap;
+import java.nio.file.Path;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +22,7 @@ public class ServerParams {
     private static PropertiesManager propManager;
     private StrategiesList strategy;
     private int port;
-    private String basedir;
+    private Path basedir;
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     /**
@@ -104,15 +104,15 @@ public class ServerParams {
     public boolean setBaseDir(String dir) {
         File f = new File(dir);
         if (f.exists() && f.isDirectory()) {
-            basedir = f.getAbsolutePath();
+            basedir = f.toPath().toAbsolutePath();
             LOG.log(Level.INFO, "Basedir is now set to: {0}", basedir);
-            propManager.setProperty("basedir", basedir);
+            propManager.setProperty("basedir", basedir.toString());
             return true;
         } else {
             if (f.mkdirs()) {
-                basedir = f.getAbsolutePath();
+                basedir = f.toPath().toAbsolutePath();
                 LOG.log(Level.INFO, "Basedir is now set to: {0}", basedir);
-                propManager.setProperty("basedir", basedir);
+                propManager.setProperty("basedir", basedir.toString());
                 return true;
             } else {
                 LOG.log(Level.WARNING, "Path {0} is not correct path", dir);
@@ -126,7 +126,7 @@ public class ServerParams {
      *
      * @return base directory
      */
-    public String getBaseDir() {
+    public Path getBaseDir() {
         return basedir;
     }
 

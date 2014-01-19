@@ -131,7 +131,7 @@ public class IServerImpl implements IServer {
     @Override
     public Pipe uploadProject(String clientName, String projectName, int priority, int cores, int memory, int time, Pipe pipe) throws RemoteException {
         Project project = taskManager.createPreparingProject(clientName, projectName, priority, cores, memory, time);
-        File upDir = CustomIO.createFolder(filesStructure.getClientUploadedDir(clientName, projectName));
+        File upDir = CustomIO.createFolder(filesStructure.getClientUploadedDir(clientName, projectName).toPath());
         try {
             File tmp = File.createTempFile(clientName, projectName + ".zip");
             try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tmp))) {
