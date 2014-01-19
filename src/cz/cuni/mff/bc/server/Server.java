@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -65,9 +64,20 @@ public class Server implements IConsole {
      */
     public void initialise() {
         serverParams.initialiseParameters();
+        deleteContentOfBaseDirectory();
         discoveryThread = new DiscoveryThread(serverParams.getPort());
         CustomIO.deleteDirectory(new File(serverParams.getBaseDir())); // delete directories from last run of the server
         startListening();
+    }
+
+    /*
+     * Deletes content of temporary directory
+     */
+    private void deleteContentOfBaseDirectory() {
+        File[] files = new File(serverParams.getBaseDir()).listFiles();
+        for (File file : files) {
+            CustomIO.deleteDirectory(file);
+        }
     }
 
     /**

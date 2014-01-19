@@ -147,7 +147,7 @@ public class FilesStructure {
      * @return project jar file
      */
     public File getProjectJarFile(String clientName, String projectName) {
-        return new File(getClientProjectsDir(clientName, projectName), dataFilesName + ".jar");
+        return new File(getClientProjectsDir(clientName, projectName), jarFilesName + ".jar");
     }
 
     /**
