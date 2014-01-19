@@ -159,6 +159,7 @@ public class CustomIO {
             for (File f : files) {
                 if (f.isDirectory()) {
                     deleteDirectory(f);
+
                 } else {
                     f.delete();
                 }

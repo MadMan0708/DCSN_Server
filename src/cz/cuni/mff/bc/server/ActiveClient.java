@@ -145,7 +145,7 @@ public class ActiveClient {
     public int getCurrentCoresUsed() {
         int coreUsage = 0;
         for (Entry<ProjectUID, ArrayList<TaskID>> entry : currentTasks.entrySet()) {
-            coreUsage += entry.getValue().get(0).getPriority() * entry.getValue().size();
+            coreUsage += entry.getValue().get(0).getCores() * entry.getValue().size();
         }
         return coreUsage;
     }

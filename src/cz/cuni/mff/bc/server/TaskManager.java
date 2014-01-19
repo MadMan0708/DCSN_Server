@@ -77,11 +77,9 @@ public class TaskManager {
         this.projectsPaused = new ConcurrentHashMap<>();
         this.projectsActive = new ConcurrentHashMap<>();
         this.tasksInProgress = new CopyOnWriteArrayList<>();
-        this.finishingProjects = new ConcurrentSkipListSet<>(new Comparator() {
+        Comparator<Project> comparatorForFinishing = new Comparator<Project>() {
             @Override
-            public int compare(Object o1, Object o2) { // for highest priority first
-                Project p1 = (Project) o1;
-                Project p2 = (Project) o2;
+            public int compare(Project p1, Project p2) { // for highest priority first
                 if (p1.getPriority() < p2.getPriority()) {
                     return 1;
                 } else if (p1.getPriority() == p2.getPriority()) {
@@ -90,8 +88,8 @@ public class TaskManager {
                     return -1;
                 }
             }
-        });
-
+        };
+        this.finishingProjects = new ConcurrentSkipListSet<>(comparatorForFinishing);
         this.planner = new Planner();
         this.serverParams = serverParams;
         this.filesStructure = filesStructure;
@@ -264,11 +262,14 @@ public class TaskManager {
         // tasks pool has to contain taskID.getProjectUID()
         tasksPool.get(taskID.getProjectUID()).add(taskID);
     }
-    /*
-     * Checks if the client is in list of active clients
-     */
 
-    private boolean isClientActive(String clientName) {
+    /**
+     * Checks if the client is in list of active clients
+     *
+     * @param clientName client's name
+     * @return true if the client is active, false otherwise
+     */
+    public boolean isClientActive(String clientName) {
         if (activeClients.containsKey(clientName)) {
             return true;
         } else {
@@ -333,13 +334,11 @@ public class TaskManager {
     }
 
     /*
-     * Check if there are unassigned tasks in projects which are in current client plan
+     * Check if there are unassigned tasks in projects which are in finishing projects
      */
-    private boolean plannedProjectsHasTasks(String clientName) {
-        Set<ProjectUID> currentPlan = activeClients.get(clientName).getCurrentPlan().keySet();
-
-        for (ProjectUID projectUID : currentPlan) {
-            if (projectsAll.get(projectUID).getNumOfTasksUncompleted() != 0) {
+    private boolean finishingProjectsHasTasks(SortedSet<Project> projects) {
+        for (Project project : projects) {
+            if (project.getNumOfTasksUncompleted() != 0) {
                 return true;
             }
         }
@@ -347,40 +346,52 @@ public class TaskManager {
     }
 
     /*
-     * Gets the project from client's current plan from which the client will calculates the tasks
+     * Check if there are unassigned tasks in projects which are part of regular planning
      */
-    private synchronized ProjectUID getNextProjectForClient(String clientName) {
-        ActiveClient active = activeClients.get(clientName);
-        if (!finishingProjects.isEmpty()) {
-            // planning for absolute priority tasks
-            int coresAvailable = active.getAvailableCores();
-            int memoryLimit = active.getMemoryLimit();
-            for (Project project : finishingProjects) {
-                if (project.getMemory() <= memoryLimit && project.getCores() <= coresAvailable
-                        && project.getNumOfTasksUncompleted() != 0) { // if num of uncompleted tasks is 0, the tasks will be propably
-                    // be soon calculated by different client, it is better to skip
-                    // to the next project
-                    return project.getProjectUID();
-                }
+    private boolean regularProjectsHasTasks(Set<ProjectUID> projects) {
+        for (ProjectUID projectUID : projects) {
+            if (projectsAll.get(projectUID).getNumOfTasksUncompleted() != 0) {
+                return true;
             }
-            return null; // return null to wait for current tasks to finish so the
-            // almost finished tasks are calculated as soon as possible
-        } else {
-            // regular planning
-            HashMap<ProjectUID, ArrayList<TaskID>> currentTasks = active.getCurrentTasks();
-            for (Entry<ProjectUID, Integer> entry : active.getCurrentPlan().entrySet()) {
-                if (!currentTasks.containsKey(entry.getKey())) {
-                    return entry.getKey();
-                } else if (currentTasks.get(entry.getKey()).size() < entry.getValue()) { // if there can be more tasks of one project
-                    return entry.getKey();
-                } else {
-                    continue;
-                }
-            }
-            // this part never returns null because of design of planning, but it has to be here to preserve correctness of the function
-            return null;
         }
+        return false;
+    }
+    /*
+     * Gets project which will user calculate from finishing projects
+     */
 
+    private ProjectUID getTaskFromFinishing(ActiveClient active) {
+        int coresAvailable = active.getAvailableCores();
+        int memoryLimit = active.getMemoryLimit();
+        for (Project project : finishingProjects) {
+            if (project.getMemory() <= memoryLimit && project.getCores() <= coresAvailable
+                    && project.getNumOfTasksUncompleted() != 0) { // if num of uncompleted tasks is 0, the tasks will be propably
+                // be soon calculated by different client, it is better to skip
+                // to the next project
+                return project.getProjectUID();
+            }
+        }
+        return null; // return null to wait for current tasks to finish so the
+        // almost finished tasks are calculated as soon as possible
+    }
+
+    /*
+     * Gets project which will user calculate from projects which aren't finishing
+     */
+    private ProjectUID getTaskFromRegularPlan(ActiveClient active) {
+        // regular planning
+        HashMap<ProjectUID, ArrayList<TaskID>> currentTasks = active.getCurrentTasks();
+        for (Entry<ProjectUID, Integer> entry : active.getCurrentPlan().entrySet()) {
+            if (!currentTasks.containsKey(entry.getKey())) {
+                return entry.getKey();
+            } else if (currentTasks.get(entry.getKey()).size() < entry.getValue()) { // if there can be more tasks of one project
+                return entry.getKey();
+            } else {
+                continue;
+            }
+        }
+        // this part never returns null because of design of planning, but it has to be here to preserve correctness of the function
+        return null;
     }
 
     /**
@@ -389,13 +400,18 @@ public class TaskManager {
      * @param clientName client's name
      * @return project unique ID
      */
-    public ProjectUID getProjectIDBeforeCalculation(String clientName) {
-        if (plannedProjectsHasTasks(clientName)) {
-            ProjectUID projectID = getNextProjectForClient(clientName);
-            return projectID;
+    public synchronized ProjectUID getProjectIDBeforeCalculation(String clientName) {
+        ActiveClient active = activeClients.get(clientName);
+        if (!finishingProjects.isEmpty() && finishingProjectsHasTasks(finishingProjects)) {
+            // planning for finishing projects
+            return getTaskFromFinishing(active);
         } else {
-            // No more tasks, checkers on clients will be forced to sleep for a while
-            return null;
+            if (regularProjectsHasTasks(active.getCurrentPlan().keySet())) {
+                return getTaskFromRegularPlan(active);
+            } else {
+                // No more tasks, checkers on clients will be forced to sleep for a while
+                return null;
+            }
         }
     }
 
@@ -432,6 +448,7 @@ public class TaskManager {
             addTaskBackToPool(id);
             return null;
         }
+
     }
 
     /*
@@ -692,7 +709,7 @@ public class TaskManager {
      * projects, because faster processing is done for them
      */
     private synchronized void planForAll() {
-        Collection<Project> values = projectsActive.values();
+        ArrayList<Project> values = new ArrayList<>(projectsActive.values());
         values.removeAll(finishingProjects);
         // create new plan because finishing projects are not part of the planning process
         planner.planForAll(activeClients.values(), values, serverParams.getStrategy());
@@ -705,7 +722,7 @@ public class TaskManager {
      * @param clientName
      * @param ID task ID
      */
-    public void addCompletedTask(String clientName, TaskID ID) {
+    public synchronized void addCompletedTask(String clientName, TaskID ID) {
         HashMap<ProjectUID, Project> pausedActive = new HashMap<>();
         // if the project is paused, tasks on the clients are let to finish computation and saved after
         // if computation fails on the client, the task is then returned to the project uncompleted list
@@ -719,26 +736,35 @@ public class TaskManager {
             if (project.getNumOfTasksUncompleted() <= Planner.TASK_LIMIT_FOR_ABSOLUTE_PROCCESING && !finishingProjects.contains(project)) {
                 finishingProjects.add(project);
                 planForAll();
+                // new plan for active clients is created
             }
-            // if all project tasks are completed, the task is packed
-            // and new plan for active client is created
+
             if (project.allTasksCompleted()) {
-                project.setState(ProjectState.COMPLETED);
-                projectsCompleted.put(ID.getProjectUID(), project);
-                projectsActive.remove(ID.getProjectUID());
-                File sourceDirectory = filesStructure.getCompleteDirInProject(project.getClientName(), project.getProjectName());
-                File destination = filesStructure.getCalculatedDataFile(project.getClientName(), project.getProjectName());
-                final Future<Boolean> f = executor.submit(new ProjectPacker(project, sourceDirectory, destination));
-                try {
-                    Boolean result = f.get(); // waits utill the packing is done
-                    projectsCompleted.remove(project.getProjectUID());
-                    projectsForDownload.put(project.getProjectUID(), project);
-                } catch (ExecutionException e) {
-                    LOG.log(Level.WARNING, "Error durong project packing: {0}", ((Exception) e.getCause()).toString());
-                } catch (InterruptedException e) {
-                    LOG.log(Level.WARNING, "Interpution during project packing");
-                }
+                // if all project tasks are completed, the task is packed
+                packProject(project);
             }
+        }
+
+    }
+
+    /*
+     * Packs the completed project
+     */
+    private void packProject(Project project) {
+        project.setState(ProjectState.COMPLETED);
+        projectsCompleted.put(project.getProjectUID(), project);
+        projectsActive.remove(project.getProjectUID());
+        File sourceDirectory = filesStructure.getCompleteDirInProject(project.getClientName(), project.getProjectName());
+        File destination = filesStructure.getCalculatedDataFile(project.getClientName(), project.getProjectName());
+        final Future<Boolean> f = executor.submit(new ProjectPacker(project, sourceDirectory, destination));
+        try {
+            Boolean result = f.get(); // waits utill the packing is done
+            projectsCompleted.remove(project.getProjectUID());
+            projectsForDownload.put(project.getProjectUID(), project);
+        } catch (ExecutionException e) {
+            LOG.log(Level.WARNING, "Error durong project packing: {0}", ((Exception) e.getCause()).toString());
+        } catch (InterruptedException e) {
+            LOG.log(Level.WARNING, "Interpution during project packing");
         }
     }
 

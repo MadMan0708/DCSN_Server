@@ -244,7 +244,7 @@ public class Project implements Serializable {
      * @return project state
      */
     public ProjectState getState() {
-        return this.state;
+        return state;
     }
 
     /**

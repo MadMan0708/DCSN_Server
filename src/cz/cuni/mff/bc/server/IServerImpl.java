@@ -268,8 +268,9 @@ public class IServerImpl implements IServer {
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (activeClients.get(clientID).getTimeout().equals(Boolean.TRUE)) {
-                    // vse ok, klient se ozval, znovu nastavuju timer
+
+                if (taskManager.isClientActive(clientID) && activeClients.get(clientID).getTimeout().equals(Boolean.TRUE)) {
+                    // OK, client has sent an inform message to the server, resetting timer
                     activeClients.get(clientID).setTimeout(Boolean.FALSE);
                     LOG.log(Level.INFO, "Client {0} is active", clientID);
                 } else {
@@ -283,6 +284,7 @@ public class IServerImpl implements IServer {
                     stopClientTimer(clientID);
                     activeClients.remove(clientID);
                 }
+
             }
         }, 0, timerPeriodSec * 1000);
         activeClients.get(clientID).setTimer(t);
@@ -292,9 +294,11 @@ public class IServerImpl implements IServer {
      * Stops the client timer
      */
     private void stopClientTimer(String clientID) {
-        Timer t = activeClients.get(clientID).getTimer();
-        t.cancel();
-        activeClients.get(clientID).setTimeout(null);
-        activeClients.get(clientID).setTimer(null);
+        if (taskManager.isClientActive(clientID)) {
+            Timer t = activeClients.get(clientID).getTimer();
+            t.cancel();
+            activeClients.get(clientID).setTimeout(null);
+            activeClients.get(clientID).setTimer(null);
+        }
     }
 }

@@ -29,7 +29,7 @@ import org.cojen.dirmi.SessionAcceptor;
  * @author Jakub Hava
  */
 public class Server implements IConsole {
-    
+
     private static final int numThreads = 100;
     private Environment env;
     private SessionAcceptor sesAcceptor;
@@ -49,9 +49,9 @@ public class Server implements IConsole {
         logHandler = new CustomHandler();
         logHandler.setFormatter(new CustomFormater());
         logHandler.setLevel(Level.ALL);
-        logHandler.addLogTarget(new FileLogger(new File("server.log")));
+        logHandler.addLogTarget(new FileLogger(new File("server.main.log")));
         LOG.addHandler(logHandler);
-        
+
         activeClients = new HashMap<>();
         serverParams = new ServerParams(logHandler);
         filesStructure = new FilesStructure(serverParams);
@@ -65,6 +65,7 @@ public class Server implements IConsole {
     public void initialise() {
         serverParams.initialiseParameters();
         discoveryThread = new DiscoveryThread(serverParams.getPort());
+        CustomIO.deleteDirectory(new File(serverParams.getBaseDir())); // delete directories from last run of the server
         startListening();
     }
 
@@ -96,20 +97,20 @@ public class Server implements IConsole {
         } else {
             base.mkdir();
         }
-        
+
         File uploaded = filesStructure.getUploadedDir();
         if (uploaded.exists() && uploaded.isDirectory()) {
         } else {
             uploaded.mkdir();
         }
-        
+
         File projects = filesStructure.getProjectsDir();
         if (projects.exists() && projects.isDirectory()) {
         } else {
             projects.mkdir();
         }
     }
-    
+
     @Override
     public void proceedCommand(String command) {
         String[] cmd = ServerCommands.parseCommand(command);
@@ -137,7 +138,7 @@ public class Server implements IConsole {
         } catch (SecurityException e) {
         }
     }
-    
+
     @Override
     public void startClassicConsole() {
         new Thread() {
@@ -154,7 +155,7 @@ public class Server implements IConsole {
             }
         }.start();
     }
-    
+
     @Override
     public void startGUIConsole() {
         GConsole con = new GConsole(this, "server", new java.awt.event.WindowAdapter() {
@@ -171,20 +172,17 @@ public class Server implements IConsole {
      * Server starts listening for incoming sessions
      */
     public void startListening() {
-        if (serverParams.getBaseDir() == null) {
-            LOG.log(Level.INFO, "Server base dir has to be set before starting the server");
-        } else {
-            try {
-                checkFolders();
-                env = new Environment(numThreads);
-                sesAcceptor = env.newSessionAcceptor(serverParams.getPort());
-                sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor));
-                LOG.log(Level.INFO, "Server is listening for incoming sessions on port {0}", serverParams.getPort());
-                discoveryThread.startDiscovering();
-            } catch (IOException e) {
-                LOG.log(Level.WARNING, "Starting server: {0}", e.getMessage());
-            }
+        try {
+            checkFolders();
+            env = new Environment(numThreads);
+            sesAcceptor = env.newSessionAcceptor(serverParams.getPort());
+            sesAcceptor.accept(new CustomSessionListener(remoteMethods, sesAcceptor));
+            LOG.log(Level.INFO, "Server is listening for incoming sessions on port {0}", serverParams.getPort());
+            discoveryThread.startDiscovering();
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Starting server: {0}", e.getMessage());
         }
+
     }
 
     /**
@@ -217,7 +215,6 @@ public class Server implements IConsole {
      */
     public void exitServer() {
         stopListening();
-        CustomIO.deleteDirectory(new File(serverParams.getBaseDir()));
         System.exit(0);
     }
 }
