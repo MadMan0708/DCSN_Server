@@ -418,3 +418,201 @@ Sat Jan 18 23:58:37 GMT 2014 INFO 	Jakub:
 
 Sat Jan 18 23:58:37 GMT 2014 INFO 		 Plan empty
 
+Sun Jan 19 00:07:26 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 00:07:26 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:07:26 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:07:27 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:07:27 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:07:27 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 00:08:11 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:08:11 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:08:11 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:09:34 GMT 2014 INFO Replanning for client Petr
+
+Sun Jan 19 00:09:34 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 00:09:34 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:09:40 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 00:09:40 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:09:40 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:09:46 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:09:46 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 00:09:46 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 00:09:46 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:09:46 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 00:09:59 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:09:59 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 00:09:59 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:09:59 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:09:59 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:12:34 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 00:12:34 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:12:34 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:12:37 GMT 2014 INFO Replanning for client Petr
+
+Sun Jan 19 00:12:37 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 00:12:37 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:12:43 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:12:43 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 00:12:43 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 00:12:43 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:12:43 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 00:13:08 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:13:08 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 00:13:08 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:13:08 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:13:08 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:16:31 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 00:16:31 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:16:31 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:16:36 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:16:36 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:16:36 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 00:17:17 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:17:17 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:17:17 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:58:28 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 00:58:28 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:58:28 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 00:58:33 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:58:33 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:58:33 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 00:59:13 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 00:59:13 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 00:59:13 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 01:18:45 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 01:18:45 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:18:45 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 01:18:47 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 01:18:47 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:18:47 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 01:19:30 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 01:19:30 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:19:30 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 01:21:27 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 01:21:27 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 01:21:27 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:21:27 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 01:29:06 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 01:29:06 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:29:06 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 01:29:08 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 01:29:08 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:29:08 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 01:36:52 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 01:36:52 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:36:52 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 01:36:55 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 01:36:55 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:36:55 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 01:45:38 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 01:45:38 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:45:38 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 01:45:40 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 01:45:40 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:45:40 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 01:46:55 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 01:46:55 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:46:55 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 01:47:23 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 01:47:23 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:47:23 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 01:47:26 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 01:47:26 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 01:47:26 GMT 2014 INFO 		 2x : TestProject by Jakub
+

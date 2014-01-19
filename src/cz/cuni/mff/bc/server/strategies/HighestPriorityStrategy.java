@@ -22,14 +22,39 @@ import java.util.LinkedList;
  */
 public class HighestPriorityStrategy implements IStrategy {
 
-    LinkedList<Project> allProjectsSorted;
-    HashMap<Key, LinkedList<Project>> availableProjects;
-    HashMap<Key, LinkedList<Project>> usedProjects;
+    private LinkedList<Project> allProjectsSorted;
+    private HashMap<Key, LinkedList<Project>> availableProjects;
+    private HashMap<Key, LinkedList<Project>> usedProjects;
+    private Comparator<Project> comparator;
 
     public HighestPriorityStrategy() {
         this.allProjectsSorted = new LinkedList<>();
         this.availableProjects = getAvailableProjectsList(allProjectsSorted);
         this.usedProjects = new HashMap<>();
+        this.comparator = new Comparator<Project>() {
+            @Override
+            public int compare(Project p1, Project p2) {
+                if (p1.getMemory() > p2.getMemory()) { // firstly,sort by memory
+                    return 1;
+                } else if (p1.getMemory() < p2.getMemory()) {
+                    return -1;
+                } else {
+                    if (p1.getCores() > p2.getCores()) { //secondly sort by cores
+                        return 1;
+                    } else if (p1.getCores() < p2.getCores()) {
+                        return -1;
+                    } else {
+                        if (p1.getPriority() > p2.getPriority()) { // lastly, sort by priorities
+                            return 1;
+                        } else if (p1.getPriority() == p2.getPriority()) {
+                            return 0;
+                        } else {
+                            return 1;
+                        }
+                    }
+                }
+            }
+        };
     }
 
     @Override
@@ -120,33 +145,7 @@ public class HighestPriorityStrategy implements IStrategy {
      */
     private LinkedList<Project> getAllProjectsSortedList(Collection<Project> activeProjects) {
         LinkedList<Project> asList = new LinkedList<>(activeProjects);
-        Collections.sort(asList, new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                Project p1 = (Project) o1;
-                Project p2 = (Project) o2;
-
-                if (p1.getMemory() < p2.getMemory()) { // firstly,sort by memory
-                    return -1;
-                } else if (p1.getMemory() > p2.getMemory()) {
-                    return 1;
-                } else {
-                    if (p1.getCores() < p2.getCores()) { //secondly sort by cores
-                        return -1;
-                    } else if (p1.getCores() > p2.getCores()) {
-                        return 1;
-                    } else {
-                        if (p1.getPriority() < p2.getPriority()) { // lastly, sort by priorities
-                            return -1;
-                        } else if (p1.getPriority() == p2.getPriority()) {
-                            return 0;
-                        } else {
-                            return 1;
-                        }
-                    }
-                }
-            }
-        });
+        Collections.sort(asList, comparator);
         return asList;
     }
 

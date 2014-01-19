@@ -80,7 +80,7 @@ public class TaskManager {
         Comparator<Project> comparatorForFinishing = new Comparator<Project>() {
             @Override
             public int compare(Project p1, Project p2) { // for highest priority first
-                if (p1.getPriority() < p2.getPriority()) {
+                if (p1.getPriority() > p2.getPriority()) {
                     return 1;
                 } else if (p1.getPriority() == p2.getPriority()) {
                     return 0;

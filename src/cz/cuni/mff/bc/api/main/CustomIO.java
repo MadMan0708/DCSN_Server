@@ -9,7 +9,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -159,7 +163,6 @@ public class CustomIO {
             for (File f : files) {
                 if (f.isDirectory()) {
                     deleteDirectory(f);
-
                 } else {
                     f.delete();
                 }
@@ -189,5 +192,43 @@ public class CustomIO {
         for (File file : files) {
             file.delete();
         }
+    }
+
+    /**
+     * Deletes the directory and all its content recursively at closing the
+     * program
+     *
+     * @param path directory to delete
+     */
+    public static void recursiveDeleteOnShutdownHook(final Path path) {
+        Runtime.getRuntime().addShutdownHook(new Thread(
+                new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                        @Override
+                        public FileVisitResult visitFile(Path file,
+                                @SuppressWarnings("unused") BasicFileAttributes attrs)
+                                throws IOException {
+                            Files.delete(file);
+                            return FileVisitResult.CONTINUE;
+                        }
+
+                        @Override
+                        public FileVisitResult postVisitDirectory(Path dir, IOException e)
+                                throws IOException {
+                            if (e == null) {
+                                Files.delete(dir);
+                                return FileVisitResult.CONTINUE;
+                            }
+                            // directory iteration failed
+                            throw e;
+                        }
+                    });
+                } catch (IOException e) {
+                }
+            }
+        }));
     }
 }
