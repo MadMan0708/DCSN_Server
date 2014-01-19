@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -48,7 +47,7 @@ public class TaskManager {
     private ConcurrentHashMap<String, ActiveClient> activeClients;
     private ClassManager classManager;
     private final ConcurrentHashMap<ProjectUID, BlockingQueue<TaskID>> tasksPool;
-    private CopyOnWriteArrayList<TaskID> tasksInProgress;
+    private final CopyOnWriteArrayList<TaskID> tasksInProgress;
     private ConcurrentHashMap<ProjectUID, Project> projectsActive;
     private ConcurrentHashMap<ProjectUID, Project> projectsPaused;
     private ConcurrentHashMap<ProjectUID, Project> projectsAll;
@@ -255,12 +254,25 @@ public class TaskManager {
         }
     }
 
-    /*
+    /**
      * Adds task back to the task pool
+     *
+     * @param taskID task to add again to the task pool
      */
-    private void addTaskBackToPool(TaskID taskID) {
-        // tasks pool has to contain taskID.getProjectUID()
-        tasksPool.get(taskID.getProjectUID()).add(taskID);
+    public synchronized void addTaskBackToPool(TaskID taskID) {
+        Project p = projectsAll.get(taskID.getProjectUID());
+        tasksInProgress.remove(taskID);
+        if (!isTaskCompleted(taskID)) {
+            p.addTaskAgain(taskID); // adds task again to the project's uncompleted list
+            if (p.getState().equals(ProjectState.ACTIVE)) {
+                // if the project is active, the tasks are added to the task pool
+                tasksPool.get(taskID.getProjectUID()).add(taskID);
+                LOG.log(Level.INFO, "Task {0} is again in tasks pool", taskID);
+            }
+            // otherwise the project could be paused, so tasks aren't added to the tasks pool
+        } else {
+            LOG.log(Level.INFO, "Task {0} is already finished", taskID);
+        }
     }
 
     /**
@@ -298,15 +310,7 @@ public class TaskManager {
         if (isClientComputing(clientName)) { // othwerwise the client is not in the list and nothing can be unassociated from his lists
             activeClients.get(clientName).unassociateClientWithTask(taskID);
         }
-        tasksInProgress.remove(taskID);
-        Project p = projectsAll.get(taskID.getProjectUID());
-        p.addTaskAgain(taskID); // adds task again to the project's uncompleted list
-
-        if (p.getState().equals(ProjectState.ACTIVE)) {
-            addTaskBackToPool(taskID);// if the project is active, the tasks is added to the task pool
-            LOG.log(Level.INFO, "Task {0} calculated by {1} is again in tasks pool", new Object[]{taskID, clientName});
-            // otherwise no
-        }
+        addTaskBackToPool(taskID);
     }
 
     /**
@@ -427,6 +431,7 @@ public class TaskManager {
         if (id == null) {
             return null; // the pool for this project is empty, in that case client checker will wait for a while
         }
+        tasksInProgress.add(id);
         File f = filesStructure.getTaskLoadPath(id).toFile();
         File jar = filesStructure.getProjectJarFile(id.getClientName(), id.getProjectName());
         try {
@@ -435,7 +440,6 @@ public class TaskManager {
                 Task task = (Task) ois.readObject();
                 // client is in the list for sure, because he just asked for new task to compute, therefore is connected
                 activeClients.get(clientName).associateClientWithTask(id);
-                tasksInProgress.add(id);
                 LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientName});
                 return task;
             } catch (ClassNotFoundException | IOException e) {

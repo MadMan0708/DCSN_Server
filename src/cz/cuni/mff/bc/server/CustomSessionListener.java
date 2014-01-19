@@ -4,9 +4,11 @@
  */
 package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.misc.IClient;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import org.cojen.dirmi.Link;
@@ -20,7 +22,7 @@ import org.cojen.dirmi.SessionCloseListener;
  * @author Jakub Hava
  */
 public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
-
+    
     private TaskManager taskManager;
     private ConcurrentHashMap<String, ActiveClient> activeClients;
     private IServerImpl remoteMethods;
@@ -71,6 +73,13 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
                     try {
                         if (taskManager.isClientActive(clientID)) {
                             activeClients.get(clientID).getSession().close();
+                            Collection<ArrayList<TaskID>> values = activeClients.get(clientID).getCurrentTasks().values();
+                            for (ArrayList<TaskID> arrayList : values) {
+                                for (TaskID taskID : arrayList) {
+                                    LOG.log(Level.INFO, "Task " + taskID.getTaskName() + " sent back to the task pool");
+                                    taskManager.addTaskBackToPool(taskID);
+                                }
+                            }
                             activeClients.remove(clientID);
                             LOG.log(Level.INFO, "Client {0} has been disconnected form the server", clientID);
                             sessionLink.close();
@@ -80,7 +89,7 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
                     }
                 }
             });
-
+            
         } else {
             session.send(Boolean.FALSE);
         }
