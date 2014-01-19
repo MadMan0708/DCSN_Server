@@ -76,3 +76,81 @@ Sun Jan 19 02:07:00 GMT 2014 INFO 	Karel:
 
 Sun Jan 19 02:07:00 GMT 2014 INFO 		 Plan empty
 
+Sun Jan 19 02:13:07 GMT 2014 INFO Replanning for client Petr
+
+Sun Jan 19 02:13:07 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 02:13:07 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:13 GMT 2014 INFO Replanning for client Honza
+
+Sun Jan 19 02:13:13 GMT 2014 INFO 	Honza: 
+
+Sun Jan 19 02:13:13 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:20 GMT 2014 INFO Replanning for client Karel
+
+Sun Jan 19 02:13:20 GMT 2014 INFO 	Karel: 
+
+Sun Jan 19 02:13:20 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:30 GMT 2014 INFO Replanning for client Jakub
+
+Sun Jan 19 02:13:30 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 02:13:30 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:37 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 02:13:37 GMT 2014 INFO 	Honza: 
+
+Sun Jan 19 02:13:37 GMT 2014 INFO 		 1x : TestProject by Jakub
+
+Sun Jan 19 02:13:37 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 02:13:37 GMT 2014 INFO 		 2x : TestProject by Jakub
+
+Sun Jan 19 02:13:37 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 02:13:37 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:37 GMT 2014 INFO 	Karel: 
+
+Sun Jan 19 02:13:37 GMT 2014 INFO 		 1x : TestProject by Jakub
+
+Sun Jan 19 02:13:53 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 02:13:53 GMT 2014 INFO 	Honza: 
+
+Sun Jan 19 02:13:53 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:53 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 02:13:53 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:53 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 02:13:53 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:53 GMT 2014 INFO 	Karel: 
+
+Sun Jan 19 02:13:53 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:57 GMT 2014 INFO Replanning for all clients:
+
+Sun Jan 19 02:13:57 GMT 2014 INFO 	Honza: 
+
+Sun Jan 19 02:13:57 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:57 GMT 2014 INFO 	Jakub: 
+
+Sun Jan 19 02:13:57 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:57 GMT 2014 INFO 	Petr: 
+
+Sun Jan 19 02:13:57 GMT 2014 INFO 		 Plan empty
+
+Sun Jan 19 02:13:57 GMT 2014 INFO 	Karel: 
+
+Sun Jan 19 02:13:57 GMT 2014 INFO 		 Plan empty
+

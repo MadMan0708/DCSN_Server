@@ -69,10 +69,12 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
                 public void closed(Link sessionLink, SessionCloseListener.Cause cause) {
                     taskManager.getClassManager().deleteCustomClassLoader(clientID);
                     try {
-                        activeClients.get(clientID).getSession().close();
-                        activeClients.remove(clientID);
-                        LOG.log(Level.INFO, "Client {0} has been disconnected form the server", clientID);
-                        sessionLink.close();
+                        if (taskManager.isClientActive(clientID)) {
+                            activeClients.get(clientID).getSession().close();
+                            activeClients.remove(clientID);
+                            LOG.log(Level.INFO, "Client {0} has been disconnected form the server", clientID);
+                            sessionLink.close();
+                        }
                     } catch (IOException e) {
                         LOG.log(Level.WARNING, "Closing session; Cause: {0}; {1}", new Object[]{cause.name(), e.getMessage()});
                     }
