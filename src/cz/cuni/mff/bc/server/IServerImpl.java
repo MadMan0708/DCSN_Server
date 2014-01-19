@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import org.cojen.dirmi.Pipe;
 
@@ -34,7 +35,7 @@ public class IServerImpl implements IServer {
 
     private TaskManager taskManager;
     private final int timerPeriodSec = 40;
-    private HashMap<String, ActiveClient> activeClients;
+    private ConcurrentHashMap<String, ActiveClient> activeClients;
     private FilesStructure filesStructure;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
@@ -45,7 +46,7 @@ public class IServerImpl implements IServer {
      * @param filesStructure files structure
      * @param serverParams server parameters
      */
-    public IServerImpl(HashMap<String, ActiveClient> activeClients, FilesStructure filesStructure, ServerParams serverParams) {
+    public IServerImpl(ConcurrentHashMap<String, ActiveClient> activeClients, FilesStructure filesStructure, ServerParams serverParams) {
         this.activeClients = activeClients;
         this.filesStructure = filesStructure;
         this.taskManager = new TaskManager(activeClients, filesStructure, serverParams);
@@ -56,7 +57,7 @@ public class IServerImpl implements IServer {
      *
      * @return list with active clients
      */
-    public HashMap<String, ActiveClient> getActiveClients() {
+    public ConcurrentHashMap<String, ActiveClient> getActiveClients() {
         return activeClients;
     }
 

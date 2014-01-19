@@ -45,7 +45,7 @@ public class TaskManager {
 
     private ExecutorService executor;
     private FilesStructure filesStructure;
-    private HashMap<String, ActiveClient> activeClients;
+    private ConcurrentHashMap<String, ActiveClient> activeClients;
     private ClassManager classManager;
     private final ConcurrentHashMap<ProjectUID, BlockingQueue<TaskID>> tasksPool;
     private CopyOnWriteArrayList<TaskID> tasksInProgress;
@@ -68,7 +68,7 @@ public class TaskManager {
      * @param filesStructure files structure
      * @param serverParams server parameters
      */
-    public TaskManager(HashMap<String, ActiveClient> activeClients, FilesStructure filesStructure, ServerParams serverParams) {
+    public TaskManager(ConcurrentHashMap<String, ActiveClient> activeClients, FilesStructure filesStructure, ServerParams serverParams) {
         this.projectsCorrupted = new ConcurrentHashMap<>();
         this.projectsForDownload = new ConcurrentHashMap<>();
         this.projectsCompleted = new ConcurrentHashMap<>();

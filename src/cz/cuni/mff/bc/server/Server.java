@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import org.cojen.dirmi.Environment;
 import org.cojen.dirmi.SessionAcceptor;
@@ -33,7 +34,7 @@ public class Server implements IConsole {
     private static final int numThreads = 100;
     private Environment env;
     private SessionAcceptor sesAcceptor;
-    private HashMap<String, ActiveClient> activeClients;
+    private ConcurrentHashMap<String, ActiveClient> activeClients;
     private IServerImpl remoteMethods;
     private CustomHandler logHandler;
     private ServerParams serverParams;
@@ -52,7 +53,7 @@ public class Server implements IConsole {
         logHandler.addLogTarget(new FileLogger(new File("server.main.log")));
         LOG.addHandler(logHandler);
 
-        activeClients = new HashMap<>();
+        activeClients = new ConcurrentHashMap<>();
         serverParams = new ServerParams(logHandler);
         filesStructure = new FilesStructure(serverParams);
         remoteMethods = new IServerImpl(activeClients, filesStructure, serverParams);
@@ -84,7 +85,7 @@ public class Server implements IConsole {
      *
      * @return list with active clients
      */
-    public HashMap<String, ActiveClient> getActiveClients() {
+    public ConcurrentHashMap<String, ActiveClient> getActiveClients() {
         return activeClients;
     }
 

@@ -7,6 +7,7 @@ package cz.cuni.mff.bc.server;
 import cz.cuni.mff.bc.misc.IClient;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import org.cojen.dirmi.Link;
 import org.cojen.dirmi.Session;
@@ -21,7 +22,7 @@ import org.cojen.dirmi.SessionCloseListener;
 public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
 
     private TaskManager taskManager;
-    private HashMap<String, ActiveClient> activeClients;
+    private ConcurrentHashMap<String, ActiveClient> activeClients;
     private IServerImpl remoteMethods;
     private SessionAcceptor sesAcceptor;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
