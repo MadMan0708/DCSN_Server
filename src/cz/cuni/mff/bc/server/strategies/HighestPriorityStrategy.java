@@ -74,7 +74,7 @@ public class HighestPriorityStrategy implements IStrategy {
         LinkedHashMap<ProjectUID, Integer> newerPlan = new LinkedHashMap<>();
 
         for (Project project : allProjectsSorted) {
-            if (project.getMemory() > active.getMemoryLimit() || project.getCores() > active.getCoresLimit()) {
+            if (project.getMemory() > active.getMemoryLimit() || project.getCores() > coresLeft) {
                 // go fastly through start of the list where are the projects with memory limit and
                 // core limit higher then actual client can handle
                 continue;
@@ -145,7 +145,7 @@ public class HighestPriorityStrategy implements IStrategy {
      */
     private LinkedList<Project> getAllProjectsSortedList(Collection<Project> activeProjects) {
         LinkedList<Project> asList = new LinkedList<>(activeProjects);
-        Collections.sort(asList, comparator);
+        Collections.sort(asList, Collections.reverseOrder(comparator));
         return asList;
     }
 

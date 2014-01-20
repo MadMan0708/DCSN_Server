@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -88,7 +89,7 @@ public class TaskManager {
                 }
             }
         };
-        this.finishingProjects = new ConcurrentSkipListSet<>(comparatorForFinishing);
+        this.finishingProjects = new ConcurrentSkipListSet<>(Collections.reverseOrder(comparatorForFinishing));
         this.planner = new Planner();
         this.serverParams = serverParams;
         this.filesStructure = filesStructure;
