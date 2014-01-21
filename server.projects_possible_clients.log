@@ -1,98 +1,124 @@
-Tue Jan 21 12:22:26 GMT 2014 INFO Replanning for client Palcat
+Tue Jan 21 13:09:30 GMT 2014 INFO Honza >> Current plan: 
 
-Tue Jan 21 12:22:26 GMT 2014 INFO 	Palcat: 
+Tue Jan 21 13:09:30 GMT 2014 INFO  	 Plan is empty
 
-Tue Jan 21 12:22:26 GMT 2014 INFO 		 Plan empty
+Tue Jan 21 13:09:30 GMT 2014 INFO 
 
-Tue Jan 21 12:22:31 GMT 2014 INFO Replanning for client Jirik
+NEW POSSIBLE ASSOCIATION
 
-Tue Jan 21 12:22:31 GMT 2014 INFO 	Jirik: 
+Tue Jan 21 13:09:42 GMT 2014 INFO Palcat >> Current plan: 
 
-Tue Jan 21 12:22:31 GMT 2014 INFO 		 Plan empty
+Tue Jan 21 13:09:42 GMT 2014 INFO  	 Plan is empty
 
-Tue Jan 21 12:22:38 GMT 2014 INFO Replanning for client Honza
+Tue Jan 21 13:09:42 GMT 2014 INFO 
 
-Tue Jan 21 12:22:38 GMT 2014 INFO 	Honza: 
+NEW POSSIBLE ASSOCIATION
 
-Tue Jan 21 12:22:38 GMT 2014 INFO 		 Plan empty
+Tue Jan 21 13:10:15 GMT 2014 INFO Honza >> Current plan: 
 
-Tue Jan 21 12:22:45 GMT 2014 INFO Replanning for client Petr
+Tue Jan 21 13:10:15 GMT 2014 INFO 	 Tasks from project Weather, 3x
 
-Tue Jan 21 12:22:45 GMT 2014 INFO 	Petr: 
+Tue Jan 21 13:10:15 GMT 2014 INFO 
 
-Tue Jan 21 12:22:45 GMT 2014 INFO 		 Plan empty
+NEW POSSIBLE ASSOCIATION
 
-Tue Jan 21 12:23:11 GMT 2014 INFO {}: Replanning for all clients:
+Tue Jan 21 13:10:15 GMT 2014 INFO Project Weather could be planned on:
 
-Tue Jan 21 12:23:11 GMT 2014 INFO 	Honza: 
+Tue Jan 21 13:10:15 GMT 2014 INFO Honza
 
-Tue Jan 21 12:23:11 GMT 2014 INFO 		 3x : Weather by Petr
+Tue Jan 21 13:10:15 GMT 2014 INFO Palcat
 
-Tue Jan 21 12:23:11 GMT 2014 INFO 	Petr: 
+Tue Jan 21 13:10:15 GMT 2014 INFO Palcat >> Current plan: 
 
-Tue Jan 21 12:23:11 GMT 2014 INFO 		 4x : Weather by Petr
+Tue Jan 21 13:10:15 GMT 2014 INFO 	 Tasks from project Weather, 2x
 
-Tue Jan 21 12:23:11 GMT 2014 INFO 	Jirik: 
+Tue Jan 21 13:10:15 GMT 2014 INFO 
 
-Tue Jan 21 12:23:11 GMT 2014 INFO 		 4x : Weather by Petr
+NEW POSSIBLE ASSOCIATION
 
-Tue Jan 21 12:23:11 GMT 2014 INFO 	Palcat: 
+Tue Jan 21 13:10:15 GMT 2014 INFO Project Weather could be planned on:
 
-Tue Jan 21 12:23:11 GMT 2014 INFO 		 2x : Weather by Petr
+Tue Jan 21 13:10:15 GMT 2014 INFO Honza
 
-Tue Jan 21 12:23:13 GMT 2014 INFO {}: Replanning for all clients:
+Tue Jan 21 13:10:15 GMT 2014 INFO Palcat
 
-Tue Jan 21 12:23:13 GMT 2014 INFO 	Honza: 
+Tue Jan 21 13:10:16 GMT 2014 INFO Honza >> Current plan: 
 
-Tue Jan 21 12:23:13 GMT 2014 INFO 		 1x : TestProject by Petr
+Tue Jan 21 13:10:16 GMT 2014 INFO 	 Tasks from project TestProject, 1x
 
-Tue Jan 21 12:23:13 GMT 2014 INFO 		 1x : Weather by Petr
+Tue Jan 21 13:10:16 GMT 2014 INFO 	 Tasks from project Weather, 1x
 
-Tue Jan 21 12:23:13 GMT 2014 INFO 	Petr: 
+Tue Jan 21 13:10:16 GMT 2014 INFO 
 
-Tue Jan 21 12:23:13 GMT 2014 INFO 		 2x : TestProject by Petr
+NEW POSSIBLE ASSOCIATION
 
-Tue Jan 21 12:23:13 GMT 2014 INFO 	Jirik: 
+Tue Jan 21 13:10:16 GMT 2014 INFO Project TestProject could be planned on:
 
-Tue Jan 21 12:23:13 GMT 2014 INFO 		 2x : TestProject by Petr
+Tue Jan 21 13:10:16 GMT 2014 INFO Honza
 
-Tue Jan 21 12:23:13 GMT 2014 INFO 	Palcat: 
+Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
 
-Tue Jan 21 12:23:14 GMT 2014 INFO 		 1x : TestProject by Petr
+Tue Jan 21 13:10:16 GMT 2014 INFO Project Weather could be planned on:
 
-Tue Jan 21 12:23:48 GMT 2014 INFO {}: Replanning for all clients:
+Tue Jan 21 13:10:16 GMT 2014 INFO Honza
 
-Tue Jan 21 12:23:48 GMT 2014 INFO 	Honza: 
+Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
 
-Tue Jan 21 12:23:48 GMT 2014 INFO 		 3x : Weather by Petr
+Tue Jan 21 13:10:16 GMT 2014 INFO Palcat >> Current plan: 
 
-Tue Jan 21 12:23:48 GMT 2014 INFO 	Petr: 
+Tue Jan 21 13:10:16 GMT 2014 INFO 	 Tasks from project TestProject, 1x
 
-Tue Jan 21 12:23:49 GMT 2014 INFO 		 4x : Weather by Petr
+Tue Jan 21 13:10:16 GMT 2014 INFO 
 
-Tue Jan 21 12:23:49 GMT 2014 INFO 	Jirik: 
+NEW POSSIBLE ASSOCIATION
 
-Tue Jan 21 12:23:49 GMT 2014 INFO 		 4x : Weather by Petr
+Tue Jan 21 13:10:16 GMT 2014 INFO Project TestProject could be planned on:
 
-Tue Jan 21 12:23:49 GMT 2014 INFO 	Palcat: 
+Tue Jan 21 13:10:16 GMT 2014 INFO Honza
 
-Tue Jan 21 12:23:49 GMT 2014 INFO 		 2x : Weather by Petr
+Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
 
-Tue Jan 21 12:23:57 GMT 2014 INFO {}: Replanning for all clients:
+Tue Jan 21 13:10:16 GMT 2014 INFO Project Weather could be planned on:
 
-Tue Jan 21 12:23:57 GMT 2014 INFO 	Honza: 
+Tue Jan 21 13:10:16 GMT 2014 INFO Honza
 
-Tue Jan 21 12:23:57 GMT 2014 INFO 		 Plan empty
+Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
 
-Tue Jan 21 12:23:57 GMT 2014 INFO 	Petr: 
+Tue Jan 21 13:10:21 GMT 2014 INFO Honza >> Current task: 
 
-Tue Jan 21 12:23:57 GMT 2014 INFO 		 Plan empty
+Tue Jan 21 13:10:21 GMT 2014 INFO 	 Task data_8.txt from project TestProject
 
-Tue Jan 21 12:23:57 GMT 2014 INFO 	Jirik: 
+Tue Jan 21 13:10:22 GMT 2014 INFO Honza >> Current task: 
 
-Tue Jan 21 12:23:57 GMT 2014 INFO 		 Plan empty
+Tue Jan 21 13:10:22 GMT 2014 INFO 	 Task data_8.txt from project TestProject
 
-Tue Jan 21 12:23:57 GMT 2014 INFO 	Palcat: 
+Tue Jan 21 13:10:22 GMT 2014 INFO 	 Task data_1.txt from project Weather
 
-Tue Jan 21 12:23:57 GMT 2014 INFO 		 Plan empty
+Tue Jan 21 13:10:23 GMT 2014 INFO Palcat >> Current task: 
+
+Tue Jan 21 13:10:23 GMT 2014 INFO 	 Task data_0.txt from project TestProject
+
+Tue Jan 21 13:10:34 GMT 2014 INFO Honza >> Current task: 
+
+Tue Jan 21 13:10:34 GMT 2014 INFO 	 Task data_7.txt from project TestProject
+
+Tue Jan 21 13:10:35 GMT 2014 INFO Honza >> Current task: 
+
+Tue Jan 21 13:10:35 GMT 2014 INFO 	 Task data_7.txt from project TestProject
+
+Tue Jan 21 13:10:35 GMT 2014 INFO 	 Task data_7.txt from project Weather
+
+Tue Jan 21 13:10:36 GMT 2014 INFO Palcat >> Current task: 
+
+Tue Jan 21 13:10:36 GMT 2014 INFO 	 Task data_9.txt from project TestProject
+
+Tue Jan 21 13:10:46 GMT 2014 INFO Honza >> Current task: 
+
+Tue Jan 21 13:10:46 GMT 2014 INFO 	 Task data_6.txt from project TestProject
+
+Tue Jan 21 13:10:47 GMT 2014 INFO Honza >> Current task: 
+
+Tue Jan 21 13:10:47 GMT 2014 INFO 	 Task data_6.txt from project TestProject
+
+Tue Jan 21 13:10:47 GMT 2014 INFO 	 Task data_9.txt from project Weather
 

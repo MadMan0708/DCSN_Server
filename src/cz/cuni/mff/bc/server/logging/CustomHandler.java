@@ -37,21 +37,6 @@ public class CustomHandler extends Handler {
         targets.remove(target);
     }
 
-    /**
-     * Creates custom logging handler
-     *
-     * @param fileName fileName where to log
-     * @return Custom handler
-     */
-    public static CustomHandler createLogHandler(String fileName) {
-        CustomHandler logHandler;
-        logHandler = new CustomHandler();
-        logHandler.setFormatter(new CustomFormater());
-        logHandler.setLevel(Level.ALL);
-        logHandler.addLogTarget(new FileLogger(new File(fileName)));
-        return logHandler;
-    }
-
     @Override
     public void publish(LogRecord record) {
         for (ILogTarget iLogTarget : targets) {

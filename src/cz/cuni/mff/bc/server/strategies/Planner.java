@@ -9,9 +9,7 @@ import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.server.ActiveClient;
 import cz.cuni.mff.bc.server.Project;
 import cz.cuni.mff.bc.server.ServerParams;
-import cz.cuni.mff.bc.server.TaskManager;
-import cz.cuni.mff.bc.server.logging.CustomFormater;
-import cz.cuni.mff.bc.server.logging.CustomHandler;
+import cz.cuni.mff.bc.server.logging.CustomLogger;
 import cz.cuni.mff.bc.server.logging.FileLogger;
 import static cz.cuni.mff.bc.server.strategies.StrategiesList.HIGHEST_PRIORITY_FIRST;
 import static cz.cuni.mff.bc.server.strategies.StrategiesList.MAXIMAL_THROUGHPUT;
@@ -36,18 +34,21 @@ public class Planner {
     public static int TASK_LIMIT_FOR_ABSOLUTE_PROCCESING = 5;
     private HashMap<StrategiesList, IStrategy> strategies;
     private ServerParams serverParams;
-    private static final java.util.logging.Logger LOG_PLAN = java.util.logging.Logger.getLogger(Planner.class.getName());
-    private static final java.util.logging.Logger LOG_TASKS = java.util.logging.Logger.getLogger(Planner.class.getName());
-    private static final java.util.logging.Logger LOG_PROJECTS_CURRENT_CLIENTS = java.util.logging.Logger.getLogger(Planner.class.getName());
-    private static final java.util.logging.Logger LOG_PROJECTS_POSSIBLE_CLIENTS = java.util.logging.Logger.getLogger(Planner.class.getName());
+    private ArrayList<ActiveClient> computingClients;
+    private ArrayList<Project> activeProjects;
+    private CustomLogger LOG_PLAN;
+    private CustomLogger LOG_TASKS;
+    private CustomLogger LOG_PROJECTS_CURRENT_CLIENTS;
+    private CustomLogger LOG_PROJECTS_POSSIBLE_CLIENTS;
 
     public Planner(ServerParams serverParams) {
         this.serverParams = serverParams;
-
-        LOG_PLAN.addHandler(CustomHandler.createLogHandler("server.plan.log"));
-        LOG_TASKS.addHandler(CustomHandler.createLogHandler("server.tasks.log"));
-        LOG_PROJECTS_CURRENT_CLIENTS.addHandler(CustomHandler.createLogHandler("server.projects_current_clients.log"));
-        LOG_PROJECTS_POSSIBLE_CLIENTS.addHandler(CustomHandler.createLogHandler("server.projects_possible_clients.log"));
+        this.computingClients = new ArrayList<>();
+        this.activeProjects = new ArrayList<>();
+        LOG_PLAN = new CustomLogger("server.current_plans.log");
+        LOG_TASKS = new CustomLogger("server.current_tasks.log");
+        LOG_PROJECTS_CURRENT_CLIENTS = new CustomLogger("server.projects_current_clients.log");
+        LOG_PROJECTS_POSSIBLE_CLIENTS = new CustomLogger("server.projects_possible_clients.log");
 
         strategies = new HashMap<>();
         strategies.put(MAXIMAL_THROUGHPUT, new MaxThroughputStrategy(5));
@@ -61,11 +62,14 @@ public class Planner {
      * @param activeProjects list of active projects
      * @param strategy actual strategy
      */
-    public synchronized void planForAll(Collection<ActiveClient> activeClients, Collection<Project> activeProjects, StrategiesList strategy) {
+    public synchronized void planForAll(Collection<ActiveClient> activeClients, ArrayList<Project> activeProjects, StrategiesList strategy) {
         ArrayList<ActiveClient> computing = getClientsInComputation(activeClients);
+        this.computingClients = new ArrayList<>(computing);
+        this.activeProjects = new ArrayList<>(activeProjects);
         strategies.get(strategy).planForAll(computing, activeProjects);
         for (ActiveClient activeClient : computing) {
             logCurrentPlan(activeClient);
+            logPossibleProjectAssociation();
         }
     }
 
@@ -77,8 +81,12 @@ public class Planner {
      */
     public synchronized void planForOne(ActiveClient activeClient, StrategiesList strategy) {
         if (activeClient.isComputing()) {
+            if (!computingClients.contains(activeClient)) {
+                computingClients.add(activeClient);
+            }
             strategies.get(strategy).planForOne(activeClient);
             logCurrentPlan(activeClient);
+            logPossibleProjectAssociation();
         }
     }
 
@@ -95,31 +103,66 @@ public class Planner {
      * @param activeClient active client
      */
     public void logCurrentPlan(ActiveClient activeClient) {
-        LOG_TASKS.log(Level.INFO, "{0} >> Current plan: ", activeClient.getClientName());
+        LOG_PLAN.log("-----------------------------");
+        LOG_PLAN.log(activeClient.getClientName() + " >> Current plan: ");
         if (!activeClient.getCurrentPlan().isEmpty()) {
             for (Entry<ProjectUID, Integer> entry : activeClient.getCurrentPlan().entrySet()) {
-                LOG_PLAN.log(Level.INFO, "\t Tasks from project {0}, {1}x", new Object[]{entry.getKey().getProjectName(), entry.getValue()});
+                LOG_PLAN.log("\t Tasks from project " + entry.getKey().getProjectName() + ", " + entry.getValue() + "x");
             }
         } else {
-            LOG_PLAN.log(Level.INFO, " \t Plan is empty");
+            LOG_PLAN.log(" \t Plan is empty");
+        }
+    }
+
+    /**
+     * Create log message which contains current tasks running on this client
+     *
+     * @param activeClient active client
+     */
+    public void logCurrentTasks(ActiveClient activeClient) {
+        LOG_TASKS.log("-----------------------------");
+        LOG_TASKS.log(activeClient.getClientName() + " >> Current tasks: ");
+        for (Entry<ProjectUID, ArrayList<TaskID>> entry : activeClient.getCurrentTasks().entrySet()) {
+            for (TaskID taskID : entry.getValue()) {
+                LOG_TASKS.log("\t Task " + taskID.getTaskName() + " from project " + entry.getKey().getProjectName());
+            }
+        }
+    }
+
+    /**
+     * Create log message which contains projects and clients on which these
+     * projects can be calculated
+     *
+     */
+    public void logPossibleProjectAssociation() {
+        LOG_PROJECTS_CURRENT_CLIENTS.log("------------NEW POSSIBLE ASSOCIATION------------");
+        for (Entry<Project, ArrayList<ActiveClient>> entry : getPossibleProjectsAssociation().entrySet()) {
+            LOG_PROJECTS_CURRENT_CLIENTS.log("Project " + entry.getKey().getProjectName() + " could be planned on:");
+            for (ActiveClient activeClient : entry.getValue()) {
+                LOG_PROJECTS_CURRENT_CLIENTS.log(activeClient.getClientName());
+            }
         }
     }
 
     /*
-     * Basic function use to log the plan
+     * Gets list of projects with
      */
-    public void logCurrentTasks(ActiveClient activeClient) {
-        LOG_TASKS.log(Level.INFO, "{0} >> Current task: ", activeClient.getClientName());
-        for (Entry<ProjectUID, ArrayList<TaskID>> entry : activeClient.getCurrentTasks().entrySet()) {
-            for (TaskID taskID : entry.getValue()) {
-                LOG_TASKS.log(Level.INFO, "\t Task {0} from project {1}", new Object[]{taskID.getTaskName(), entry.getKey().getProjectName()});
+    private HashMap<Project, ArrayList<ActiveClient>> getPossibleProjectsAssociation() {
+        HashMap<Project, ArrayList<ActiveClient>> list = new HashMap<>();
+        for (Project project : activeProjects) {
+            list.put(project, new ArrayList<ActiveClient>());
+            for (ActiveClient activeClient : computingClients) {
+                if (project.getMemory() <= activeClient.getMemoryLimit() && project.getCores() <= activeClient.getCoresLimit()) {
+                    list.get(project).add(activeClient);
+                }
             }
         }
+        return list;
     }
+
     /*
      * Gets only clients which are currently in computation state
      */
-
     private ArrayList<ActiveClient> getClientsInComputation(Collection<ActiveClient> activeClients) {
         ArrayList<ActiveClient> onlyComputing = new ArrayList<>();
         for (ActiveClient activeClient : activeClients) {

@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.cojen.dirmi.Environment;
 import org.cojen.dirmi.SessionAcceptor;
 
@@ -51,7 +52,6 @@ public class Server implements IConsole {
         logHandler.setLevel(Level.ALL);
         logHandler.addLogTarget(new FileLogger(new File("server.main.log")));
         LOG.addHandler(logHandler);
-
         activeClients = new ConcurrentHashMap<>();
         serverParams = new ServerParams(logHandler);
         filesStructure = new FilesStructure(serverParams);
