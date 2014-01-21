@@ -12,6 +12,7 @@ import cz.cuni.mff.bc.api.main.Task;
 import cz.cuni.mff.bc.api.enums.ProjectState;
 import cz.cuni.mff.bc.api.main.ProjectInfo;
 import cz.cuni.mff.bc.misc.CustomObjectInputStream;
+import cz.cuni.mff.bc.server.logging.CustomHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -441,6 +442,7 @@ public class TaskManager {
                 Task task = (Task) ois.readObject();
                 // client is in the list for sure, because he just asked for new task to compute, therefore is connected
                 activeClients.get(clientName).associateClientWithTask(id);
+                planner.logCurrentTasks(activeClients.get(clientName));
                 LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientName});
                 return task;
             } catch (ClassNotFoundException | IOException e) {

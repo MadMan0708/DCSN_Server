@@ -5,9 +5,11 @@
 package cz.cuni.mff.bc.server.strategies;
 
 import cz.cuni.mff.bc.api.main.ProjectUID;
+import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.server.ActiveClient;
 import cz.cuni.mff.bc.server.Project;
 import cz.cuni.mff.bc.server.ServerParams;
+import cz.cuni.mff.bc.server.TaskManager;
 import cz.cuni.mff.bc.server.logging.CustomFormater;
 import cz.cuni.mff.bc.server.logging.CustomHandler;
 import cz.cuni.mff.bc.server.logging.FileLogger;
@@ -33,18 +35,19 @@ public class Planner {
      */
     public static int TASK_LIMIT_FOR_ABSOLUTE_PROCCESING = 5;
     private HashMap<StrategiesList, IStrategy> strategies;
-    private CustomHandler logHandler;
     private ServerParams serverParams;
-    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Planner.class.getName());
+    private static final java.util.logging.Logger LOG_PLAN = java.util.logging.Logger.getLogger(Planner.class.getName());
+    private static final java.util.logging.Logger LOG_TASKS = java.util.logging.Logger.getLogger(Planner.class.getName());
+    private static final java.util.logging.Logger LOG_PROJECTS_CURRENT_CLIENTS = java.util.logging.Logger.getLogger(Planner.class.getName());
+    private static final java.util.logging.Logger LOG_PROJECTS_POSSIBLE_CLIENTS = java.util.logging.Logger.getLogger(Planner.class.getName());
 
     public Planner(ServerParams serverParams) {
         this.serverParams = serverParams;
-        logHandler = new CustomHandler();
-        logHandler.setFormatter(new CustomFormater());
-        logHandler.setLevel(Level.ALL);
-        logHandler.addLogTarget(new FileLogger(new File("server.plan.log")));
-        LOG.addHandler(logHandler);
 
+        LOG_PLAN.addHandler(CustomHandler.createLogHandler("server.plan.log"));
+        LOG_TASKS.addHandler(CustomHandler.createLogHandler("server.tasks.log"));
+        LOG_PROJECTS_CURRENT_CLIENTS.addHandler(CustomHandler.createLogHandler("server.projects_current_clients.log"));
+        LOG_PROJECTS_POSSIBLE_CLIENTS.addHandler(CustomHandler.createLogHandler("server.projects_possible_clients.log"));
 
         strategies = new HashMap<>();
         strategies.put(MAXIMAL_THROUGHPUT, new MaxThroughputStrategy(5));
@@ -61,9 +64,8 @@ public class Planner {
     public synchronized void planForAll(Collection<ActiveClient> activeClients, Collection<Project> activeProjects, StrategiesList strategy) {
         ArrayList<ActiveClient> computing = getClientsInComputation(activeClients);
         strategies.get(strategy).planForAll(computing, activeProjects);
-        LOG.log(Level.INFO, "{}: Replanning for all clients:", serverParams.getStrategy().toString());
         for (ActiveClient activeClient : computing) {
-            logPlanForOne(activeClient);
+            logCurrentPlan(activeClient);
         }
     }
 
@@ -76,22 +78,42 @@ public class Planner {
     public synchronized void planForOne(ActiveClient activeClient, StrategiesList strategy) {
         if (activeClient.isComputing()) {
             strategies.get(strategy).planForOne(activeClient);
-            LOG.log(Level.INFO, "Replanning for client {0}", activeClient.getClientName());
-            logPlanForOne(activeClient);
+            logCurrentPlan(activeClient);
+        }
+    }
+
+    private HashMap<Project, Integer> getNotPlannedLatelyNumbers() {
+        return strategies.get(serverParams.getStrategy()).getNotPlannedLatelyNumbers();
+    }
+    /*
+     * Log plan for one client
+     */
+
+    /**
+     * Create log message which contains projects planned for this client
+     *
+     * @param activeClient active client
+     */
+    public void logCurrentPlan(ActiveClient activeClient) {
+        LOG_TASKS.log(Level.INFO, "{0} >> Current plan: ", activeClient.getClientName());
+        if (!activeClient.getCurrentPlan().isEmpty()) {
+            for (Entry<ProjectUID, Integer> entry : activeClient.getCurrentPlan().entrySet()) {
+                LOG_PLAN.log(Level.INFO, "\t Tasks from project {0}, {1}x", new Object[]{entry.getKey().getProjectName(), entry.getValue()});
+            }
+        } else {
+            LOG_PLAN.log(Level.INFO, " \t Plan is empty");
         }
     }
 
     /*
-     * Log plan for one client
+     * Basic function use to log the plan
      */
-    private void logPlanForOne(ActiveClient activeClient) {
-        LOG.log(Level.INFO, "\t{0}: ", activeClient.getClientName());
-        if (!activeClient.getCurrentPlan().isEmpty()) {
-            for (Entry<ProjectUID, Integer> entry : activeClient.getCurrentPlan().entrySet()) {
-                LOG.log(Level.INFO, "\t\t {0}x : {1} by {2}", new Object[]{entry.getValue(), entry.getKey().getProjectName(), entry.getKey().getClientName()});
+    public void logCurrentTasks(ActiveClient activeClient) {
+        LOG_TASKS.log(Level.INFO, "{0} >> Current task: ", activeClient.getClientName());
+        for (Entry<ProjectUID, ArrayList<TaskID>> entry : activeClient.getCurrentTasks().entrySet()) {
+            for (TaskID taskID : entry.getValue()) {
+                LOG_TASKS.log(Level.INFO, "\t Task {0} from project {1}", new Object[]{taskID.getTaskName(), entry.getKey().getProjectName()});
             }
-        } else {
-            LOG.log(Level.INFO, "\t\t Plan empty");
         }
     }
     /*

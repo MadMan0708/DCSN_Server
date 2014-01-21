@@ -8,6 +8,7 @@ import cz.cuni.mff.bc.server.ActiveClient;
 import cz.cuni.mff.bc.server.Project;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * Common interface for strategies
@@ -33,4 +34,13 @@ public interface IStrategy {
      * @param active active project
      */
     public void planForOne(ActiveClient active);
+
+    /**
+     * Gets list of projects with numbers how many times they haven't been
+     * planned
+     *
+     * @return list of projects with numbers how many times they haven't been
+     * planned
+     */
+    public HashMap<Project, Integer> getNotPlannedLatelyNumbers();
 }

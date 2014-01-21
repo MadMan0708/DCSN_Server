@@ -26,11 +26,15 @@ public class HighestPriorityStrategy implements IStrategy {
     private HashMap<Key, LinkedList<Project>> availableProjects;
     private HashMap<Key, LinkedList<Project>> usedProjects;
     private Comparator<Project> comparator;
+    private LinkedList<Project> notPlannedLatelyIncrement;
+    private HashMap<Project, Integer> notPlannedLatelyNumbers;
 
     public HighestPriorityStrategy() {
         this.allProjectsSorted = new LinkedList<>();
         this.availableProjects = getAvailableProjectsList(allProjectsSorted);
         this.usedProjects = new HashMap<>();
+        this.notPlannedLatelyNumbers = new LinkedHashMap<>();
+        this.notPlannedLatelyIncrement = new LinkedList<>();
         this.comparator = new Comparator<Project>() {
             @Override
             public int compare(Project p1, Project p2) {
@@ -62,7 +66,12 @@ public class HighestPriorityStrategy implements IStrategy {
         allProjectsSorted = getAllProjectsSortedList(activeProjects);
         availableProjects = getAvailableProjectsList(allProjectsSorted);
         usedProjects = new HashMap<>();
-
+        for (Project project : activeProjects) {
+            if (!notPlannedLatelyNumbers.containsKey(project)) {
+                notPlannedLatelyNumbers.put(project, 0);
+            }
+        }
+        notPlannedLatelyIncrement();
         for (ActiveClient active : activeClients) {
             planForOne(active);
         }
@@ -125,11 +134,25 @@ public class HighestPriorityStrategy implements IStrategy {
         active.setCurrentPlan(newerPlan);
     }
 
+    @Override
+    public HashMap<Project, Integer> getNotPlannedLatelyNumbers() {
+        return notPlannedLatelyNumbers;
+    }
+
+    private void notPlannedLatelyIncrement() {
+        for (Project project : notPlannedLatelyIncrement) {
+            int newValue = notPlannedLatelyNumbers.get(project) + 1;
+            notPlannedLatelyNumbers.put(project, newValue);
+        }
+    }
+
     /*
      * Assigns project to client's new plan
      */
     private int assignProjectForClient(int coresLeft, LinkedHashMap<ProjectUID, Integer> newerPlan, Project project) {
         int repeatProject = 0;
+        notPlannedLatelyIncrement.remove(project);
+        notPlannedLatelyNumbers.put(project, 0);
         // append project as many times as it can be added
         while (project.getCores() <= coresLeft) {
             repeatProject++;

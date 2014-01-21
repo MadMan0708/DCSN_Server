@@ -4,8 +4,10 @@
  */
 package cz.cuni.mff.bc.server.logging;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
@@ -18,7 +20,8 @@ public class CustomHandler extends Handler {
     private ArrayList<ILogTarget> targets = new ArrayList<>();
 
     /**
-     *Adds new logging target to the log handler
+     * Adds new logging target to the log handler
+     *
      * @param target log target
      */
     public void addLogTarget(ILogTarget target) {
@@ -26,11 +29,27 @@ public class CustomHandler extends Handler {
     }
 
     /**
-     *Deletes the logging target from the log handler
+     * Deletes the logging target from the log handler
+     *
      * @param target
      */
     public void deleteLogTarger(ILogTarget target) {
         targets.remove(target);
+    }
+
+    /**
+     * Creates custom logging handler
+     *
+     * @param fileName fileName where to log
+     * @return Custom handler
+     */
+    public static CustomHandler createLogHandler(String fileName) {
+        CustomHandler logHandler;
+        logHandler = new CustomHandler();
+        logHandler.setFormatter(new CustomFormater());
+        logHandler.setLevel(Level.ALL);
+        logHandler.addLogTarget(new FileLogger(new File(fileName)));
+        return logHandler;
     }
 
     @Override

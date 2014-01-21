@@ -42,19 +42,19 @@ public class MaxThroughputStrategy implements IStrategy {
         this.comparator = new Comparator<Project>() {
             @Override
             public int compare(Project p1, Project p2) {
-                if (p1.getTime()> p2.getTime()) { // firstly sort by time in ascending order
+                if (p1.getTime() > p2.getTime()) { // firstly sort by time in ascending order
                     return -1;
-                } else if (p1.getTime()< p2.getTime()) {
+                } else if (p1.getTime() < p2.getTime()) {
                     return 1;
                 } else {
-                    if (p1.getCores()> p2.getCores()) { //secondly sort by cores in ascending order
+                    if (p1.getCores() > p2.getCores()) { //secondly sort by cores in ascending order
                         return -1;
-                    } else if (p1.getCores()< p2.getCores()) {
+                    } else if (p1.getCores() < p2.getCores()) {
                         return 1;
                     } else {
-                        if (p1.getMemory()> p2.getMemory()) { // lastly sort by memory in descending order
+                        if (p1.getMemory() > p2.getMemory()) { // lastly sort by memory in descending order
                             return 1;
-                        } else if (p1.getMemory()== p2.getMemory()) {
+                        } else if (p1.getMemory() == p2.getMemory()) {
                             return 0;
                         } else {
                             return -1;
@@ -80,6 +80,11 @@ public class MaxThroughputStrategy implements IStrategy {
             planForOne(active);
         }
         notPlannedLatelyIncrement = new LinkedList<>(allProjectsSorted);
+    }
+
+    @Override
+    public HashMap<Project, Integer> getNotPlannedLatelyNumbers() {
+        return notPlannedLatelyNumbers;
     }
 
     private void notPlannedLatelyIncrement() {
@@ -171,9 +176,9 @@ public class MaxThroughputStrategy implements IStrategy {
      */
     private int assignProjectForClient(int coresLeft, LinkedHashMap<ProjectUID, Integer> newerPlan, Project project) {
         int repeatProject = 0;
-        // append project as many times as it can be added
         notPlannedLatelyIncrement.remove(project);
         notPlannedLatelyNumbers.put(project, 0);
+        // append project as many times as it can be added
         while (project.getCores() <= coresLeft) {
             repeatProject++;
             coresLeft = coresLeft - project.getCores();
