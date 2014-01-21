@@ -42,22 +42,22 @@ public class MaxThroughputStrategy implements IStrategy {
         this.comparator = new Comparator<Project>() {
             @Override
             public int compare(Project p1, Project p2) {
-                if (p1.getMemory() > p2.getMemory()) { // firstly sort by memory in ascending order
-                    return 1;
-                } else if (p1.getMemory() < p2.getMemory()) {
+                if (p1.getTime()> p2.getTime()) { // firstly sort by time in ascending order
                     return -1;
+                } else if (p1.getTime()< p2.getTime()) {
+                    return 1;
                 } else {
-                    if (p1.getTime() > p2.getTime()) { //secondly sort by time in ascending order
+                    if (p1.getCores()> p2.getCores()) { //secondly sort by cores in ascending order
                         return -1;
-                    } else if (p1.getTime() < p2.getTime()) {
+                    } else if (p1.getCores()< p2.getCores()) {
                         return 1;
                     } else {
-                        if (p1.getCores() > p2.getCores()) { // lastly sort by cores in ascending order
-                            return -1;
-                        } else if (p1.getCores() == p2.getCores()) {
+                        if (p1.getMemory()> p2.getMemory()) { // lastly sort by memory in descending order
+                            return 1;
+                        } else if (p1.getMemory()== p2.getMemory()) {
                             return 0;
                         } else {
-                            return 1;
+                            return -1;
                         }
                     }
                 }
@@ -199,7 +199,7 @@ public class MaxThroughputStrategy implements IStrategy {
     private HashMap<Key, LinkedList<Project>> getAvailableProjectsList(LinkedList<Project> activeProjects) {
         HashMap<Key, LinkedList<Project>> distributionList = new HashMap<>();
         for (Project project : activeProjects) {
-            Key key = new Key(project.getPriority(), project.getCores());
+            Key key = new Key(project.getTime(), project.getCores());
             if (!distributionList.containsKey(key)) {
                 distributionList.put(key, new LinkedList<Project>());
             }

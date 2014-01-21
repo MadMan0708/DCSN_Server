@@ -96,7 +96,7 @@ public class ServerCommands {
                     ok = true;
                     server.getServerParams().setStrategy(StrategiesList.HIGHEST_PRIORITY_FIRST);
                     break;
-                case "max-througput":
+                case "max-throughput":
                     ok = true;
                     server.getServerParams().setStrategy(StrategiesList.MAXIMAL_THROUGHPUT);
                     break;
@@ -108,7 +108,7 @@ public class ServerCommands {
             }
         } else {
             LOG.log(Level.INFO, "Expected parameters: 1");
-            LOG.log(Level.INFO, "1: Server strategy - priority or max-througput");
+            LOG.log(Level.INFO, "1: Server strategy - priority or max-throughput");
         }
     }
 

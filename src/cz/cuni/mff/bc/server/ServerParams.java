@@ -82,8 +82,8 @@ public class ServerParams {
      */
     public void setStrategy(StrategiesList strategy) {
         this.strategy = strategy;
-        propManager.setProperty("strategy", strategy.toString());
         LOG.log(Level.INFO, "Server strategy has been set to: {0}", strategy.toString());
+        propManager.setProperty("strategy", strategy.toString());
     }
 
     /**
@@ -144,10 +144,10 @@ public class ServerParams {
             setDefaultStrategy();
         } else {
             switch (propManager.getProperty("strategy")) {
-                case "priority":
+                case "HIGHEST_PRIORITY_FIRST":
                     setStrategy(StrategiesList.HIGHEST_PRIORITY_FIRST);
                     break;
-                case "max-througput":
+                case "MAXIMAL_THROUGHPUT":
                     setStrategy(StrategiesList.MAXIMAL_THROUGHPUT);
                     break;
                 default:
