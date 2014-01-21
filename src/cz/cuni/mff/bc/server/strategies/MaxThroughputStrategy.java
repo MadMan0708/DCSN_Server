@@ -112,6 +112,7 @@ public class MaxThroughputStrategy implements IStrategy {
             }
             notPlannedLately.removeAll(chosenProjects);
             if (coresLeft == 0) {
+                active.setCurrentPlan(newerPlan);
                 // stop the function, no reason to continue
                 return;
             }
