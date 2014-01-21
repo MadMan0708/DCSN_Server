@@ -69,6 +69,7 @@ public class Planner {
         strategies.get(strategy).planForAll(computing, activeProjects);
         for (ActiveClient activeClient : computing) {
             logCurrentPlan(activeClient);
+            logProjectAssociation();
             logPossibleProjectAssociation();
         }
     }
@@ -86,6 +87,7 @@ public class Planner {
             }
             strategies.get(strategy).planForOne(activeClient);
             logCurrentPlan(activeClient);
+            logProjectAssociation();
             logPossibleProjectAssociation();
         }
     }
@@ -135,17 +137,50 @@ public class Planner {
      *
      */
     public void logPossibleProjectAssociation() {
-        LOG_PROJECTS_CURRENT_CLIENTS.log("------------NEW POSSIBLE ASSOCIATION------------");
+        LOG_PROJECTS_POSSIBLE_CLIENTS.log("------------NEW POSSIBLE ASSOCIATION------------");
         for (Entry<Project, ArrayList<ActiveClient>> entry : getPossibleProjectsAssociation().entrySet()) {
-            LOG_PROJECTS_CURRENT_CLIENTS.log("Project " + entry.getKey().getProjectName() + " could be planned on:");
+            LOG_PROJECTS_POSSIBLE_CLIENTS.log("Project " + entry.getKey().getProjectName() + " could be planned on:");
             for (ActiveClient activeClient : entry.getValue()) {
-                LOG_PROJECTS_CURRENT_CLIENTS.log(activeClient.getClientName());
+                LOG_PROJECTS_POSSIBLE_CLIENTS.log(activeClient.getClientName());
+            }
+        }
+    }
+
+    public void logProjectAssociation() {
+        HashMap<Project, Integer> notPlannedLatelyNumbers = getNotPlannedLatelyNumbers();
+        LOG_PROJECTS_CURRENT_CLIENTS.log("------------PROJECTS PLANNED ON------------");
+        for (Entry<Project, ArrayList<ActiveClient>> entry : getPossibleProjectsAssociation().entrySet()) {
+
+            if (entry.getValue().isEmpty()) {
+                LOG_PROJECTS_CURRENT_CLIENTS.log("Project " + entry.getKey().getProjectName() + " hasn't been planned for " + notPlannedLatelyNumbers.get(entry.getKey()) + " planning");
+            } else {
+                LOG_PROJECTS_CURRENT_CLIENTS.log("Project " + entry.getKey().getProjectName() + " is planned on:");
+                for (ActiveClient activeClient : entry.getValue()) {
+                    LOG_PROJECTS_CURRENT_CLIENTS.log(activeClient.getClientName());
+                }
             }
         }
     }
 
     /*
-     * Gets list of projects with
+     * Gets list of projects with list of clients on which project is planned
+     */
+    private HashMap<Project, ArrayList<ActiveClient>> getProjectsAssociation() {
+        HashMap<Project, ArrayList<ActiveClient>> list = new HashMap<>();
+
+        for (Project project : activeProjects) {
+            list.put(project, new ArrayList<ActiveClient>());
+            for (ActiveClient activeClient : computingClients) {
+                if (activeClient.getCurrentPlan().containsKey(project.getProjectUID())) {
+                    list.get(project).add(activeClient);
+                }
+            }
+        }
+        return list;
+    }
+
+    /*
+     * Gets list of projects with list of clients on which project could be planned
      */
     private HashMap<Project, ArrayList<ActiveClient>> getPossibleProjectsAssociation() {
         HashMap<Project, ArrayList<ActiveClient>> list = new HashMap<>();
