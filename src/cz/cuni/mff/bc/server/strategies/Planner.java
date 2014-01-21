@@ -7,7 +7,6 @@ package cz.cuni.mff.bc.server.strategies;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.server.ActiveClient;
 import cz.cuni.mff.bc.server.Project;
-import cz.cuni.mff.bc.server.Server;
 import cz.cuni.mff.bc.server.logging.CustomFormater;
 import cz.cuni.mff.bc.server.logging.CustomHandler;
 import cz.cuni.mff.bc.server.logging.FileLogger;
@@ -45,7 +44,7 @@ public class Planner {
 
 
         strategies = new HashMap<>();
-        strategies.put(MAXIMAL_THROUGHPUT, new MaxThroughputStrategy());
+        strategies.put(MAXIMAL_THROUGHPUT, new MaxThroughputStrategy(5));
         strategies.put(HIGHEST_PRIORITY_FIRST, new HighestPriorityStrategy());
     }
 

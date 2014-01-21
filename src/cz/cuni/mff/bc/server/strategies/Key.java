@@ -11,19 +11,19 @@ package cz.cuni.mff.bc.server.strategies;
  */
 public class Key {
 
-    private int priority;
-    private int cores;
+    private int first;
+    private int second;
 
-    public Key(int priority, int cores) {
-        this.priority = priority;
-        this.cores = cores;
+    public Key(int first, int second) {
+        this.first = first;
+        this.second = second;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + this.priority;
-        hash = 89 * hash + this.cores;
+        hash = 89 * hash + this.first;
+        hash = 89 * hash + this.second;
         return hash;
     }
 
@@ -36,10 +36,10 @@ public class Key {
             return false;
         }
         final Key other = (Key) obj;
-        if (this.priority != other.priority) {
+        if (this.first != other.first) {
             return false;
         }
-        if (this.cores != other.cores) {
+        if (this.second != other.second) {
             return false;
         }
         return true;
