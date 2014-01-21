@@ -7,6 +7,7 @@ package cz.cuni.mff.bc.server.strategies;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.server.ActiveClient;
 import cz.cuni.mff.bc.server.Project;
+import cz.cuni.mff.bc.server.ServerParams;
 import cz.cuni.mff.bc.server.logging.CustomFormater;
 import cz.cuni.mff.bc.server.logging.CustomHandler;
 import cz.cuni.mff.bc.server.logging.FileLogger;
@@ -33,9 +34,11 @@ public class Planner {
     public static int TASK_LIMIT_FOR_ABSOLUTE_PROCCESING = 5;
     private HashMap<StrategiesList, IStrategy> strategies;
     private CustomHandler logHandler;
+    private ServerParams serverParams;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Planner.class.getName());
 
-    public Planner() {
+    public Planner(ServerParams serverParams) {
+        this.serverParams = serverParams;
         logHandler = new CustomHandler();
         logHandler.setFormatter(new CustomFormater());
         logHandler.setLevel(Level.ALL);
@@ -58,7 +61,7 @@ public class Planner {
     public synchronized void planForAll(Collection<ActiveClient> activeClients, Collection<Project> activeProjects, StrategiesList strategy) {
         ArrayList<ActiveClient> computing = getClientsInComputation(activeClients);
         strategies.get(strategy).planForAll(computing, activeProjects);
-        LOG.log(Level.INFO, "Replanning for all clients:");
+        LOG.log(Level.INFO, "{}: Replanning for all clients:", serverParams.getStrategy().toString());
         for (ActiveClient activeClient : computing) {
             logPlanForOne(activeClient);
         }
