@@ -49,7 +49,7 @@ public class HighestPriorityStrategy implements IStrategy {
                         } else if (p1.getPriority() == p2.getPriority()) {
                             return 0;
                         } else {
-                            return 1;
+                            return -1;
                         }
                     }
                 }
@@ -151,7 +151,7 @@ public class HighestPriorityStrategy implements IStrategy {
 
     /*
      * Create list which is used to distribute task evenly.
-     * The list in the parameter has to shoul be sorted list by getSortedList method
+     * The list in the parameter should be sorted list by getSortedList method
      */
     private HashMap<Key, LinkedList<Project>> getAvailableProjectsList(LinkedList<Project> activeProjects) {
         HashMap<Key, LinkedList<Project>> distributionList = new HashMap<>();
