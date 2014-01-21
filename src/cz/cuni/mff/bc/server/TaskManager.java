@@ -90,7 +90,7 @@ public class TaskManager {
             }
         };
         this.finishingProjects = new ConcurrentSkipListSet<>(Collections.reverseOrder(comparatorForFinishing));
-        this.planner = new Planner();
+        this.planner = new Planner(serverParams);
         this.serverParams = serverParams;
         this.filesStructure = filesStructure;
         this.activeClients = activeClients;
