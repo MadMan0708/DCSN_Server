@@ -1,124 +1,77 @@
-Tue Jan 21 13:09:30 GMT 2014 INFO Honza >> Current plan: 
-
-Tue Jan 21 13:09:30 GMT 2014 INFO  	 Plan is empty
-
-Tue Jan 21 13:09:30 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:09:42 GMT 2014 INFO Palcat >> Current plan: 
-
-Tue Jan 21 13:09:42 GMT 2014 INFO  	 Plan is empty
-
-Tue Jan 21 13:09:42 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Honza >> Current plan: 
-
-Tue Jan 21 13:10:15 GMT 2014 INFO 	 Tasks from project Weather, 3x
-
-Tue Jan 21 13:10:15 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Project Weather could be planned on:
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Palcat >> Current plan: 
-
-Tue Jan 21 13:10:15 GMT 2014 INFO 	 Tasks from project Weather, 2x
-
-Tue Jan 21 13:10:15 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Project Weather could be planned on:
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza >> Current plan: 
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 	 Tasks from project TestProject, 1x
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 	 Tasks from project Weather, 1x
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Project TestProject could be planned on:
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Project Weather could be planned on:
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat >> Current plan: 
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 	 Tasks from project TestProject, 1x
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Project TestProject could be planned on:
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Project Weather could be planned on:
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:21 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:21 GMT 2014 INFO 	 Task data_8.txt from project TestProject
-
-Tue Jan 21 13:10:22 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:22 GMT 2014 INFO 	 Task data_8.txt from project TestProject
-
-Tue Jan 21 13:10:22 GMT 2014 INFO 	 Task data_1.txt from project Weather
-
-Tue Jan 21 13:10:23 GMT 2014 INFO Palcat >> Current task: 
-
-Tue Jan 21 13:10:23 GMT 2014 INFO 	 Task data_0.txt from project TestProject
-
-Tue Jan 21 13:10:34 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:34 GMT 2014 INFO 	 Task data_7.txt from project TestProject
-
-Tue Jan 21 13:10:35 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:35 GMT 2014 INFO 	 Task data_7.txt from project TestProject
-
-Tue Jan 21 13:10:35 GMT 2014 INFO 	 Task data_7.txt from project Weather
-
-Tue Jan 21 13:10:36 GMT 2014 INFO Palcat >> Current task: 
-
-Tue Jan 21 13:10:36 GMT 2014 INFO 	 Task data_9.txt from project TestProject
-
-Tue Jan 21 13:10:46 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:46 GMT 2014 INFO 	 Task data_6.txt from project TestProject
-
-Tue Jan 21 13:10:47 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:47 GMT 2014 INFO 	 Task data_6.txt from project TestProject
-
-Tue Jan 21 13:10:47 GMT 2014 INFO 	 Task data_9.txt from project Weather
-
+Tue Jan 21 14:33:52 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:52 GMT 2014 : Honza >> Current tasks: 
+Tue Jan 21 14:33:52 GMT 2014 : 	 Task data_1.txt from project Weather
+Tue Jan 21 14:33:56 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:56 GMT 2014 : Palcat >> Current tasks: 
+Tue Jan 21 14:33:56 GMT 2014 : 	 Task data_7.txt from project Weather
+Tue Jan 21 14:33:57 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:57 GMT 2014 : Petr >> Current tasks: 
+Tue Jan 21 14:33:57 GMT 2014 : 	 Task data_8.txt from project TestProject
+Tue Jan 21 14:33:58 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:58 GMT 2014 : Palcat >> Current tasks: 
+Tue Jan 21 14:33:58 GMT 2014 : 	 Task data_7.txt from project Weather
+Tue Jan 21 14:33:58 GMT 2014 : 	 Task data_9.txt from project Weather
+Tue Jan 21 14:34:00 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:00 GMT 2014 : Petr >> Current tasks: 
+Tue Jan 21 14:34:00 GMT 2014 : 	 Task data_8.txt from project TestProject
+Tue Jan 21 14:34:00 GMT 2014 : 	 Task data_0.txt from project Weather
+Tue Jan 21 14:34:02 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:02 GMT 2014 : Jirik >> Current tasks: 
+Tue Jan 21 14:34:02 GMT 2014 : 	 Task data_0.txt from project TestProject
+Tue Jan 21 14:34:05 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:05 GMT 2014 : Palcat >> Current tasks: 
+Tue Jan 21 14:34:05 GMT 2014 : 	 Task data_7.txt from project Weather
+Tue Jan 21 14:34:05 GMT 2014 : 	 Task data_9.txt from project Weather
+Tue Jan 21 14:34:05 GMT 2014 : 	 Task data_3.txt from project Weather
+Tue Jan 21 14:34:08 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:08 GMT 2014 : Jirik >> Current tasks: 
+Tue Jan 21 14:34:08 GMT 2014 : 	 Task data_0.txt from project TestProject
+Tue Jan 21 14:34:08 GMT 2014 : 	 Task data_7.txt from project TestProject
+Tue Jan 21 14:34:10 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:10 GMT 2014 : Honza >> Current tasks: 
+Tue Jan 21 14:34:11 GMT 2014 : 	 Task data_5.txt from project Weather
+Tue Jan 21 14:34:14 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:14 GMT 2014 : Palcat >> Current tasks: 
+Tue Jan 21 14:34:14 GMT 2014 : 	 Task data_9.txt from project Weather
+Tue Jan 21 14:34:14 GMT 2014 : 	 Task data_3.txt from project Weather
+Tue Jan 21 14:34:14 GMT 2014 : 	 Task data_2.txt from project Weather
+Tue Jan 21 14:34:17 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:17 GMT 2014 : Petr >> Current tasks: 
+Tue Jan 21 14:34:17 GMT 2014 : 	 Task data_9.txt from project TestProject
+Tue Jan 21 14:34:17 GMT 2014 : 	 Task data_0.txt from project Weather
+Tue Jan 21 14:34:20 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:20 GMT 2014 : Palcat >> Current tasks: 
+Tue Jan 21 14:34:20 GMT 2014 : 	 Task data_3.txt from project Weather
+Tue Jan 21 14:34:20 GMT 2014 : 	 Task data_2.txt from project Weather
+Tue Jan 21 14:34:21 GMT 2014 : 	 Task data_4.txt from project Weather
+Tue Jan 21 14:34:23 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:23 GMT 2014 : Jirik >> Current tasks: 
+Tue Jan 21 14:34:23 GMT 2014 : 	 Task data_7.txt from project TestProject
+Tue Jan 21 14:34:23 GMT 2014 : 	 Task data_6.txt from project TestProject
+Tue Jan 21 14:34:26 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:26 GMT 2014 : Palcat >> Current tasks: 
+Tue Jan 21 14:34:26 GMT 2014 : 	 Task data_2.txt from project Weather
+Tue Jan 21 14:34:26 GMT 2014 : 	 Task data_4.txt from project Weather
+Tue Jan 21 14:34:26 GMT 2014 : 	 Task data_6.txt from project Weather
+Tue Jan 21 14:34:28 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:28 GMT 2014 : Jirik >> Current tasks: 
+Tue Jan 21 14:34:28 GMT 2014 : 	 Task data_6.txt from project TestProject
+Tue Jan 21 14:34:28 GMT 2014 : 	 Task data_4.txt from project TestProject
+Tue Jan 21 14:34:34 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:35 GMT 2014 : Petr >> Current tasks: 
+Tue Jan 21 14:34:35 GMT 2014 : 	 Task data_9.txt from project TestProject
+Tue Jan 21 14:34:35 GMT 2014 : 	 Task data_8.txt from project Weather
+Tue Jan 21 14:34:41 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:41 GMT 2014 : Petr >> Current tasks: 
+Tue Jan 21 14:34:41 GMT 2014 : 	 Task data_5.txt from project TestProject
+Tue Jan 21 14:34:41 GMT 2014 : 	 Task data_8.txt from project Weather
+Tue Jan 21 14:34:42 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:42 GMT 2014 : Jirik >> Current tasks: 
+Tue Jan 21 14:34:42 GMT 2014 : 	 Task data_1.txt from project TestProject
+Tue Jan 21 14:34:43 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:43 GMT 2014 : Jirik >> Current tasks: 
+Tue Jan 21 14:34:43 GMT 2014 : 	 Task data_1.txt from project TestProject
+Tue Jan 21 14:34:43 GMT 2014 : 	 Task data_3.txt from project TestProject
+Tue Jan 21 14:34:53 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:53 GMT 2014 : Petr >> Current tasks: 
+Tue Jan 21 14:34:53 GMT 2014 : 	 Task data_2.txt from project TestProject

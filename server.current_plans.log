@@ -1,124 +1,77 @@
-Tue Jan 21 13:09:30 GMT 2014 INFO Honza >> Current plan: 
-
-Tue Jan 21 13:09:30 GMT 2014 INFO  	 Plan is empty
-
-Tue Jan 21 13:09:30 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:09:42 GMT 2014 INFO Palcat >> Current plan: 
-
-Tue Jan 21 13:09:42 GMT 2014 INFO  	 Plan is empty
-
-Tue Jan 21 13:09:42 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Honza >> Current plan: 
-
-Tue Jan 21 13:10:15 GMT 2014 INFO 	 Tasks from project Weather, 3x
-
-Tue Jan 21 13:10:15 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Project Weather could be planned on:
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Palcat >> Current plan: 
-
-Tue Jan 21 13:10:15 GMT 2014 INFO 	 Tasks from project Weather, 2x
-
-Tue Jan 21 13:10:15 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Project Weather could be planned on:
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:15 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza >> Current plan: 
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 	 Tasks from project TestProject, 1x
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 	 Tasks from project Weather, 1x
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Project TestProject could be planned on:
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Project Weather could be planned on:
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat >> Current plan: 
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 	 Tasks from project TestProject, 1x
-
-Tue Jan 21 13:10:16 GMT 2014 INFO 
-
-NEW POSSIBLE ASSOCIATION
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Project TestProject could be planned on:
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Project Weather could be planned on:
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Honza
-
-Tue Jan 21 13:10:16 GMT 2014 INFO Palcat
-
-Tue Jan 21 13:10:21 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:21 GMT 2014 INFO 	 Task data_8.txt from project TestProject
-
-Tue Jan 21 13:10:22 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:22 GMT 2014 INFO 	 Task data_8.txt from project TestProject
-
-Tue Jan 21 13:10:22 GMT 2014 INFO 	 Task data_1.txt from project Weather
-
-Tue Jan 21 13:10:23 GMT 2014 INFO Palcat >> Current task: 
-
-Tue Jan 21 13:10:23 GMT 2014 INFO 	 Task data_0.txt from project TestProject
-
-Tue Jan 21 13:10:34 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:34 GMT 2014 INFO 	 Task data_7.txt from project TestProject
-
-Tue Jan 21 13:10:35 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:35 GMT 2014 INFO 	 Task data_7.txt from project TestProject
-
-Tue Jan 21 13:10:35 GMT 2014 INFO 	 Task data_7.txt from project Weather
-
-Tue Jan 21 13:10:36 GMT 2014 INFO Palcat >> Current task: 
-
-Tue Jan 21 13:10:36 GMT 2014 INFO 	 Task data_9.txt from project TestProject
-
-Tue Jan 21 13:10:46 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:46 GMT 2014 INFO 	 Task data_6.txt from project TestProject
-
-Tue Jan 21 13:10:47 GMT 2014 INFO Honza >> Current task: 
-
-Tue Jan 21 13:10:47 GMT 2014 INFO 	 Task data_6.txt from project TestProject
-
-Tue Jan 21 13:10:47 GMT 2014 INFO 	 Task data_9.txt from project Weather
-
+Tue Jan 21 14:33:06 GMT 2014 : 
+PLANNING FOR ONE
+Tue Jan 21 14:33:06 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:06 GMT 2014 : Petr >> Current plan: 
+Tue Jan 21 14:33:06 GMT 2014 :  	 Plan is empty
+Tue Jan 21 14:33:12 GMT 2014 : 
+PLANNING FOR ONE
+Tue Jan 21 14:33:12 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:12 GMT 2014 : Honza >> Current plan: 
+Tue Jan 21 14:33:12 GMT 2014 :  	 Plan is empty
+Tue Jan 21 14:33:18 GMT 2014 : 
+PLANNING FOR ONE
+Tue Jan 21 14:33:18 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:18 GMT 2014 : Jirik >> Current plan: 
+Tue Jan 21 14:33:18 GMT 2014 :  	 Plan is empty
+Tue Jan 21 14:33:26 GMT 2014 : 
+PLANNING FOR ONE
+Tue Jan 21 14:33:26 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:26 GMT 2014 : Palcat >> Current plan: 
+Tue Jan 21 14:33:26 GMT 2014 :  	 Plan is empty
+Tue Jan 21 14:33:50 GMT 2014 : 
+PLANNING FOR ALL
+Tue Jan 21 14:33:50 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:50 GMT 2014 : Honza >> Current plan: 
+Tue Jan 21 14:33:50 GMT 2014 : 	 Tasks from project Weather, 1x
+Tue Jan 21 14:33:50 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:50 GMT 2014 : Petr >> Current plan: 
+Tue Jan 21 14:33:50 GMT 2014 : 	 Tasks from project Weather, 3x
+Tue Jan 21 14:33:50 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:50 GMT 2014 : Jirik >> Current plan: 
+Tue Jan 21 14:33:50 GMT 2014 : 	 Tasks from project Weather, 4x
+Tue Jan 21 14:33:50 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:50 GMT 2014 : Palcat >> Current plan: 
+Tue Jan 21 14:33:50 GMT 2014 : 	 Tasks from project Weather, 3x
+Tue Jan 21 14:33:52 GMT 2014 : 
+PLANNING FOR ALL
+Tue Jan 21 14:33:52 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:52 GMT 2014 : Honza >> Current plan: 
+Tue Jan 21 14:33:52 GMT 2014 : 	 Tasks from project Weather, 1x
+Tue Jan 21 14:33:52 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:52 GMT 2014 : Petr >> Current plan: 
+Tue Jan 21 14:33:52 GMT 2014 : 	 Tasks from project TestProject, 1x
+Tue Jan 21 14:33:52 GMT 2014 : 	 Tasks from project Weather, 1x
+Tue Jan 21 14:33:52 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:52 GMT 2014 : Jirik >> Current plan: 
+Tue Jan 21 14:33:52 GMT 2014 : 	 Tasks from project TestProject, 2x
+Tue Jan 21 14:33:52 GMT 2014 : -----------------------------
+Tue Jan 21 14:33:52 GMT 2014 : Palcat >> Current plan: 
+Tue Jan 21 14:33:52 GMT 2014 : 	 Tasks from project Weather, 3x
+Tue Jan 21 14:34:30 GMT 2014 : 
+PLANNING FOR ALL
+Tue Jan 21 14:34:30 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:30 GMT 2014 : Honza >> Current plan: 
+Tue Jan 21 14:34:30 GMT 2014 :  	 Plan is empty
+Tue Jan 21 14:34:30 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:30 GMT 2014 : Petr >> Current plan: 
+Tue Jan 21 14:34:31 GMT 2014 : 	 Tasks from project TestProject, 1x
+Tue Jan 21 14:34:31 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:31 GMT 2014 : Jirik >> Current plan: 
+Tue Jan 21 14:34:31 GMT 2014 : 	 Tasks from project TestProject, 2x
+Tue Jan 21 14:34:31 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:31 GMT 2014 : Palcat >> Current plan: 
+Tue Jan 21 14:34:31 GMT 2014 :  	 Plan is empty
+Tue Jan 21 14:34:40 GMT 2014 : 
+PLANNING FOR ALL
+Tue Jan 21 14:34:40 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:40 GMT 2014 : Honza >> Current plan: 
+Tue Jan 21 14:34:40 GMT 2014 :  	 Plan is empty
+Tue Jan 21 14:34:40 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:40 GMT 2014 : Petr >> Current plan: 
+Tue Jan 21 14:34:40 GMT 2014 :  	 Plan is empty
+Tue Jan 21 14:34:40 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:40 GMT 2014 : Jirik >> Current plan: 
+Tue Jan 21 14:34:40 GMT 2014 :  	 Plan is empty
+Tue Jan 21 14:34:40 GMT 2014 : -----------------------------
+Tue Jan 21 14:34:40 GMT 2014 : Palcat >> Current plan: 
+Tue Jan 21 14:34:40 GMT 2014 :  	 Plan is empty

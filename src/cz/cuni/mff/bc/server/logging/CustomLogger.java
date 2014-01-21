@@ -4,7 +4,11 @@
  */
 package cz.cuni.mff.bc.server.logging;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -16,15 +20,19 @@ import java.util.logging.Logger;
  */
 public class CustomLogger {
 
-    FileLogger fileLogger;
+    File logFile;
 
     public CustomLogger(String fileName) {
 
-        fileLogger = new FileLogger(new File(fileName));
+        logFile = new File(fileName);
     }
 
-    public void log(String message) {
-        Date date = new Date();
-        fileLogger.log(date.toString() + " : " + message);
+    public void log(String message, Object... args) {
+        try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
+            Date date = new Date();
+            pw.printf(date.toString() + " : " + message + "\n", args);
+        } catch (IOException e) {
+            System.err.println("Can not write message to log file:" + logFile.getAbsolutePath());
+        }
     }
 }
