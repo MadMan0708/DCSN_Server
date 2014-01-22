@@ -168,7 +168,7 @@ public class HighestPriorityStrategy implements IStrategy {
      */
     private LinkedList<Project> getAllProjectsSortedList(Collection<Project> activeProjects) {
         LinkedList<Project> asList = new LinkedList<>(activeProjects);
-        Collections.sort(asList, Collections.reverseOrder(comparator));
+        Collections.sort(asList, comparator);
         return asList;
     }
 
