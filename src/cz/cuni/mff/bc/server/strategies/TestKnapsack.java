@@ -34,8 +34,8 @@ public class TestKnapsack {
         list.add(new Project(ProjectState.ACTIVE, 7, 2, 39, 15, null, "UFO"));
         list.add(new Project(ProjectState.ACTIVE, 9, 2, 39, 10, null, "TestOne"));
         list.add(new Project(ProjectState.ACTIVE, 7, 2, 39, 10, null, "Same"));
-        HashMap<Key, ArrayList<Project>> solveKnapsack = m.solveKnapsack(active, list);
-        for (Entry<Key, ArrayList<Project>> entry : solveKnapsack.entrySet()) {
+        HashMap<Key, LinkedList<Project>> solveKnapsack = m.findBestAssigning(active.getCoresLimit(),active.getMemoryLimit(), list);
+        for (Entry<Key, LinkedList<Project>> entry : solveKnapsack.entrySet()) {
             for (Project project : entry.getValue()) {
                 System.out.println(entry.getKey().getFirst() + "x Cores : " + entry.getKey().getSecond() + " : " + project.getProjectName());
             }

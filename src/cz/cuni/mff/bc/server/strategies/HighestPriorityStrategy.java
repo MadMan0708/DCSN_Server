@@ -80,10 +80,11 @@ public class HighestPriorityStrategy implements IStrategy {
     @Override
     public void planForOne(ActiveClient active) {
         int coresLeft = active.getCoresLimit();
+        int memoryLimit = active.getMemoryLimit();
         LinkedHashMap<ProjectUID, Integer> newerPlan = new LinkedHashMap<>();
 
         for (Project project : allProjectsSorted) {
-            if (project.getMemory() > active.getMemoryLimit() || project.getCores() > coresLeft) {
+            if (project.getMemory() > memoryLimit || project.getCores() > coresLeft) {
                 // go fastly through start of the list where are the projects with memory limit and
                 // core limit higher then actual client can handle
                 continue;
@@ -139,6 +140,9 @@ public class HighestPriorityStrategy implements IStrategy {
         return notPlannedLatelyNumbers;
     }
 
+    /*
+     * Assign prject to the client's new plan
+     */
     private void notPlannedLatelyIncrement() {
         for (Project project : notPlannedLatelyIncrement) {
             int newValue = notPlannedLatelyNumbers.get(project) + 1;
