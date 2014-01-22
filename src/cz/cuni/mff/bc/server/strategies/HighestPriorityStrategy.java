@@ -38,22 +38,22 @@ public class HighestPriorityStrategy implements IStrategy {
         this.comparator = new Comparator<Project>() {
             @Override
             public int compare(Project p1, Project p2) {
-                if (p1.getMemory() > p2.getMemory()) { // firstly,sort by memory
-                    return 1;
-                } else if (p1.getMemory() < p2.getMemory()) {
+                if (p1.getMemory() > p2.getMemory()) { // firstly,sort by memory in descending order
                     return -1;
+                } else if (p1.getMemory() < p2.getMemory()) {
+                    return 1;
                 } else {
-                    if (p1.getCores() > p2.getCores()) { //secondly sort by cores
-                        return 1;
-                    } else if (p1.getCores() < p2.getCores()) {
+                    if (p1.getCores() > p2.getCores()) { //secondly sort by cores in descending order
                         return -1;
+                    } else if (p1.getCores() < p2.getCores()) {
+                        return 1;
                     } else {
-                        if (p1.getPriority() > p2.getPriority()) { // lastly, sort by priorities
-                            return 1;
+                        if (p1.getPriority() > p2.getPriority()) { // lastly, sort by priorities in descening order
+                            return -1;
                         } else if (p1.getPriority() == p2.getPriority()) {
                             return 0;
                         } else {
-                            return -1;
+                            return 1;
                         }
                     }
                 }

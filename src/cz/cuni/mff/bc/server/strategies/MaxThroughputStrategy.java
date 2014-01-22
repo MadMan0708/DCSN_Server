@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Implementation of Maximal Throughput strategy
@@ -42,27 +43,138 @@ public class MaxThroughputStrategy implements IStrategy {
         this.comparator = new Comparator<Project>() {
             @Override
             public int compare(Project p1, Project p2) {
-                if (p1.getTime() > p2.getTime()) { // firstly sort by time in ascending order
+                if (p1.getMemory() > p2.getMemory()) {
                     return -1;
-                } else if (p1.getTime() < p2.getTime()) {
+                } else if (p1.getMemory() < p2.getMemory()) { // firstly sort by memory descending
                     return 1;
                 } else {
-                    if (p1.getCores() > p2.getCores()) { //secondly sort by cores in ascending order
-                        return -1;
-                    } else if (p1.getCores() < p2.getCores()) {
+                    if (p1.getTime() > p2.getTime()) { // secondly sort by time in ascending order
                         return 1;
+                    } else if (p1.getTime() < p2.getTime()) {
+                        return -1;
                     } else {
-                        if (p1.getMemory() > p2.getMemory()) { // lastly sort by memory in descending order
-                            return 1;
-                        } else if (p1.getMemory() == p2.getMemory()) {
+                        if (p1.getPriority() > p2.getPriority()) { // thirdly  sort  by priority in descending order
+                            return -1;
+                        } else if (p1.getPriority() == p2.getPriority()) {
                             return 0;
                         } else {
-                            return -1;
+                            return 1;
                         }
                     }
                 }
             }
-        };
+        }; /*      this.comparator = new Comparator<Project>() {
+         @Override
+         public int compare(Project p1, Project p2) {
+         if (p1.getTime() > p2.getTime()) { // firstly sort by time in ascending
+         return -1;
+         } else if (p1.getTime() < p2.getTime()) {
+         return 1;
+         } else {
+         if (p1.getCores() > p2.getCores()) { //secondly sort by cores in ascending order
+         return -1;
+         } else if (p1.getCores() < p2.getCores()) {
+         return 1;
+         } else {
+         if (p1.getMemory() > p2.getMemory()) { // lastly sort by memory in descending order
+         return 1;
+         } else if (p1.getMemory() == p2.getMemory()) {
+         return 0;
+         } else {
+         return -1;
+         }
+         }
+         }
+         }
+         };*/
+    } /* Values are same as weights (stored in array items)
+     / Weights (stored in array items)
+     / Number of distinct items (items.length)
+     / Knapsack capacity (capacity)
+     * 
+     * Returns the list where key is how many times can projects from list in hashmap value be used
+     */
+
+
+    public HashMap<Key, ArrayList<Project>> solveKnapsack(ActiveClient active, LinkedList<Project> projects) {
+        int capacity = active.getCoresLimit();
+        HashMap<Integer, ArrayList<Project>> filtered = filterProjects(active, projects);
+        HashMap<Key, ArrayList<Project>> toReturn = new HashMap<>();
+        Integer[] items = prepareArrayOfWeights(active, filtered);
+        Integer[][] result = new Integer[items.length + 1][capacity + 1];
+        Integer[][] picked = new Integer[items.length + 1][capacity + 1];
+        HashMap<Integer, Integer> selectedItems = new HashMap<>();
+        // initialize
+        for (int j = 0; j <= capacity; j++) {
+            result[0][j] = 0;
+            picked[0][j] = 0;
+        }
+        // solve
+        for (int i = 1; i <= items.length; i++) {
+            for (int j = 0; j <= capacity; j++) {
+                if (items[i - 1] <= j) {
+                    int withNewItem = result[i - 1][j - items[i - 1]] + items[i - 1];
+                    int previousItem = result[i - 1][j];
+                    if (withNewItem < previousItem) {
+                        result[i][j] = previousItem;
+                        picked[i][j] = 0;
+                    } else {
+                        result[i][j] = withNewItem;
+                        picked[i][j] = 1;
+                    }
+                } else {
+                    result[i][j] = result[i - 1][j];
+                    picked[i][j] = 0;
+                }
+            }
+        }
+        // find the cores to use
+        int c = capacity;
+        for (int i = items.length; i > 0; i--) {
+            if (picked[i][c] == 1) {
+                if (!selectedItems.containsKey(items[i - 1])) {
+                    selectedItems.put(items[i - 1], 1);
+                } else {
+                    selectedItems.put(items[i - 1], selectedItems.get(items[i - 1]) + 1);
+                }
+                c = c - items[i - 1];
+            }
+        }
+        // now we have how many times project with specific cores limit can be in most effective list
+        for (Map.Entry<Integer, Integer> entry : selectedItems.entrySet()) {
+            toReturn.put(new Key(entry.getKey(), entry.getValue()), filtered.get(entry.getKey()));
+        }
+        return toReturn;
+    }
+
+    private Integer[] prepareArrayOfWeights(ActiveClient activeClient, HashMap<Integer, ArrayList<Project>> filtredProejcts) {
+        ArrayList<Integer> weights = new ArrayList<>();
+        int coresLimit = activeClient.getCoresLimit();
+        int coresTemp;
+        for (Integer cores : filtredProejcts.keySet()) {
+            coresTemp = coresLimit - cores;
+            while (coresTemp >= 0) {
+                weights.add(cores);
+                coresTemp = coresTemp - cores;
+            }
+        }
+        return (Integer[]) weights.toArray(new Integer[weights.size()]);
+    }
+
+    private HashMap<Integer, ArrayList<Project>> filterProjects(ActiveClient active, LinkedList<Project> projects) {
+        HashMap<Integer, ArrayList<Project>> list = new HashMap<>();
+        for (Project project : projects) {
+            if (project.getMemory() <= active.getMemoryLimit() && project.getCores() <= active.getCoresLimit()) {
+                if (!list.containsKey(project.getCores())) {
+                    list.put(project.getCores(), new ArrayList<Project>());
+                }
+                list.get(project.getCores()).add(project);
+            }
+        }
+        for (ArrayList<Project> l : list.values()) {
+            Collections.sort(l, comparator);
+        }
+        return list;
     }
 
     @Override
