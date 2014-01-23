@@ -23,12 +23,15 @@ import java.util.LinkedList;
 public class HighestPriorityStrategy implements IStrategy {
 
     private LinkedList<Project> allProjectsSorted;
-    private HashMap<Key, LinkedList<Project>> availableProjects;
-    private HashMap<Key, LinkedList<Project>> usedProjects;
+    private HashMap<Pair, LinkedList<Project>> availableProjects;
+    private HashMap<Pair, LinkedList<Project>> usedProjects;
     private Comparator<Project> comparator;
     private LinkedList<Project> notPlannedLatelyIncrement;
     private HashMap<Project, Integer> notPlannedLatelyNumbers;
 
+    /**
+     * Constructor
+     */
     public HighestPriorityStrategy() {
         this.allProjectsSorted = new LinkedList<>();
         this.availableProjects = getAvailableProjectsList(allProjectsSorted);
@@ -89,7 +92,7 @@ public class HighestPriorityStrategy implements IStrategy {
                 // core limit higher then actual client can handle
                 continue;
             } else {
-                Key key = new Key(project.getPriority(), project.getCores());
+                Pair key = new Pair(project.getPriority(), project.getCores());
                 if (availableProjects.get(key).contains(project)) {
                     // project hasn't been chosen in this round
                     if (!usedProjects.containsKey(key)) {
@@ -180,10 +183,10 @@ public class HighestPriorityStrategy implements IStrategy {
      * Create list which is used to distribute task evenly.
      * The list in the parameter should be sorted list by getSortedList method
      */
-    private HashMap<Key, LinkedList<Project>> getAvailableProjectsList(LinkedList<Project> activeProjects) {
-        HashMap<Key, LinkedList<Project>> distributionList = new HashMap<>();
+    private HashMap<Pair, LinkedList<Project>> getAvailableProjectsList(LinkedList<Project> activeProjects) {
+        HashMap<Pair, LinkedList<Project>> distributionList = new HashMap<>();
         for (Project project : activeProjects) {
-            Key key = new Key(project.getPriority(), project.getCores());
+            Pair key = new Pair(project.getPriority(), project.getCores());
             if (!distributionList.containsKey(key)) {
                 distributionList.put(key, new LinkedList<Project>());
             }

@@ -9,9 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Logger;
 
 /**
  * Custom logger
@@ -22,11 +20,22 @@ public class CustomLogger {
 
     File logFile;
 
+    /**
+     * Constructor
+     *
+     * @param fileName name of file where to log
+     */
     public CustomLogger(String fileName) {
 
         logFile = new File(fileName);
     }
 
+    /**
+     * Writes the message into to file
+     *
+     * @param message message
+     * @param args arguments
+     */
     public void log(String message, Object... args) {
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(logFile, true)))) {
             Date date = new Date();

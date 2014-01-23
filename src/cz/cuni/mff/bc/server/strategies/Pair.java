@@ -9,12 +9,18 @@ package cz.cuni.mff.bc.server.strategies;
  *
  * @author Jakub Hava
  */
-public class Key {
+public class Pair {
 
     private int first;
     private int second;
 
-    public Key(int first, int second) {
+    /**
+     * Creates the pair
+     *
+     * @param first first integer
+     * @param second second integer
+     */
+    public Pair(int first, int second) {
         this.first = first;
         this.second = second;
     }
@@ -35,7 +41,7 @@ public class Key {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Key other = (Key) obj;
+        final Pair other = (Pair) obj;
         if (this.first != other.first) {
             return false;
         }
@@ -45,10 +51,20 @@ public class Key {
         return true;
     }
 
+    /**
+     * Gets the first integer from the pair
+     *
+     * @return the first integer from the pair
+     */
     public int getFirst() {
         return first;
     }
 
+    /**
+     * Gets the second integer from the pair
+     *
+     * @return the second integer from the pair
+     */
     public int getSecond() {
         return second;
     }

@@ -31,6 +31,12 @@ public class MaxThroughputStrategy implements IStrategy {
     private LinkedList<Project> notPlannedLatelyIncrement;
     private HashMap<Project, Integer> notPlannedLatelyNumbers;
 
+    /**
+     * Constructor
+     *
+     * @param replannedLimit number of planning after projects which haven't
+     * been planned yet will be planned with higher priority
+     */
     public MaxThroughputStrategy(int replannedLimit) {
         this.replannedLimit = replannedLimit;
         this.notPlannedLatelyNumbers = new LinkedHashMap<>();
@@ -107,8 +113,8 @@ public class MaxThroughputStrategy implements IStrategy {
         // continue with regular planning
         LinkedList<Project> forDistribution = new LinkedList<>(allProjectsSorted);
         forDistribution.removeAll(chosenProjects); // remove projects which has been added cause of immediate planning
-        HashMap<Key, LinkedList<Project>> distributionList = findBestAssigning(coresLeft, memoryLimit, forDistribution);
-        for (Entry<Key, LinkedList<Project>> entry : distributionList.entrySet()) {
+        HashMap<Pair, LinkedList<Project>> distributionList = findBestAssigning(coresLeft, memoryLimit, forDistribution);
+        for (Entry<Pair, LinkedList<Project>> entry : distributionList.entrySet()) {
             for (int i = entry.getKey().getSecond(); i > 0; i--) {
                 Project project = entry.getValue().getFirst();
                 assignProjectForClient(newPlan, project, entry.getKey().getSecond());
@@ -125,10 +131,10 @@ public class MaxThroughputStrategy implements IStrategy {
     /*
      * Returns the list where the keys tell how many times can projects from list in hashmap value be used
      */
-    public HashMap<Key, LinkedList<Project>> findBestAssigning(int coresLimit, int memoryLimit, LinkedList<Project> projects) {
+    private HashMap<Pair, LinkedList<Project>> findBestAssigning(int coresLimit, int memoryLimit, LinkedList<Project> projects) {
         int capacity = coresLimit;
         HashMap<Integer, LinkedList<Project>> filtered = filterProjects(coresLimit, memoryLimit, projects);
-        HashMap<Key, LinkedList<Project>> toReturn = new HashMap<>();
+        HashMap<Pair, LinkedList<Project>> toReturn = new HashMap<>();
         Integer[] items = prepareArrayOfWeights(coresLimit, filtered);
         Integer[][] result = new Integer[items.length + 1][capacity + 1];
         Integer[][] picked = new Integer[items.length + 1][capacity + 1];
@@ -171,7 +177,7 @@ public class MaxThroughputStrategy implements IStrategy {
         }
         // now we have how many times project with specific cores limit can be in most effective list
         for (Map.Entry<Integer, Integer> entry : selectedItems.entrySet()) {
-            toReturn.put(new Key(entry.getKey(), entry.getValue()), filtered.get(entry.getKey()));
+            toReturn.put(new Pair(entry.getKey(), entry.getValue()), filtered.get(entry.getKey()));
         }
         return toReturn;
     }

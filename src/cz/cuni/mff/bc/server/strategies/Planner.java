@@ -41,6 +41,11 @@ public class Planner {
     private CustomLogger LOG_PROJECTS_CURRENT_CLIENTS;
     private CustomLogger LOG_PROJECTS_POSSIBLE_CLIENTS;
 
+    /**
+     * Constructor
+     *
+     * @param serverParams server parameters
+     */
     public Planner(ServerParams serverParams) {
         this.serverParams = serverParams;
         this.computingClients = new ArrayList<>();
@@ -155,6 +160,11 @@ public class Planner {
         }
     }
 
+    /**
+     * Create log message which contains projects and clients on which these
+     * projects are calculated
+     *
+     */
     public void logProjectAssociation() {
         HashMap<Project, ArrayList<ActiveClient>> projectsAssociation = getProjectsAssociation();
         if (!projectsAssociation.isEmpty()) {
