@@ -659,13 +659,13 @@ public class TaskManager {
      * @param projectName project name
      * @return true if project has been successfully resumed, false otherwise
      */
-    public boolean resumeProject(String clientID, String projectID) {
-        if (isProjectInManager(clientID, projectID)) {
-            Project project = projectsAll.get(new ProjectUID(clientID, projectID));
+    public boolean resumeProject(String clientName, String projectName) {
+        if (isProjectInManager(clientName, projectName)) {
+            Project project = projectsAll.get(new ProjectUID(clientName, projectName));
             project.setState(ProjectState.ACTIVE);
             projectsActive.put(project.getProjectUID(), project);
             projectsPaused.remove(project.getProjectUID());
-            addTasksToPool(clientID, projectID);
+            addTasksToPool(clientName, projectName);
             planForAll();
             return true;
         } else {

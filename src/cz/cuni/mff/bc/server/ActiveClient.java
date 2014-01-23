@@ -39,6 +39,7 @@ public class ActiveClient {
      *
      * @param clientName client's name
      * @param session client's session
+     * @param listener listener which listen to changes in client's computation state
      */
     public ActiveClient(String clientName, Session session, IActiveClientListener listener) {
         this.listener = listener;
