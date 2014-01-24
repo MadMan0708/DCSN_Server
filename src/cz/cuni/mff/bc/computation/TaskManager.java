@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package computation;
+package cz.cuni.mff.bc.computation;
 
 import cz.cuni.mff.bc.server.strategies.Planner;
 import cz.cuni.mff.bc.api.main.CustomIO;
@@ -790,4 +790,6 @@ public class TaskManager {
         classManager.deleteCustomClassLoader(uid.getClientName());
         projectsForDownload.remove(uid);
     }
+    
+    
 }

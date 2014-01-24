@@ -2,17 +2,22 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package computation;
+package cz.cuni.mff.bc.computation;
 
 import cz.cuni.mff.bc.misc.CustomClassLoader;
 import cz.cuni.mff.bc.api.main.JarAPI;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.server.FilesStructure;
+import cz.cuni.mff.bc.server.Server;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class manager
@@ -23,6 +28,7 @@ public class ClassManager {
 
     private Map<String, CustomClassLoader> loaderCache = Collections.synchronizedMap(new HashMap<String, CustomClassLoader>());
     private FilesStructure filesStructure;
+    private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     /**
      * Constructor
@@ -86,6 +92,20 @@ public class ClassManager {
         // it doesn't have to be synchronized, as each client is associated only with one clientSessionID
         if (loaderCache.containsKey(clientSessionID)) {
             loaderCache.remove(clientSessionID);
+        }
+    }
+
+    public void reloadClassLoadersWithout(ProjectUID uid) {
+        URL jar = filesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName()).toURI().toURL();
+        for (String clientName : loaderCache.keySet()) {
+            URL[] urls = loaderCache.get(clientName).getURLs();
+            try {
+                loaderCache.get(clientName).close();
+            } catch (IOException e) {
+                LOG.log(Level.WARNING, "Problem with closing classloader for client {0}", clientName);
+            }
+            ArrayList<
+            loaderCache.put(clientName, new CustomClassLoader(java.util.Arrays.))
         }
     }
 }

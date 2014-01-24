@@ -4,7 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
-import computation.ActiveClient;
+import cz.cuni.mff.bc.computation.ActiveClient;
 import cz.cuni.mff.bc.api.main.CustomIO;
 import cz.cuni.mff.bc.misc.GConsole;
 import cz.cuni.mff.bc.misc.IConsole;

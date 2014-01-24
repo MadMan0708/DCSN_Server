@@ -4,8 +4,8 @@
  */
 package cz.cuni.mff.bc.server.strategies;
 
-import computation.ActiveClient;
-import computation.Project;
+import cz.cuni.mff.bc.computation.ActiveClient;
+import cz.cuni.mff.bc.computation.Project;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

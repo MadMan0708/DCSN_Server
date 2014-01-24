@@ -4,9 +4,9 @@
  */
 package cz.cuni.mff.bc.server;
 
-import computation.ActiveClient;
-import computation.TaskManager;
-import computation.Project;
+import cz.cuni.mff.bc.computation.ActiveClient;
+import cz.cuni.mff.bc.computation.TaskManager;
+import cz.cuni.mff.bc.computation.Project;
 import cz.cuni.mff.bc.api.main.IServer;
 import cz.cuni.mff.bc.api.main.Task;
 import cz.cuni.mff.bc.api.main.TaskID;
