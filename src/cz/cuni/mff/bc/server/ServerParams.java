@@ -7,6 +7,7 @@ package cz.cuni.mff.bc.server;
 import cz.cuni.mff.bc.server.strategies.StrategiesList;
 import cz.cuni.mff.bc.misc.PropertiesManager;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -103,21 +104,20 @@ public class ServerParams {
      */
     public boolean setBaseDir(String dir) {
         File f = new File(dir);
-        if (f.exists() && f.isDirectory()) {
-            basedir = f.toPath().toAbsolutePath();
-            LOG.log(Level.INFO, "Basedir is now set to: {0}", basedir);
-            propManager.setProperty("basedir", basedir.toString());
-            return true;
-        } else {
-            if (f.mkdirs()) {
-                basedir = f.toPath().toAbsolutePath();
+        if ((f.exists() && f.isDirectory()) || f.mkdirs()) {
+            try {
+                basedir = f.getCanonicalFile().toPath().toAbsolutePath();
                 LOG.log(Level.INFO, "Basedir is now set to: {0}", basedir);
                 propManager.setProperty("basedir", basedir.toString());
                 return true;
-            } else {
+            } catch (IOException e) {
                 LOG.log(Level.WARNING, "Path {0} is not correct path", dir);
                 return false;
             }
+
+        } else {
+            LOG.log(Level.WARNING, "Path {0} is not correct path", dir);
+            return false;
         }
     }
 
