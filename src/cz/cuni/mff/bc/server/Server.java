@@ -64,7 +64,7 @@ public class Server implements IConsole {
      */
     public void initialise() {
         serverParams.initialiseParameters();
-        deleteContentOfBaseDirectory();
+        deleteContentOfBaseDirectory(); // if for any reason the base directory is not empty
         discoveryThread = new DiscoveryThread(serverParams.getPort());
         CustomIO.deleteDirectory(serverParams.getBaseDir()); // delete directories from last run of the server
         startListening();

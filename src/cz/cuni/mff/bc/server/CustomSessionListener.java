@@ -24,7 +24,7 @@ import org.cojen.dirmi.SessionCloseListener;
  * @author Jakub Hava
  */
 public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
-    
+
     private TaskManager taskManager;
     private ConcurrentHashMap<String, ActiveClient> activeClients;
     private IServerImpl remoteMethods;
@@ -62,8 +62,7 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
                 }
             });
             activeClients.put(clientID, activeClient);
-            taskManager.getClassManager().setCustomClassLoader(clientID);
-            session.setClassLoader(taskManager.getClassManager().getClassLoader(clientID));
+            session.setClassLoader(taskManager.getClassManager().getClassLoader());
             session.send(Boolean.TRUE);
             session.send(remoteMethods);
             activeClient.setClientMethods((IClient) session.receive());
@@ -71,14 +70,13 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
             session.addCloseListener(new SessionCloseListener() {
                 @Override
                 public void closed(Link sessionLink, SessionCloseListener.Cause cause) {
-                    taskManager.getClassManager().deleteCustomClassLoader(clientID);
                     try {
                         if (taskManager.isClientActive(clientID)) {
                             activeClients.get(clientID).getSession().close();
                             Collection<ArrayList<TaskID>> values = activeClients.get(clientID).getCurrentTasks().values();
                             for (ArrayList<TaskID> arrayList : values) {
                                 for (TaskID taskID : arrayList) {
-                                    LOG.log(Level.INFO, "Task " + taskID.getTaskName() + " sent back to the task pool");
+                                    LOG.log(Level.INFO, "Task {0} sent back to the task pool", taskID.getTaskName());
                                     taskManager.addTaskBackToPool(taskID);
                                 }
                             }
@@ -91,7 +89,7 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
                     }
                 }
             });
-            
+
         } else {
             session.send(Boolean.FALSE);
         }

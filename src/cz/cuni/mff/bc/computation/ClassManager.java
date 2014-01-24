@@ -11,11 +11,11 @@ import cz.cuni.mff.bc.server.FilesStructure;
 import cz.cuni.mff.bc.server.Server;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Collections;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class ClassManager {
 
-    private Map<String, CustomClassLoader> loaderCache = Collections.synchronizedMap(new HashMap<String, CustomClassLoader>());
+    private CustomClassLoader classLoader = new CustomClassLoader();
     private FilesStructure filesStructure;
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
@@ -42,70 +42,57 @@ public class ClassManager {
     /**
      * Loads class
      *
-     * @param clientSessionID client's name
      * @param uid project unique id
      * @return loaded class
      * @throws ClassNotFoundException
      * @throws IOException
      */
-    public Class<?> loadClass(String clientSessionID, ProjectUID uid) throws ClassNotFoundException, IOException {
-        CustomClassLoader cl = getClassLoader(clientSessionID);
+    public synchronized Class<?> loadClass(ProjectUID uid) throws ClassNotFoundException, IOException {
         File jar = filesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName());
-        cl.addNewUrl(jar.toURI().toURL());
         String name = JarAPI.getAttributeFromManifest(jar.toPath(), "Main-Comp-Class");
-        return cl.loadClass(name);
+        return classLoader.loadClass(name);
     }
 
     /**
-     * Sets custom class loader
+     * Gets class loader
      *
-     * @param clientSessionID client's name
-     */
-    public void setCustomClassLoader(String clientSessionID) {
-        // it doesn't have to be synchronized, each client has unique sessionID, no clients at same time with same session ID can
-        // insert new CustomClassLoader
-        synchronized (loaderCache) {
-            if (!loaderCache.containsKey(clientSessionID)) {
-                loaderCache.put(clientSessionID, new CustomClassLoader());
-            }
-        }
-    }
-
-    /**
-     * Gets client's class loader
-     *
-     * @param clientSessionID client's name
      * @return custom class loader
      */
-    public CustomClassLoader getClassLoader(String clientSessionID) {
-        setCustomClassLoader(clientSessionID);
-        // it is surely in loaderCache, because setCustomClassLoader possible inserted new class loader
-        return loaderCache.get(clientSessionID);
+    public synchronized CustomClassLoader getClassLoader() {
+        return classLoader;
     }
 
     /**
-     * Deletes custom class loader
+     * Deletes project URL from classloader
      *
-     * @param clientSessionID client's name
+     * @param projectUID project unique ID
      */
-    public void deleteCustomClassLoader(String clientSessionID) {
-        // it doesn't have to be synchronized, as each client is associated only with one clientSessionID
-        if (loaderCache.containsKey(clientSessionID)) {
-            loaderCache.remove(clientSessionID);
+    public synchronized void deleteProjectFromCL(ProjectUID projectUID) {
+        try {
+            URL projectURL = filesStructure.getProjectJarFile(projectUID.getClientName(), projectUID.getProjectName()).toURI().toURL();
+            URL[] urls = classLoader.getURLs();
+            ArrayList<URL> urlList = new ArrayList<>(java.util.Arrays.asList(urls));
+            urlList.remove(projectURL);
+            classLoader.close();
+            classLoader = new CustomClassLoader(urlList.toArray(new URL[urlList.size()]));
+        } catch (MalformedURLException e) {
+            LOG.log(Level.WARNING, "Problem with finding project url for project {0}", projectUID.getProjectName());
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Problem with closing classloader ");
         }
     }
 
-    public void reloadClassLoadersWithout(ProjectUID uid) {
-        URL jar = filesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName()).toURI().toURL();
-        for (String clientName : loaderCache.keySet()) {
-            URL[] urls = loaderCache.get(clientName).getURLs();
-            try {
-                loaderCache.get(clientName).close();
-            } catch (IOException e) {
-                LOG.log(Level.WARNING, "Problem with closing classloader for client {0}", clientName);
-            }
-            ArrayList<
-            loaderCache.put(clientName, new CustomClassLoader(java.util.Arrays.))
+    /**
+     * Adds project URL to the classloader
+     *
+     * @param projectUID project unique ID
+     */
+    public synchronized void appendProjectToCL(ProjectUID projectUID) {
+        try {
+            File jar = filesStructure.getProjectJarFile(projectUID.getClientName(), projectUID.getProjectName());
+            classLoader.addNewUrl(jar.toURI().toURL());
+        } catch (MalformedURLException e) {
+            LOG.log(Level.WARNING, "Problem with finding project url for project {0}", projectUID.getProjectName());
         }
     }
 }

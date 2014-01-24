@@ -437,28 +437,19 @@ public class TaskManager {
         }
         tasksInProgress.add(id);
         File f = filesStructure.getTaskLoadPath(id).toFile();
-        File jar = filesStructure.getProjectJarFile(id.getClientName(), id.getProjectName());
-        try {
-            classManager.getClassLoader(clientName).addNewUrl(jar.toURI().toURL());
-            try (CustomObjectInputStream ois = new CustomObjectInputStream(new FileInputStream(f), classManager.getClassLoader(clientName))) {
-                Task task = (Task) ois.readObject();
-                // client is in the list for sure, because he just asked for new task to compute, therefore is connected
-                activeClients.get(clientName).associateClientWithTask(id);
-                planner.logCurrentTasks(activeClients.get(clientName));
-                task.setState(TaskState.IN_PROGRESS);
-                LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientName});
-                return task;
-            } catch (ClassNotFoundException | IOException e) {
-                LOG.log(Level.WARNING, "Problem during unpacking task: {0}", e.toString());
-                addTaskBackToPool(id);
-                return null;
-            }
-        } catch (MalformedURLException e) {
-            LOG.log(Level.WARNING, "Problem during accessing jar file needed to computation: {0}", e.toString());
+        try (CustomObjectInputStream ois = new CustomObjectInputStream(new FileInputStream(f), classManager.getClassLoader())) {
+            Task task = (Task) ois.readObject();
+            // client is in the list for sure, because he just asked for new task to compute, therefore is connected
+            activeClients.get(clientName).associateClientWithTask(id);
+            planner.logCurrentTasks(activeClients.get(clientName));
+            task.setState(TaskState.IN_PROGRESS);
+            LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientName});
+            return task;
+        } catch (ClassNotFoundException | IOException e) {
+            LOG.log(Level.WARNING, "Problem during unpacking task: {0}", e.toString());
             addTaskBackToPool(id);
             return null;
         }
-
     }
 
     /*
@@ -486,7 +477,7 @@ public class TaskManager {
         int numberOfTasks = 0;
         for (File file : dataFiles) {
             Task task = new Task(project.getProjectName(), project.getClientName(), file.getName(), project.getPriority(), project.getCores(), project.getMemory(), project.getTime());
-            task.setClass(classManager.loadClass(task.getClientName(), task.getProjectUID()));
+            task.setClass(classManager.loadClass(task.getProjectUID()));
             task.loadData(filesStructure.getTaskLoadDataPath(task.getUnicateID()));
             File output = new File(saveFolder, file.getName());
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(output))) {
@@ -534,7 +525,7 @@ public class TaskManager {
     public void undoProject(Project project) {
         projectsPreparing.remove(project.getProjectUID());
         projectsAll.remove(project.getProjectUID());
-        classManager.deleteCustomClassLoader(project.getProjectUID().getClientName());
+        classManager.deleteProjectFromCL(project.getProjectUID());
         deleteProject(project.getClientName(), project.getProjectName());
     }
 
@@ -568,6 +559,7 @@ public class TaskManager {
                 // directory preparation for client's project
                 filesStructure.createClientProjectDirs(project.getClientName(), project.getProjectName());
                 try {
+                    classManager.appendProjectToCL(project.getProjectUID());
                     moveJarAndExtractTasks(project);
                     createTasks(project);
                     changePreparingToActive(project);
@@ -625,6 +617,7 @@ public class TaskManager {
             projectsCorrupted.remove(project.getProjectUID());
             cleanTasksPool(clientName, projectName);
             cleanTasksInProgress(clientName, projectName);
+            classManager.deleteProjectFromCL(project.getProjectUID());
             deleteProject(clientName, projectName);
             planForAll();
             return true;
@@ -784,12 +777,10 @@ public class TaskManager {
      *
      * @param uid project unique id
      */
-    public void removeDownloadedProject(ProjectUID uid) {
-        deleteProject(uid.getClientName(), uid.getProjectName());
-        projectsAll.remove(uid);
-        classManager.deleteCustomClassLoader(uid.getClientName());
-        projectsForDownload.remove(uid);
+    public void removeDownloadedProject(ProjectUID projectUID) {
+        deleteProject(projectUID.getClientName(), projectUID.getProjectName());
+        projectsAll.remove(projectUID);
+        classManager.deleteProjectFromCL(projectUID);
+        projectsForDownload.remove(projectUID);
     }
-    
-    
 }
