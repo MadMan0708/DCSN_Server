@@ -4,6 +4,8 @@
  */
 package cz.cuni.mff.bc.server;
 
+import computation.ActiveClient;
+import computation.TaskManager;
 import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.misc.IClient;
 import java.io.IOException;

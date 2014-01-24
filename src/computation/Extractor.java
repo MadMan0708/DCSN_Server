@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cuni.mff.bc.server;
+package computation;
 
 import cz.cuni.mff.bc.api.main.CustomIO;
+import cz.cuni.mff.bc.server.Server;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;

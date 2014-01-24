@@ -4,8 +4,6 @@
  */
 package cz.cuni.mff.bc.server;
 
-import java.util.Collection;
-
 /**
  * Listens to changes related to client computation status
  *

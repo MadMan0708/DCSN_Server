@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cuni.mff.bc.server;
+package computation;
 
 import cz.cuni.mff.bc.server.strategies.Planner;
 import cz.cuni.mff.bc.api.main.CustomIO;
@@ -10,9 +10,12 @@ import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.api.main.Task;
 import cz.cuni.mff.bc.api.enums.ProjectState;
+import cz.cuni.mff.bc.api.enums.TaskState;
 import cz.cuni.mff.bc.api.main.ProjectInfo;
 import cz.cuni.mff.bc.misc.CustomObjectInputStream;
-import cz.cuni.mff.bc.server.logging.CustomHandler;
+import cz.cuni.mff.bc.server.FilesStructure;
+import cz.cuni.mff.bc.server.Server;
+import cz.cuni.mff.bc.server.ServerParams;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -326,7 +329,6 @@ public class TaskManager {
         if (isClientComputing(clientName)) {
             tasks = activeClients.get(clientName).getCurrentTasks();
         }
-
         ArrayList<TaskID> toPrint = new ArrayList<>();
         if (tasks != null) {
             for (Entry<ProjectUID, ArrayList<TaskID>> entry : tasks.entrySet()) {
@@ -443,6 +445,7 @@ public class TaskManager {
                 // client is in the list for sure, because he just asked for new task to compute, therefore is connected
                 activeClients.get(clientName).associateClientWithTask(id);
                 planner.logCurrentTasks(activeClients.get(clientName));
+                task.setState(TaskState.IN_PROGRESS);
                 LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientName});
                 return task;
             } catch (ClassNotFoundException | IOException e) {

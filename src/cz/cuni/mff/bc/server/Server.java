@@ -4,6 +4,7 @@
  */
 package cz.cuni.mff.bc.server;
 
+import computation.ActiveClient;
 import cz.cuni.mff.bc.api.main.CustomIO;
 import cz.cuni.mff.bc.misc.GConsole;
 import cz.cuni.mff.bc.misc.IConsole;
@@ -20,7 +21,6 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.cojen.dirmi.Environment;
 import org.cojen.dirmi.SessionAcceptor;
 

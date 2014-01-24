@@ -5,8 +5,8 @@
 package cz.cuni.mff.bc.server.strategies;
 
 import cz.cuni.mff.bc.api.main.ProjectUID;
-import cz.cuni.mff.bc.server.ActiveClient;
-import cz.cuni.mff.bc.server.Project;
+import computation.ActiveClient;
+import computation.Project;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

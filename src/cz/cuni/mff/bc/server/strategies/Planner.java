@@ -6,19 +6,16 @@ package cz.cuni.mff.bc.server.strategies;
 
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.main.TaskID;
-import cz.cuni.mff.bc.server.ActiveClient;
-import cz.cuni.mff.bc.server.Project;
+import computation.ActiveClient;
+import computation.Project;
 import cz.cuni.mff.bc.server.ServerParams;
 import cz.cuni.mff.bc.server.logging.CustomLogger;
-import cz.cuni.mff.bc.server.logging.FileLogger;
 import static cz.cuni.mff.bc.server.strategies.StrategiesList.HIGHEST_PRIORITY_FIRST;
 import static cz.cuni.mff.bc.server.strategies.StrategiesList.MAXIMAL_THROUGHPUT;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 
 /**
  * Implementation of plan creating for the clients
