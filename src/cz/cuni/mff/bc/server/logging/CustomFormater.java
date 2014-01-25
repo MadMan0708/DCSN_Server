@@ -26,10 +26,6 @@ public class CustomFormater extends Formatter {
         sb.append(date.toString());
         sb.append(" ");
 
-        // Get the level name and add it to the buffer
-        sb.append(record.getLevel().getName());
-        sb.append(" ");
-
         // Get the formatted message (includes localization 
         // and substitution of paramters) and add it to the buffer
         sb.append(formatMessage(record));
