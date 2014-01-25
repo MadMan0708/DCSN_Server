@@ -4,8 +4,8 @@
  */
 package cz.cuni.mff.bc.computation;
 
+import cz.cuni.mff.bc.api.main.JarTools;
 import cz.cuni.mff.bc.misc.CustomClassLoader;
-import cz.cuni.mff.bc.api.main.JarAPI;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.server.FilesStructure;
 import cz.cuni.mff.bc.server.Server;
@@ -47,7 +47,7 @@ public class ClassManager {
      */
     public synchronized Class<?> loadClass(ProjectUID uid) throws ClassNotFoundException, IOException {
         File jar = filesStructure.getProjectJarFile(uid.getClientName(), uid.getProjectName());
-        String name = JarAPI.getAttributeFromManifest(jar.toPath(), "Main-Comp-Class");
+        String name = JarTools.getAttributeFromManifest(jar.toPath(), "Main-Comp-Class");
         return classLoader.loadClass(name);
     }
 
