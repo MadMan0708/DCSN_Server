@@ -789,7 +789,7 @@ public class TaskManager {
     /**
      * Removes the downloaded project
      *
-     * @param uid project unique id
+     * @param projectUID project unique id
      */
     public void removeDownloadedProject(ProjectUID projectUID) {
         deleteProject(projectUID.getClientName(), projectUID.getProjectName());

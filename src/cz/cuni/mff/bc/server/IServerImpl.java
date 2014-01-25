@@ -147,13 +147,13 @@ public class IServerImpl implements IServer {
                 pipe.close();
             }
             CustomIO.extractZipFile(tmp, upDir);
-
             tmp.delete();
+            taskManager.addProject(project);
         } catch (IOException e) {
             taskManager.undoProject(project);
             LOG.log(Level.WARNING, "Problem during saving uploaded file: {0}", e.toString());
         }
-        taskManager.addProject(project);
+
         return null;
     }
 
@@ -190,11 +190,11 @@ public class IServerImpl implements IServer {
                 pipe.write(buffer, 0, n);
             }
             pipe.close();
-
+            taskManager.removeDownloadedProject(new ProjectUID(clientID, projectID));
         } catch (IOException e) {
             LOG.log(Level.WARNING, "Loading project for download: {0}", e.getMessage());
         }
-        taskManager.removeDownloadedProject(new ProjectUID(clientID, projectID));
+
         return null;
     }
 
@@ -301,8 +301,8 @@ public class IServerImpl implements IServer {
         if (taskManager.isClientActive(clientID)) {
             Timer t = activeClients.get(clientID).getTimer();
             t.cancel();
-            activeClients.get(clientID).setTimeout(null);
-            activeClients.get(clientID).setTimer(null);
+            activeClients.get(clientID).setTimeout(false);
+            activeClients.get(clientID).setTimer(new Timer());
         }
     }
 }
