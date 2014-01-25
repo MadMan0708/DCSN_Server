@@ -562,8 +562,8 @@ public class TaskManager {
                     classManager.appendProjectToCL(project.getProjectUID());
                     moveJarAndExtractTasks(project);
                     createTasks(project);
-                    changePreparingToActive(project);
                     addTasksToPool(project.getClientName(), project.getProjectName());
+                    changePreparingToActive(project);
                     planForAll();
                 } catch (ClassNotFoundException e) {
                     LOG.log(Level.WARNING, "ClassNotFoundException during task creation : {0}", e.toString());
@@ -607,20 +607,24 @@ public class TaskManager {
      * @param projectName project name
      * @return true if project has been successfully cancelled, false otherwise
      */
-    public boolean cancelProject(String clientName, String projectName) {
+    public synchronized boolean cancelProject(String clientName, String projectName) {
         if (isProjectInManager(clientName, projectName)) {
             Project project = projectsAll.get(new ProjectUID(clientName, projectName));
-            projectsAll.remove(project.getProjectUID());
-            projectsCompleted.remove(project.getProjectUID());
-            projectsActive.remove(project.getProjectUID());
-            projectsPaused.remove(project.getProjectUID());
-            projectsCorrupted.remove(project.getProjectUID());
-            cleanTasksPool(clientName, projectName);
-            cleanTasksInProgress(clientName, projectName);
-            classManager.deleteProjectFromCL(project.getProjectUID());
-            deleteProject(clientName, projectName);
-            planForAll();
-            return true;
+            if (!project.getState().equals(ProjectState.PREPARING)) {
+                projectsAll.remove(project.getProjectUID());
+                projectsCompleted.remove(project.getProjectUID());
+                projectsActive.remove(project.getProjectUID());
+                projectsPaused.remove(project.getProjectUID());
+                projectsCorrupted.remove(project.getProjectUID());
+                cleanTasksPool(clientName, projectName);
+                cleanTasksInProgress(clientName, projectName);
+                classManager.deleteProjectFromCL(project.getProjectUID());
+                deleteProject(clientName, projectName);
+                planForAll();
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -631,20 +635,26 @@ public class TaskManager {
      *
      * @param clientName client's name
      * @param projectName project name
-     * @return true if project has been successfully paused, false otherwise
+     * @return Null if the project doesn't exist on the server or project state
+     * before pausing. Project has been paused only if the previous project
+     * state was set to ACTIVE
      */
-    public boolean pauseProject(String clientName, String projectName) {
+    public ProjectState pauseProject(String clientName, String projectName) {
         if (isProjectInManager(clientName, projectName)) {
             Project project = projectsAll.get(new ProjectUID(clientName, projectName));
-            project.setState(ProjectState.PAUSED);
-            projectsActive.remove(project.getProjectUID());
-            projectsPaused.put(project.getProjectUID(), project);
-            cleanTasksPool(clientName, projectName);
-            cleanTasksInProgress(clientName, projectName);
-            planForAll();
-            return true;
+            if (project.getState().equals(ProjectState.ACTIVE)) {
+                project.setState(ProjectState.PAUSED);
+                projectsActive.remove(project.getProjectUID());
+                projectsPaused.put(project.getProjectUID(), project);
+                cleanTasksPool(clientName, projectName);
+                cleanTasksInProgress(clientName, projectName);
+                planForAll();
+                return ProjectState.ACTIVE;
+            } else {
+                return project.getState();
+            }
         } else {
-            return false;
+            return null;
         }
     }
 
@@ -653,19 +663,25 @@ public class TaskManager {
      *
      * @param clientName client's name
      * @param projectName project name
-     * @return true if project has been successfully resumed, false otherwise
+     * @return Null if the project doesn't exist on the server or project state
+     * before resuming. Project has been resumed only if the previous project
+     * state was set to PAUSED
      */
-    public boolean resumeProject(String clientName, String projectName) {
+    public ProjectState resumeProject(String clientName, String projectName) {
         if (isProjectInManager(clientName, projectName)) {
             Project project = projectsAll.get(new ProjectUID(clientName, projectName));
-            project.setState(ProjectState.ACTIVE);
-            projectsActive.put(project.getProjectUID(), project);
-            projectsPaused.remove(project.getProjectUID());
-            addTasksToPool(clientName, projectName);
-            planForAll();
-            return true;
+            if (project.getState().equals(ProjectState.PAUSED)) {
+                project.setState(ProjectState.ACTIVE);
+                projectsActive.put(project.getProjectUID(), project);
+                projectsPaused.remove(project.getProjectUID());
+                addTasksToPool(clientName, projectName);
+                planForAll();
+                return ProjectState.PAUSED;
+            } else {
+                return project.getState();
+            }
         } else {
-            return false;
+            return null;
         }
     }
 
@@ -732,7 +748,7 @@ public class TaskManager {
         pausedActive.putAll(projectsPaused);
         pausedActive.putAll(projectsActive);
         final Project project = pausedActive.get(ID.getProjectUID());
-        if (project != null) { // if the project still exists ( it may have been cancelled but client didn't know about that
+        if (project != null) { // if the project still exists ( it may have been cancelled but client dont't know about that
             project.addCompletedTask(ID);
             tasksInProgress.remove(ID);
             activeClients.get(clientName).unassociateClientWithTask(ID);
@@ -742,13 +758,11 @@ public class TaskManager {
                 planForAll();
                 // new plan for active clients is created
             }
-
             if (project.allTasksCompleted()) {
                 // if all project tasks are completed, the task is packed
                 packProject(project);
             }
         }
-
     }
 
     /*

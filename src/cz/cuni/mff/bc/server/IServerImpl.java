@@ -12,6 +12,7 @@ import cz.cuni.mff.bc.api.main.Task;
 import cz.cuni.mff.bc.api.main.TaskID;
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.enums.InformMessage;
+import cz.cuni.mff.bc.api.enums.ProjectState;
 import cz.cuni.mff.bc.api.main.ProjectInfo;
 import cz.cuni.mff.bc.api.main.CustomIO;
 import java.io.BufferedInputStream;
@@ -218,7 +219,7 @@ public class IServerImpl implements IServer {
     }
 
     @Override
-    public boolean pauseProject(String clientID, String projectID) throws RemoteException {
+    public ProjectState pauseProject(String clientID, String projectID) throws RemoteException {
         return taskManager.pauseProject(clientID, projectID);
     }
 
@@ -228,7 +229,7 @@ public class IServerImpl implements IServer {
     }
 
     @Override
-    public boolean resumeProject(String clientID, String projectID) throws RemoteException {
+    public ProjectState resumeProject(String clientID, String projectID) throws RemoteException {
         return taskManager.resumeProject(clientID, projectID);
     }
 
