@@ -76,13 +76,13 @@ public class IServerImpl implements IServer {
     @Override
     public void setClientsMemoryLimit(String clientID, int memory) throws RemoteException {
         activeClients.get(clientID).setMemoryLimit(memory);
-        LOG.log(Level.INFO, "Memory limit on client {0} is now set to {1}m", new Object[]{clientID, memory});
+        LOG.log(Level.FINE, "Memory limit on client {0} is now set to {1}m", new Object[]{clientID, memory});
     }
 
     @Override
     public void setClientsCoresLimit(String clientID, int cores) throws RemoteException {
         activeClients.get(clientID).setCoresLimit(cores);
-        LOG.log(Level.INFO, "Cores limit on client {0} is now set to {1}", new Object[]{clientID, cores});
+        LOG.log(Level.FINE, "Cores limit on client {0} is now set to {1}", new Object[]{clientID, cores});
     }
 
     @Override
@@ -128,7 +128,7 @@ public class IServerImpl implements IServer {
         if (!task.hasDataBeenSaved()) {
             task.saveData(filesStructure.getTaskSavePath(task.getUnicateID()));
             taskManager.addCompletedTask(clientID, task.getUnicateID());
-            LOG.log(Level.INFO, "Task saving: Task {0} has been saved", task.getUnicateID());
+            LOG.log(Level.FINE, "Task saving: Task {0} has been saved", task.getUnicateID());
         }
     }
 
@@ -151,7 +151,7 @@ public class IServerImpl implements IServer {
             taskManager.addProject(project);
         } catch (IOException e) {
             taskManager.undoProject(project);
-            LOG.log(Level.WARNING, "Problem during saving uploaded file: {0}", e.toString());
+            LOG.log(Level.FINE, "Problem during saving uploaded file: {0}", e.toString());
         }
 
         return null;
@@ -174,7 +174,7 @@ public class IServerImpl implements IServer {
             pipe.close();
 
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Loading project JAR for client class loader: {0}", e.getMessage());
+            LOG.log(Level.FINE, "Loading project JAR for client class loader: {0}", e.getMessage());
         }
         return null;
     }
@@ -192,7 +192,7 @@ public class IServerImpl implements IServer {
             pipe.close();
             taskManager.removeDownloadedProject(new ProjectUID(clientID, projectID));
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Loading project for download: {0}", e.getMessage());
+            LOG.log(Level.FINE, "Loading project for download: {0}", e.getMessage());
         }
 
         return null;
@@ -266,7 +266,7 @@ public class IServerImpl implements IServer {
      * Starts the client timer
      */
     private void startClientTimer(final String clientID) {
-        LOG.log(Level.INFO, "Timer for client {0} started", clientID);
+        LOG.log(Level.FINE, "Timer for client {0} started", clientID);
         final Timer t = new Timer(clientID);
         activeClients.get(clientID).setTimeout(Boolean.TRUE);
         t.scheduleAtFixedRate(new TimerTask() {
@@ -276,13 +276,13 @@ public class IServerImpl implements IServer {
                 if (taskManager.isClientActive(clientID) && activeClients.get(clientID).getTimeout().equals(Boolean.TRUE)) {
                     // OK, client has sent an inform message to the server, resetting timer
                     activeClients.get(clientID).setTimeout(Boolean.FALSE);
-                    LOG.log(Level.INFO, "Client {0} is active", clientID);
+                    LOG.log(Level.FINE, "Client {0} is active", clientID);
                 } else {
                     ArrayList<TaskID> tasks = taskManager.cancelTasksAssociation(clientID);
-                    LOG.log(Level.WARNING, "Client {0} has not sent ping message, disconnected", clientID);
+                    LOG.log(Level.FINE, "Client {0} has not sent ping message, disconnected", clientID);
                     if (tasks != null) {
                         for (TaskID taskID : tasks) {
-                            LOG.log(Level.INFO, "Task {0} calculated by {1} is again in tasks pool", new Object[]{taskID, clientID});
+                            LOG.log(Level.FINE, "Task {0} calculated by {1} is again in tasks pool", new Object[]{taskID, clientID});
                         }
                     }
                     stopClientTimer(clientID);

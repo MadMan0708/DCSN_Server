@@ -182,7 +182,7 @@ public class Project implements Serializable {
      */
     public void addTaskAgain(TaskID task) {
         if (tasksCompleted.contains(task)) {
-            return; // exit, task is already completed
+            // exit, task is already completed
         } else {
             synchronized (tasksUncompleted) {
                 if (!tasksUncompleted.contains(task)) {

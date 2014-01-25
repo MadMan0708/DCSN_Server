@@ -37,13 +37,13 @@ public class DiscoveryThread extends Thread {
             DatagramSocket socket = new DatagramSocket(port, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
             while (discovering) {
-                LOG.log(Level.INFO, "Ready to receive broadcast packets.");
+                LOG.log(Level.FINE, "Ready to receive broadcast packets.");
                 byte[] buffer = new byte[15000];
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
 
-                LOG.log(Level.INFO, "Discovery packet received from: {0}", packet.getAddress().getHostAddress());
-                LOG.log(Level.INFO, "Packet received; data: {0}", new String(packet.getData()));
+                LOG.log(Level.FINE, "Discovery packet received from: {0}", packet.getAddress().getHostAddress());
+                LOG.log(Level.FINE, "Packet received; data: {0}", new String(packet.getData()));
 
                 //Check if it's broadcast server dicovery packet
                 String message = new String(packet.getData()).trim();
@@ -52,11 +52,11 @@ public class DiscoveryThread extends Thread {
                     //Send a response
                     DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, packet.getAddress(), packet.getPort());
                     socket.send(sendPacket);
-                    LOG.log(Level.INFO, "Sent packet to: {0}", sendPacket.getAddress().getHostAddress());
+                    LOG.log(Level.FINE, "Sent packet to: {0}", sendPacket.getAddress().getHostAddress());
                 }
             }
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+            LOG.log(Level.FINE, null, ex);
         }
     }
 

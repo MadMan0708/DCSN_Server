@@ -7,7 +7,6 @@ package cz.cuni.mff.bc.server;
 import cz.cuni.mff.bc.computation.ActiveClient;
 import cz.cuni.mff.bc.computation.TaskManager;
 import cz.cuni.mff.bc.api.main.TaskID;
-import cz.cuni.mff.bc.misc.IClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,8 +64,7 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
             session.setClassLoader(taskManager.getClassManager().getClassLoader());
             session.send(Boolean.TRUE);
             session.send(remoteMethods);
-            activeClient.setClientMethods((IClient) session.receive());
-            LOG.log(Level.INFO, "Client {0} has been connected to the server", clientID);
+            LOG.log(Level.FINE, "Client {0} has been connected to the server", clientID);
             session.addCloseListener(new SessionCloseListener() {
                 @Override
                 public void closed(Link sessionLink, SessionCloseListener.Cause cause) {
@@ -76,16 +74,16 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
                             Collection<ArrayList<TaskID>> values = activeClients.get(clientID).getCurrentTasks().values();
                             for (ArrayList<TaskID> arrayList : values) {
                                 for (TaskID taskID : arrayList) {
-                                    LOG.log(Level.INFO, "Task {0} sent back to the task pool", taskID.getTaskName());
+                                    LOG.log(Level.FINE, "Task {0} sent back to the task pool", taskID.getTaskName());
                                     taskManager.addTaskBackToPool(taskID);
                                 }
                             }
                             activeClients.remove(clientID);
-                            LOG.log(Level.INFO, "Client {0} has been disconnected form the server", clientID);
+                            LOG.log(Level.FINE, "Client {0} has been disconnected form the server", clientID);
                             sessionLink.close();
                         }
                     } catch (IOException e) {
-                        LOG.log(Level.WARNING, "Closing session; Cause: {0}; {1}", new Object[]{cause.name(), e.getMessage()});
+                        LOG.log(Level.FINE, "Closing session; Cause: {0}; {1}", new Object[]{cause.name(), e.getMessage()});
                     }
                 }
             });

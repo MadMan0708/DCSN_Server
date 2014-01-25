@@ -4,7 +4,12 @@
  */
 package cz.cuni.mff.bc.server;
 
+import cz.cuni.mff.bc.server.logging.CustomFormater;
 import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main entry point of the server side
@@ -21,7 +26,7 @@ public class ServerMain {
      */
     public static void main(String[] args) throws IOException {
         final Server server = new Server();
-
+        getAndSetConsoleHandler();
         switch (args.length) {
             case 0:
                 server.startGUIConsole();
@@ -40,5 +45,24 @@ public class ServerMain {
                 System.err.println("Wrong number of parameters");
                 break;
         }
+    }
+
+    /**
+     * Gets console handler and sets the logging level
+     *
+     * @return console handler
+     */
+    public static ConsoleHandler getAndSetConsoleHandler() {
+        ConsoleHandler consoleHandler = null;
+        Handler[] handlers = Logger.getLogger("").getHandlers();
+        for (Handler handler : handlers) {
+            if (handler instanceof ConsoleHandler) {
+                handler.setLevel(Level.INFO);
+                handler.setFormatter(new CustomFormater());
+                consoleHandler = (ConsoleHandler) handler;
+                break;
+            }
+        }
+        return consoleHandler;
     }
 }

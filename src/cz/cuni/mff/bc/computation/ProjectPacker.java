@@ -50,11 +50,11 @@ public class ProjectPacker implements Callable<Boolean> {
         File[] files = sourceDirectory.listFiles();
         try {
             CustomIO.zipFiles(destination, files);
-            LOG.log(Level.INFO, "Project {0} by client {1} packed", new Object[]{project.getProjectName(), project.getClientName()});
+            LOG.log(Level.FINE, "Project {0} by client {1} packed", new Object[]{project.getProjectName(), project.getClientName()});
             project.setState(ProjectState.READY_FOR_DOWNLOAD);
             return Boolean.TRUE;
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Packing project problem {0}", e.getMessage());
+            LOG.log(Level.FINE, "Packing project problem {0}", e.getMessage());
             return Boolean.FALSE;
         }
     }

@@ -74,9 +74,9 @@ public class ClassManager {
             classLoader.close();
             classLoader = new CustomClassLoader(urlList.toArray(new URL[urlList.size()]));
         } catch (MalformedURLException e) {
-            LOG.log(Level.WARNING, "Problem with finding project url for project {0}", projectUID.getProjectName());
+            LOG.log(Level.FINE, "Problem with finding project url for project {0}", projectUID.getProjectName());
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Problem with closing classloader ");
+            LOG.log(Level.FINE, "Problem with closing classloader ");
         }
     }
 
@@ -90,7 +90,7 @@ public class ClassManager {
             File jar = filesStructure.getProjectJarFile(projectUID.getClientName(), projectUID.getProjectName());
             classLoader.addNewUrl(jar.toURI().toURL());
         } catch (MalformedURLException e) {
-            LOG.log(Level.WARNING, "Problem with finding project url for project {0}", projectUID.getProjectName());
+            LOG.log(Level.FINE, "Problem with finding project url for project {0}", projectUID.getProjectName());
         }
     }
 }

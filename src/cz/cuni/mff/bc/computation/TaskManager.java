@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -272,11 +271,11 @@ public class TaskManager {
             if (p.getState().equals(ProjectState.ACTIVE)) {
                 // if the project is active, the tasks are added to the task pool
                 tasksPool.get(taskID.getProjectUID()).add(taskID);
-                LOG.log(Level.INFO, "Task {0} is again in tasks pool", taskID);
+                LOG.log(Level.FINE, "Task {0} is again in tasks pool", taskID);
             }
             // otherwise the project could be paused, so tasks aren't added to the tasks pool
         } else {
-            LOG.log(Level.INFO, "Task {0} is already finished", taskID);
+            LOG.log(Level.FINE, "Task {0} is already finished", taskID);
         }
     }
 
@@ -443,10 +442,10 @@ public class TaskManager {
             activeClients.get(clientName).associateClientWithTask(id);
             planner.logCurrentTasks(activeClients.get(clientName));
             task.setState(TaskState.IN_PROGRESS);
-            LOG.log(Level.INFO, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientName});
+            LOG.log(Level.FINE, "Task: {0} is sent for computation by client: {1}", new Object[]{task.getUnicateID(), clientName});
             return task;
         } catch (ClassNotFoundException | IOException e) {
-            LOG.log(Level.WARNING, "Problem during unpacking task: {0}", e.toString());
+            LOG.log(Level.FINE, "Problem during unpacking task: {0}", e.toString());
             addTaskBackToPool(id);
             return null;
         }
@@ -483,7 +482,7 @@ public class TaskManager {
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(output))) {
                 out.writeObject(task);
                 project.addTask(task.getUnicateID());
-                LOG.log(Level.INFO, "Task created: {0}, {1}{2}", new Object[]{task.getUnicateID(), saveFolder, file.getName()});
+                LOG.log(Level.FINE, "Task created: {0}, {1}{2}", new Object[]{task.getUnicateID(), saveFolder, file.getName()});
                 out.close();
             }
             numberOfTasks++;
@@ -566,16 +565,16 @@ public class TaskManager {
                     changePreparingToActive(project);
                     planForAll();
                 } catch (ClassNotFoundException e) {
-                    LOG.log(Level.WARNING, "ClassNotFoundException during task creation : {0}", e.toString());
+                    LOG.log(Level.FINE, "ClassNotFoundException during task creation : {0}", e.toString());
                     undoProject(project);
                 } catch (IllegalAccessException e) {
-                    LOG.log(Level.WARNING, "Illegal access: {0}", e.getMessage());
+                    LOG.log(Level.FINE, "Illegal access: {0}", e.getMessage());
                     undoProject(project);
                 } catch (InstantiationException e) {
-                    LOG.log(Level.WARNING, "Instantiation problem: {0}", e.getMessage());
+                    LOG.log(Level.FINE, "Instantiation problem: {0}", e.getMessage());
                     undoProject(project);
                 } catch (IOException e) {
-                    LOG.log(Level.WARNING, "Creating tasks: {0}", e.toString());
+                    LOG.log(Level.FINE, "Creating tasks: {0}", e.toString());
                     undoProject(project);
                 }
             }
@@ -710,7 +709,7 @@ public class TaskManager {
     public void planForOne(ActiveClient activeClient) {
         if (isClientComputing(activeClient.getClientName())) {
             planner.planForOne(activeClient, serverParams.getStrategy());
-            LOG.log(Level.INFO, "Plan for the client {0} have been created, strategy used : {1}", new Object[]{activeClient.getClientName(), serverParams.getStrategy()});
+            LOG.log(Level.FINE, "Plan for the client {0} have been created, strategy used : {1}", new Object[]{activeClient.getClientName(), serverParams.getStrategy()});
         }
     }
 
@@ -732,7 +731,7 @@ public class TaskManager {
         values.removeAll(finishingProjects);
         // create new plan because finishing projects are not part of the planning process
         planner.planForAll(activeClients.values(), values, serverParams.getStrategy());
-        LOG.log(Level.INFO, "Plans for all clients have been created, strategy used : {0}", serverParams.getStrategy());
+        LOG.log(Level.FINE, "Plans for all clients have been created, strategy used : {0}", serverParams.getStrategy());
     }
 
     /**
@@ -780,9 +779,9 @@ public class TaskManager {
             projectsCompleted.remove(project.getProjectUID());
             projectsForDownload.put(project.getProjectUID(), project);
         } catch (ExecutionException e) {
-            LOG.log(Level.WARNING, "Error durong project packing: {0}", ((Exception) e.getCause()).toString());
+            LOG.log(Level.FINE, "Error durong project packing: {0}", ((Exception) e.getCause()).toString());
         } catch (InterruptedException e) {
-            LOG.log(Level.WARNING, "Interpution during project packing");
+            LOG.log(Level.FINE, "Interpution during project packing");
         }
     }
 

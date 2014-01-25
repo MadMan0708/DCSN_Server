@@ -51,7 +51,6 @@ public class CustomObjectInputStream extends ObjectInputStream {
         for (int i = 0; i < interfaces.length; i++) {
             interfacesClass[i] = Class.forName(interfaces[i], false, cl);
         }
-
         return Proxy.getProxyClass(cl, interfacesClass);
     }
 }

@@ -4,10 +4,8 @@
  */
 package cz.cuni.mff.bc.server.logging;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**

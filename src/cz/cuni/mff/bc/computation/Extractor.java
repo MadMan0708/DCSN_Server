@@ -49,9 +49,9 @@ public class Extractor {
     public void unpack() throws IOException {
         switch (extension.toLowerCase()) {
             case "zip":
-                LOG.log(Level.INFO, "Extracting {0} by {1} from {2} archive", new Object[]{projectName, clientName, extension});
+                LOG.log(Level.FINE, "Extracting {0} by {1} from {2} archive", new Object[]{projectName, clientName, extension});
                 CustomIO.extractZipFile(archive, destination);
-                LOG.log(Level.INFO, "Extraction of {0} by {1} was sucesfull", new Object[]{projectName, clientName});
+                LOG.log(Level.FINE, "Extraction of {0} by {1} was sucesfull", new Object[]{projectName, clientName});
                 break;
             default:
                 throw new IOException("Data archive with extension " + extension + " is not supported");

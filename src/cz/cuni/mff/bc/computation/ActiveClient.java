@@ -6,7 +6,6 @@ package cz.cuni.mff.bc.computation;
 
 import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.api.main.TaskID;
-import cz.cuni.mff.bc.misc.IClient;
 import cz.cuni.mff.bc.server.IActiveClientListener;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,6 @@ public class ActiveClient {
     private Timer timer;
     private Boolean timeout;
     private Session session;
-    private IClient clientMethods;
     private int memoryLimit;
     private int coresLimit;
     private HashMap<ProjectUID, ArrayList<TaskID>> currentTasks;
@@ -48,24 +46,6 @@ public class ActiveClient {
         this.currentTasks = new HashMap<>();
         this.clientName = clientName;
         this.session = session;
-    }
-
-    /**
-     * Gets client implementation of remote interface
-     *
-     * @return client implementation of remote interface
-     */
-    public IClient getClientMethods() {
-        return clientMethods;
-    }
-
-    /**
-     * Sets client implementation of client remote interface
-     *
-     * @param clientMethods client implementation of remote interface
-     */
-    public void setClientMethods(IClient clientMethods) {
-        this.clientMethods = clientMethods;
     }
 
     /**

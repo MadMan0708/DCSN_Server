@@ -52,6 +52,7 @@ public class Server implements IConsole {
         logHandler.setLevel(Level.ALL);
         logHandler.addLogTarget(new FileLogger(new File("server.main.log")));
         LOG.addHandler(logHandler);
+        LOG.setLevel(Level.ALL);
         activeClients = new ConcurrentHashMap<>();
         serverParams = new ServerParams(logHandler);
         filesStructure = new FilesStructure(serverParams);
@@ -217,7 +218,7 @@ public class Server implements IConsole {
             }
             LOG.log(Level.INFO, "Server succesfully stopped.");
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Stopping server problem: {0}", e.getMessage());
+            LOG.log(Level.WARNING, "Problem during stopping the server: {0}", e.getMessage());
         }
     }
 
