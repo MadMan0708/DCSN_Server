@@ -224,7 +224,7 @@ public class IServerImpl implements IServer {
     }
 
     @Override
-    public boolean cancelProject(String clientID, String projectID) throws RemoteException {
+    public Boolean cancelProject(String clientID, String projectID) throws RemoteException {
         return taskManager.cancelProject(clientID, projectID);
     }
 

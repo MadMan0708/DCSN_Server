@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+import org.cojen.dirmi.ClosedException;
 import org.cojen.dirmi.Link;
 import org.cojen.dirmi.Session;
 import org.cojen.dirmi.SessionAcceptor;
@@ -54,40 +55,43 @@ public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
         sesAcceptor.accept(this); // starts listening for possible new session on the same session listener
         final String clientID = (String) session.receive();
         if (!activeClients.containsKey(clientID)) {
-            ActiveClient activeClient = new ActiveClient(clientID, session, new IActiveClientListener() {
-                @Override
-                public void afterChange() {
-                    taskManager.planForOne(clientID);
-                }
-            });
-            activeClients.put(clientID, activeClient);
-            session.setClassLoader(taskManager.getClassManager().getClassLoader());
-            session.send(Boolean.TRUE);
-            session.send(remoteMethods);
-            LOG.log(Level.FINE, "Client {0} has been connected to the server", clientID);
-            session.addCloseListener(new SessionCloseListener() {
-                @Override
-                public void closed(Link sessionLink, SessionCloseListener.Cause cause) {
-                    try {
-                        if (taskManager.isClientActive(clientID)) {
-                            activeClients.get(clientID).getSession().close();
-                            Collection<ArrayList<TaskID>> values = activeClients.get(clientID).getCurrentTasks().values();
-                            for (ArrayList<TaskID> arrayList : values) {
-                                for (TaskID taskID : arrayList) {
-                                    LOG.log(Level.FINE, "Task {0} sent back to the task pool", taskID.getTaskName());
-                                    taskManager.addTaskBackToPool(taskID);
+            try {
+                session.setClassLoader(taskManager.getClassManager().getClassLoader());
+                session.send(Boolean.TRUE);
+                session.send(remoteMethods);
+                LOG.log(Level.FINE, "Client {0} has been connected to the server", clientID);
+                session.addCloseListener(new SessionCloseListener() {
+                    @Override
+                    public void closed(Link sessionLink, SessionCloseListener.Cause cause) {
+                        try {
+                            if (taskManager.isClientActive(clientID)) {
+                                activeClients.get(clientID).getSession().close();
+                                Collection<ArrayList<TaskID>> values = activeClients.get(clientID).getCurrentTasks().values();
+                                for (ArrayList<TaskID> arrayList : values) {
+                                    for (TaskID taskID : arrayList) {
+                                        LOG.log(Level.FINE, "Task {0} sent back to the task pool", taskID.getTaskName());
+                                        taskManager.addTaskBackToPool(taskID);
+                                    }
                                 }
+                                activeClients.remove(clientID);
+                                LOG.log(Level.FINE, "Client {0} has been disconnected form the server", clientID);
+                                sessionLink.close();
                             }
-                            activeClients.remove(clientID);
-                            LOG.log(Level.FINE, "Client {0} has been disconnected form the server", clientID);
-                            sessionLink.close();
+                        } catch (IOException e) {
+                            LOG.log(Level.FINE, "Closing session; Cause: {0}; {1}", new Object[]{cause.name(), e.getMessage()});
                         }
-                    } catch (IOException e) {
-                        LOG.log(Level.FINE, "Closing session; Cause: {0}; {1}", new Object[]{cause.name(), e.getMessage()});
                     }
-                }
-            });
-
+                });
+                ActiveClient activeClient = new ActiveClient(clientID, session, new IActiveClientListener() {
+                    @Override
+                    public void afterChange() {
+                        taskManager.planForOne(clientID);
+                    }
+                });
+                activeClients.put(clientID, activeClient);
+            } catch (ClosedException e) {
+                LOG.log(Level.FINE, "Client {0} has been disconnected to the server", clientID);
+            }
         } else {
             session.send(Boolean.FALSE);
         }

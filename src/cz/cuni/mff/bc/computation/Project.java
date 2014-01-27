@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * Represents a project
+ * Represents DCSN project
  *
  * @author Jakub Hava
  */
@@ -32,6 +32,7 @@ public class Project implements Serializable {
     private Set<TaskID> tasksCompleted;
 
     /**
+     * Constructor
      *
      * @param state project state during creation
      * @param priority project priority
@@ -108,7 +109,7 @@ public class Project implements Serializable {
     }
 
     /**
-     * Checks if task is completed
+     * Checks if the task is completed
      *
      * @param taskID task to be checked
      * @return true if tasks is completed, false otherwise

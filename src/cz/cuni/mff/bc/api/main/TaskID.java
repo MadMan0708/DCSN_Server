@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
+ * Represents unique task ID
  *
  * @author Jakub Hava
  */
@@ -43,6 +44,7 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Gets the number of cores needed by task
      *
      * @return number of cores needed by task
      */
@@ -51,6 +53,7 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Sets the number of cores needed by task
      *
      * @param cores number of cores needed by task
      */
@@ -59,6 +62,7 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Gets the amount of memory needed by task
      *
      * @return amount of memory needed by task
      */
@@ -67,6 +71,7 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Sets the amount of memory needed by task
      *
      * @param memory amount of memory needed by task
      */
@@ -75,6 +80,7 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Gets the average time of task to be calculated
      *
      * @return average time of task to be calculated
      */
@@ -83,6 +89,7 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Sets the average time of task to be calculated
      *
      * @param time average time of task to be calculated
      */
@@ -91,6 +98,7 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Gets the project priority
      *
      * @return project priority
      */
@@ -99,6 +107,7 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Gets the project name
      *
      * @return project name
      */
@@ -107,14 +116,16 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Gets the unique project ID
      *
-     * @return project unique id
+     * @return project unique ID
      */
     public ProjectUID getProjectUID() {
         return new ProjectUID(clientName, projectName);
     }
 
     /**
+     * Gets the client's name
      *
      * @return client's name
      */
@@ -123,6 +134,7 @@ public class TaskID implements Serializable {
     }
 
     /**
+     * Gets the task name
      *
      * @return task name
      */

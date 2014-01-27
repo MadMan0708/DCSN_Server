@@ -221,7 +221,7 @@ public class TaskManager {
     }
 
     /*
-     * Cleans task pool. Deletes all task of one project from the tasks pool
+     * Cleans the task pool. Deletes all task of one project from the tasks pool
      */
     private void cleanTasksPool(String clientName, String projectName) {
         ProjectUID projectUID = new ProjectUID(clientName, projectName);
@@ -280,7 +280,7 @@ public class TaskManager {
     }
 
     /**
-     * Checks if the client is in list of active clients
+     * Checks if the client is in the list of active clients
      *
      * @param clientName client's name
      * @return true if the client is active, false otherwise
@@ -363,10 +363,10 @@ public class TaskManager {
         }
         return false;
     }
+
     /*
      * Gets project which will user calculate from finishing projects
      */
-
     private ProjectUID getTaskFromFinishing(ActiveClient active) {
         int coresAvailable = active.getAvailableCores();
         int memoryLimit = active.getMemoryLimit();
@@ -383,7 +383,7 @@ public class TaskManager {
     }
 
     /*
-     * Gets project which will user calculate from projects which aren't finishing
+     * Gets project which will client calculate from projects which aren't finishing
      */
     private ProjectUID getTaskFromRegularPlan(ActiveClient active) {
         // regular planning
@@ -604,9 +604,10 @@ public class TaskManager {
      *
      * @param clientName client's name
      * @param projectName project name
-     * @return true if project has been successfully cancelled, false otherwise
+     * @return true if project has been successfully cancelled, false if the
+     * project is in preparing phase and null if the project doesn't exist
      */
-    public synchronized boolean cancelProject(String clientName, String projectName) {
+    public synchronized Boolean cancelProject(String clientName, String projectName) {
         if (isProjectInManager(clientName, projectName)) {
             Project project = projectsAll.get(new ProjectUID(clientName, projectName));
             if (!project.getState().equals(ProjectState.PREPARING)) {
@@ -625,7 +626,7 @@ public class TaskManager {
                 return false;
             }
         } else {
-            return false;
+            return null;
         }
     }
 

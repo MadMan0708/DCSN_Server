@@ -40,7 +40,7 @@ public class ClassManager {
     /**
      * Loads class
      *
-     * @param uid project unique id
+     * @param uid project unique ID
      * @return loaded class
      * @throws ClassNotFoundException
      * @throws IOException

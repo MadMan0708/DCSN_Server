@@ -38,7 +38,8 @@ public class ActiveClient {
      *
      * @param clientName client's name
      * @param session client's session
-     * @param listener listener which listen to changes in client's computation state
+     * @param listener listener which listen to changes in client's computation
+     * state
      */
     public ActiveClient(String clientName, Session session, IActiveClientListener listener) {
         this.listener = listener;
@@ -102,7 +103,7 @@ public class ActiveClient {
     }
 
     /**
-     * Gets current plan
+     * Gets the current plan
      *
      * @return current plan
      */
@@ -113,7 +114,7 @@ public class ActiveClient {
     /**
      * Sets the current plan
      *
-     * @param currentPlan list with projects planned
+     * @param currentPlan list with planned projects
      */
     public void setCurrentPlan(LinkedHashMap<ProjectUID, Integer> currentPlan) {
         this.currentPlan = currentPlan;
@@ -151,6 +152,7 @@ public class ActiveClient {
     }
 
     /**
+     * Gets client's name
      *
      * @return client's name
      */
@@ -159,6 +161,7 @@ public class ActiveClient {
     }
 
     /**
+     * Sets client's name
      *
      * @param clientName client's name
      */
@@ -167,6 +170,7 @@ public class ActiveClient {
     }
 
     /**
+     * Gets the timer
      *
      * @return timer
      */
@@ -175,6 +179,7 @@ public class ActiveClient {
     }
 
     /**
+     * Sets the timer
      *
      * @param timer timer
      */
@@ -183,6 +188,7 @@ public class ActiveClient {
     }
 
     /**
+     * Gets the timeout which tells if user has sent inform message
      *
      * @return timeout
      */
@@ -191,6 +197,7 @@ public class ActiveClient {
     }
 
     /**
+     * Sets the timeout which tells if user has sent inform message
      *
      * @param timeout timeout
      */
@@ -199,6 +206,7 @@ public class ActiveClient {
     }
 
     /**
+     * Gets the client's session
      *
      * @return client's session
      */
@@ -207,6 +215,7 @@ public class ActiveClient {
     }
 
     /**
+     * Sets the client's session
      *
      * @param session client's session
      */
@@ -215,6 +224,7 @@ public class ActiveClient {
     }
 
     /**
+     * Gets the memory limit
      *
      * @return memory limit
      */
@@ -223,6 +233,7 @@ public class ActiveClient {
     }
 
     /**
+     * Sets the memory limit
      *
      * @param memoryLimit memory limit
      */
@@ -231,6 +242,7 @@ public class ActiveClient {
     }
 
     /**
+     * Gets the cores limit
      *
      * @return cores limit
      */
@@ -239,6 +251,7 @@ public class ActiveClient {
     }
 
     /**
+     * Sets the cores limit
      *
      * @param coresLimit cores limit
      */

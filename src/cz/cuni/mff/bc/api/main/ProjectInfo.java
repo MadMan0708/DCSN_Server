@@ -8,6 +8,7 @@ import cz.cuni.mff.bc.api.enums.ProjectState;
 import java.io.Serializable;
 
 /**
+ * Contains information about project
  *
  * @author Jakub
  */
@@ -50,54 +51,34 @@ public class ProjectInfo implements Serializable {
     }
 
     /**
+     * Gets the cores limit
      *
-     * @return number of cores needed by task
+     * @return cores limit
      */
     public int getCores() {
         return cores;
     }
 
     /**
+     * Gets the memory limit
      *
-     * @param cores number of cores needed by task
-     */
-    public void setCores(int cores) {
-        this.cores = cores;
-    }
-
-    /**
-     *
-     * @return amount of memory needed by task
+     * @return memory limit
      */
     public int getMemory() {
         return memory;
     }
 
     /**
+     * Gets average task time
      *
-     * @param memory amount of memory needed by task
-     */
-    public void setMemory(int memory) {
-        this.memory = memory;
-    }
-
-    /**
-     *
-     * @return average time of task to be calculated
+     * @return average task time
      */
     public int getTime() {
         return time;
     }
 
     /**
-     *
-     * @param time average time of task to be calculated
-     */
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-    /**
+     * Gets the project name
      *
      * @return project name
      */
@@ -106,14 +87,7 @@ public class ProjectInfo implements Serializable {
     }
 
     /**
-     *
-     * @param projectName project name
-     */
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    /**
+     * Gets the client's name
      *
      * @return client's name
      */
@@ -122,14 +96,7 @@ public class ProjectInfo implements Serializable {
     }
 
     /**
-     *
-     * @param clientName client's name
-     */
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    /**
+     * Gets number of completed tasks
      *
      * @return number of completed tasks
      */
@@ -138,14 +105,7 @@ public class ProjectInfo implements Serializable {
     }
 
     /**
-     *
-     * @param numOfCompletedTasks number of completed tasks
-     */
-    public void setNumOfCompletedTasks(int numOfCompletedTasks) {
-        this.numOfCompletedTasks = numOfCompletedTasks;
-    }
-
-    /**
+     * Gets number of all tasks
      *
      * @return number of all tasks
      */
@@ -154,14 +114,7 @@ public class ProjectInfo implements Serializable {
     }
 
     /**
-     *
-     * @param numOfAllTasks number of all tasks
-     */
-    public void setNumOfAllTasks(int numOfAllTasks) {
-        this.numOfAllTasks = numOfAllTasks;
-    }
-
-    /**
+     * Gets the project state
      *
      * @return project state
      */
@@ -170,27 +123,12 @@ public class ProjectInfo implements Serializable {
     }
 
     /**
-     *
-     * @param state project state
-     */
-    public void setState(ProjectState state) {
-        this.state = state;
-    }
-
-    /**
+     * Gets the project priority
      *
      * @return project priority
      */
     public int getPriority() {
         return priority;
-    }
-
-    /**
-     *
-     * @param priority project priority
-     */
-    public void setPriority(int priority) {
-        this.priority = priority;
     }
 
     @Override

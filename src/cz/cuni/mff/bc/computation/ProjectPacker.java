@@ -33,7 +33,7 @@ public class ProjectPacker implements Callable<Boolean> {
     /**
      * Constructor
      *
-     * @param project project which data files will be packed
+     * @param project project whose data files will be packed
      * @param sourceDirectory directory from which all the files will be packed
      * @param destination destination file to which data files will be packed
      */
