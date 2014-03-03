@@ -267,7 +267,6 @@ public class TaskManager {
         Project p = projectsAll.get(taskID.getProjectUID());
         tasksInProgress.remove(taskID);
         if (!isTaskCompleted(taskID)) {
-            p.addTaskAgain(taskID); // adds task again to the project's uncompleted list
             if (p.getState().equals(ProjectState.ACTIVE)) {
                 // if the project is active, the tasks are added to the task pool
                 tasksPool.get(taskID.getProjectUID()).add(taskID);

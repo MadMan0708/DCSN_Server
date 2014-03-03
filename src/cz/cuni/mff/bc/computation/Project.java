@@ -176,22 +176,6 @@ public class Project implements Serializable {
         tasksUncompleted.add(task);
     }
 
-    /**
-     * Adds again task to the project uncompleted list
-     *
-     * @param task task to be re-added
-     */
-    public void addTaskAgain(TaskID task) {
-        if (tasksCompleted.contains(task)) {
-            // exit, task is already completed
-        } else {
-            synchronized (tasksUncompleted) {
-                if (!tasksUncompleted.contains(task)) {
-                    tasksUncompleted.add(task);
-                }
-            }
-        }
-    }
 
     /**
      * Adds completed task
@@ -201,7 +185,6 @@ public class Project implements Serializable {
     public void addCompletedTask(TaskID task) {
         tasksCompleted.add(task);
         tasksUncompleted.remove(task);
-
     }
 
     /**
