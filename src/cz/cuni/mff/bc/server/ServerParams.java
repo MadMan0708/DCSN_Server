@@ -22,6 +22,7 @@ public class ServerParams {
 
     private static PropertiesManager propManager;
     private StrategiesList strategy;
+    private int taskLimit;
     private int port;
     private Path basedir;
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
@@ -42,7 +43,10 @@ public class ServerParams {
     private void setDefaultStrategy() {
         setStrategy(StrategiesList.HIGHEST_PRIORITY_FIRST);
     }
-
+    
+    private void setDefaultTaskLimit(){
+        setTaskLimit(100);
+    }
     /**
      * Gets the port
      *
@@ -50,6 +54,14 @@ public class ServerParams {
      */
     public int getPort() {
         return port;
+    }
+    
+    /**
+     *Gets the task limit for absolute planning for finishing projects
+     * @return the task limit for absolute planning for finishing projects
+     */
+    public int getTaskLimit(){
+        return taskLimit;
     }
 
     /**
@@ -85,6 +97,16 @@ public class ServerParams {
         this.strategy = strategy;
         LOG.log(Level.INFO, "Server strategy has been set to: {0}", strategy.toString());
         propManager.setProperty("strategy", strategy.toString());
+    }
+    
+    /**
+     *Sets the task limit for planning for finishing projects
+     * @param taskLimit Task limit for planning for finishing projects
+     */
+    public void setTaskLimit(int taskLimit){
+        this.taskLimit = taskLimit;
+        LOG.log(Level.INFO, "Task limit for absolute planning for finishing projects has been est to: {0}", taskLimit);
+        propManager.setProperty("strategy", taskLimit+"");
     }
 
     /**
@@ -155,6 +177,18 @@ public class ServerParams {
             }
         }
 
+        if(propManager.getProperty("tasklimit") == null){
+            setDefaultTaskLimit();
+        }else{
+              int taskLimit = Integer.parseInt(propManager.getProperty("tasklimit"));
+            try {
+                setTaskLimit(taskLimit);
+            } catch (IllegalArgumentException e) {
+                LOG.log(Level.WARNING, "INITIALIZING: Task limit for absolute planning for finishing project has to be positive integer");
+                setDefaultPort();
+            }
+        }
+        
         if (propManager.getProperty("port") == null) {
             setDefaultPort();
         } else {

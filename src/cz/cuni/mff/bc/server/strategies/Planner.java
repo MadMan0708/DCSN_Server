@@ -24,11 +24,6 @@ import java.util.Map.Entry;
  */
 public class Planner {
 
-    /**
-     * This limit says when any project has less then TASK_LIMIT uncompleted
-     * tasks, the absolute priority is given to the project
-     */
-    public static int TASK_LIMIT_FOR_ABSOLUTE_PROCCESING = 5;
     private HashMap<StrategiesList, IStrategy> strategies;
     private ServerParams serverParams;
     private ArrayList<ActiveClient> computingClients;

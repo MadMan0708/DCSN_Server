@@ -84,6 +84,24 @@ public class ServerCommands {
     }
 
     /**
+     * Sets the task limit for planning for finishing projects
+     *
+     * @param params array of parameters
+     */
+    public void setTaskLimit(String[] params) {
+        if (checkParamNum(1, params)) {
+            try {
+                server.getServerParams().setTaskLimit(Integer.parseInt(params[0]));
+            } catch (NumberFormatException e) {
+                LOG.log(Level.WARNING, "Task limit for absolute planning for finishing project has to be positive integer");
+            }
+        } else {
+            LOG.log(Level.INFO, "Expected parameters: 1");
+            LOG.log(Level.INFO, "1: Task limit for planning for finishing project");
+        }
+    }
+
+    /**
      * Sets the strategy
      *
      * @param params array of parameters

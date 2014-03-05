@@ -752,7 +752,7 @@ public class TaskManager {
             tasksInProgress.remove(ID);
             activeClients.get(clientName).unassociateClientWithTask(ID);
             planner.logCurrentTasks(activeClients.get(clientName));
-            if (project.getNumOfTasksUncompleted() <= Planner.TASK_LIMIT_FOR_ABSOLUTE_PROCCESING && !finishingProjects.contains(project)) {
+            if (project.getNumOfTasksUncompleted() <= serverParams.getTaskLimit() && !finishingProjects.contains(project)) {
                 finishingProjects.add(project);
                 planForAll();
                 // new plan for active clients is created
