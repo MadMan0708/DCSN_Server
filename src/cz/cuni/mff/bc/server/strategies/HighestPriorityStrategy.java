@@ -174,7 +174,7 @@ public class HighestPriorityStrategy implements IStrategy {
 
     /*
      * Create list which is used to distribute task evenly.
-     * The list in the parameter should be sorted list by getSortedList method
+     * The list in the parameter has be sorted list by getSortedList method
      */
     private HashMap<Pair, LinkedList<Project>> getAvailableProjectsList(LinkedList<Project> activeProjects) {
         HashMap<Pair, LinkedList<Project>> distributionList = new HashMap<>();
