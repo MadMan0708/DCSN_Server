@@ -161,10 +161,8 @@ public class HighestPriorityStrategy implements IStrategy {
         notPlannedLatelyIncrement.remove(project);
         notPlannedLatelyNumbers.put(project, 0);
         // append project as many times as it can be added
-        while (project.getCores() <= coresLeft) {
-            repeatProject++;
-            coresLeft = coresLeft - project.getCores();
-        }
+        repeatProject = coresLeft/project.getCores();
+        coresLeft = coresLeft % project.getCores();
         newerPlan.put(project.getProjectUID(), repeatProject);
         return coresLeft;
     }
