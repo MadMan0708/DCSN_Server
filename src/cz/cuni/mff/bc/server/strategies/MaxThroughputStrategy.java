@@ -24,7 +24,7 @@ import java.util.Map.Entry;
  */
 public class MaxThroughputStrategy implements IStrategy {
 
-    private int replannedLimit;
+    private int notPlannedLimit;
     private LinkedList<Project> allProjectsSorted;
     private Comparator<Project> comparator;
     private LinkedList<Project> notPlannedLately;
@@ -34,11 +34,11 @@ public class MaxThroughputStrategy implements IStrategy {
     /**
      * Constructor
      *
-     * @param replannedLimit number of planning after projects which haven't
+     * @param notPlannedLimit number of planning after projects which haven't
      * been planned yet will be planned with higher priority
      */
-    public MaxThroughputStrategy(int replannedLimit) {
-        this.replannedLimit = replannedLimit;
+    public MaxThroughputStrategy(int notPlannedLimit) {
+        this.notPlannedLimit = notPlannedLimit;
         this.notPlannedLatelyNumbers = new LinkedHashMap<>();
         this.notPlannedLatelyIncrement = new LinkedList<>();
         this.notPlannedLately = new LinkedList<>();
@@ -56,7 +56,7 @@ public class MaxThroughputStrategy implements IStrategy {
                     } else if (p1.getTime() < p2.getTime()) {
                         return -1;
                     } else {
-                        if (p1.getPriority() > p2.getPriority()) { // thirdly  sort  by priority in descending order
+                        if (p1.getPriority() > p2.getPriority()) { // thirdly sort by priority in descending order
                             return -1;
                         } else if (p1.getPriority() == p2.getPriority()) {
                             return 0;
@@ -71,7 +71,8 @@ public class MaxThroughputStrategy implements IStrategy {
 
     @Override
     public void planForAll(ArrayList<ActiveClient> activeClients, Collection<Project> activeProjects) {
-        allProjectsSorted = getAllProjectsSortedList(activeProjects);
+        allProjectsSorted = new LinkedList<>(activeProjects);
+        Collections.sort(allProjectsSorted, comparator);
         for (Project project : activeProjects) {
             if (!notPlannedLatelyNumbers.containsKey(project)) {
                 notPlannedLatelyNumbers.put(project, 0);
@@ -84,6 +85,22 @@ public class MaxThroughputStrategy implements IStrategy {
         notPlannedLatelyIncrement = new LinkedList<>(allProjectsSorted);
     }
 
+    /*
+     * Increments number of projects which haven't been planned
+     */
+    private void notPlannedLatelyIncrement() {
+        for (Project project : notPlannedLatelyIncrement) {
+            int newValue = notPlannedLatelyNumbers.get(project) + 1;
+            if (newValue == notPlannedLimit) {
+                if (!notPlannedLately.contains(project)) {
+                    notPlannedLately.addLast(project);
+                }
+                notPlannedLatelyNumbers.put(project, 0);
+            }
+            notPlannedLatelyNumbers.put(project, newValue);
+        }
+    }
+
     @Override
     public void planForOne(ActiveClient active) {
         int coresLeft = active.getCoresLimit();
@@ -92,15 +109,15 @@ public class MaxThroughputStrategy implements IStrategy {
         ArrayList<Project> chosenProjects = new ArrayList<>();
         if (!notPlannedLately.isEmpty()) {
             for (Project project : notPlannedLately) {
-                if (project.getMemory() <= memoryLimit && coresLeft - project.getCores() >= 0) {
-                    int repeat = howManyProjects(coresLeft, project);
-                    coresLeft = coresLeft - project.getCores() * repeat;
-                    assignProjectForClient(newPlan, project, repeat);
+                if (project.getMemory() <= memoryLimit && project.getCores() <= coresLeft) {
+                    int repeatProject = coresLeft / project.getCores();
+                    coresLeft = coresLeft % project.getCores();
+                    assignProjectForClient(newPlan, project, repeatProject);
                     chosenProjects.add(project);
-                }
-                if (coresLeft == 0) {
-                    // client plan is full, stopping the loop
-                    break;
+                    if (coresLeft == 0) {
+                        // client plan is full, stopping the loop
+                        break;
+                    }
                 }
             }
             notPlannedLately.removeAll(chosenProjects);
@@ -113,7 +130,7 @@ public class MaxThroughputStrategy implements IStrategy {
         // continue with regular planning
         LinkedList<Project> forDistribution = new LinkedList<>(allProjectsSorted);
         forDistribution.removeAll(chosenProjects); // remove projects which has been added cause of immediate planning
-        HashMap<Pair, LinkedList<Project>> distributionList = findBestAssigning(coresLeft, memoryLimit, forDistribution);
+        HashMap<Pair, LinkedList<Project>> distributionList = findBestAssociation(coresLeft, memoryLimit, forDistribution);
         for (Entry<Pair, LinkedList<Project>> entry : distributionList.entrySet()) {
             for (int i = entry.getKey().getSecond(); i > 0; i--) {
                 Project project = entry.getValue().getFirst();
@@ -131,7 +148,7 @@ public class MaxThroughputStrategy implements IStrategy {
     /*
      * Returns the list where the keys tell how many times can projects from list in hashmap value be used
      */
-    private HashMap<Pair, LinkedList<Project>> findBestAssigning(int coresLimit, int memoryLimit, LinkedList<Project> projects) {
+    private HashMap<Pair, LinkedList<Project>> findBestAssociation(int coresLimit, int memoryLimit, LinkedList<Project> projects) {
         int capacity = coresLimit;
         HashMap<Integer, LinkedList<Project>> filtered = filterProjects(coresLimit, memoryLimit, projects);
         HashMap<Pair, LinkedList<Project>> toReturn = new HashMap<>();
@@ -184,7 +201,7 @@ public class MaxThroughputStrategy implements IStrategy {
 
     /*
      * Prepares array of core limits
-     * Supportive function for findBestAssigning
+     * Supportive function for findBestAssociation
      */
     private Integer[] prepareArrayOfWeights(int coresLimit, HashMap<Integer, LinkedList<Project>> filtredProejcts) {
         ArrayList<Integer> weights = new ArrayList<>();
@@ -200,7 +217,7 @@ public class MaxThroughputStrategy implements IStrategy {
     }
 
     /*
-     * Filters project for method findBestAssigning, removes project with memory limit and core limit higher than client can handle
+     * Filters project for method findBestAssociation, removes project with memory limit and core limit higher than client can handle
      */
     private HashMap<Integer, LinkedList<Project>> filterProjects(int coresLimit, int memoryLimit, LinkedList<Project> projects) {
         HashMap<Integer, LinkedList<Project>> list = new HashMap<>();
@@ -219,49 +236,11 @@ public class MaxThroughputStrategy implements IStrategy {
     }
 
     /*
-     * Sorts active projects by memory, then cores and then by priorities and returns sorted list
-     */
-    private LinkedList<Project> getAllProjectsSortedList(Collection<Project> activeProjects) {
-        LinkedList<Project> asList = new LinkedList<>(activeProjects);
-        Collections.sort(asList, comparator);
-        return asList;
-    }
-
-    /*
-     * Increments number of projects which hasn't been planned
-     */
-    private void notPlannedLatelyIncrement() {
-        for (Project project : notPlannedLatelyIncrement) {
-            int newValue = notPlannedLatelyNumbers.get(project) + 1;
-            if (newValue == replannedLimit) {
-                if (!notPlannedLately.contains(project)) {
-                    notPlannedLately.addLast(project);
-                }
-                notPlannedLatelyNumbers.put(project, 0);
-            }
-            notPlannedLatelyNumbers.put(project, newValue);
-        }
-    }
-
-    /*
      * Assign prject to the client's new plan
      */
     private void assignProjectForClient(LinkedHashMap<ProjectUID, Integer> newPlan, Project project, int repeat) {
         notPlannedLatelyIncrement.remove(project);
         notPlannedLatelyNumbers.put(project, 0);
         newPlan.put(project.getProjectUID(), repeat);
-    }
-
-    /*
-     * Tells how many times can be project added to  the client's new plan
-     */
-    private int howManyProjects(int coresLeft, Project project) {
-        int repeatProject = 0;
-        // find how many times can be project added
-        while (project.getCores() <= coresLeft) {
-            repeatProject++;
-            coresLeft = coresLeft - project.getCores();
-        }
-        return repeatProject;
     }
 }
