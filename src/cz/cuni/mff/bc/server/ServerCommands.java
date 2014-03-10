@@ -93,11 +93,11 @@ public class ServerCommands {
             try {
                 server.getServerParams().setTaskLimit(Integer.parseInt(params[0]));
             } catch (NumberFormatException e) {
-                LOG.log(Level.WARNING, "Task limit for planning for finishing projects has to be positive integer");
+                LOG.log(Level.WARNING, "Task limit for planning of finishing projects has to be positive integer");
             }
         } else {
             LOG.log(Level.INFO, "Expected parameters: 1");
-            LOG.log(Level.INFO, "1: Task limit for planning for finishing projects");
+            LOG.log(Level.INFO, "1: Task limit for planning of finishing projects");
         }
     }
 
@@ -108,7 +108,7 @@ public class ServerCommands {
      */
     public void getTaskLimit(String[] params) {
         if (checkParamNum(0, params)) {
-                 LOG.log(Level.INFO, "Task limit for planning for finishing projects is set to : {0}", server.getServerParams().getTaskLimit());        
+                 LOG.log(Level.INFO, "Task limit for planning of finishing projects is set to : {0}", server.getServerParams().getTaskLimit());        
         } else {
             LOG.log(Level.INFO, "Command has no parameter");
         }

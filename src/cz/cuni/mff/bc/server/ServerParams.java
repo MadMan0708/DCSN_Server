@@ -184,7 +184,7 @@ public class ServerParams {
             try {
                 setTaskLimit(taskLimit);
             } catch (IllegalArgumentException e) {
-                LOG.log(Level.WARNING, "INITIALIZING: Task limit for absolute planning for finishing project has to be positive integer");
+                LOG.log(Level.WARNING, "INITIALIZING: Task limit for planning of finishing projects has to be positive integer");
                 setDefaultPort();
             }
         }
