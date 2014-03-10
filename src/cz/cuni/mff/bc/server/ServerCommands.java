@@ -108,7 +108,7 @@ public class ServerCommands {
      */
     public void getTaskLimit(String[] params) {
         if (checkParamNum(0, params)) {
-                 LOG.log(Level.INFO, "Task limit for planning of finishing projects is set to : {0}", server.getServerParams().getTaskLimit());        
+            LOG.log(Level.INFO, "Task limit for planning of finishing projects is set to : {0}", server.getServerParams().getTaskLimit());        
         } else {
             LOG.log(Level.INFO, "Command has no parameter");
         }
