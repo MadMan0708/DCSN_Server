@@ -103,10 +103,14 @@ public class ServerParams {
      *Sets the task limit for planning for finishing projects
      * @param taskLimit Task limit for planning for finishing projects
      */
-    public void setTaskLimit(int taskLimit){
+    public void setTaskLimit(int taskLimit) throws IllegalArgumentException{
+        if(taskLimit>0){
         this.taskLimit = taskLimit;
-        LOG.log(Level.INFO, "Task limit for absolute planning for finishing projects has been est to: {0}", taskLimit);
-        propManager.setProperty("strategy", taskLimit+"");
+        LOG.log(Level.INFO, "Task limit for absolute planning for finishing projects has been set to: {0}", taskLimit);
+        propManager.setProperty("tasklimit", taskLimit+"");
+        }else{
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -185,7 +189,7 @@ public class ServerParams {
                 setTaskLimit(taskLimit);
             } catch (IllegalArgumentException e) {
                 LOG.log(Level.WARNING, "INITIALIZING: Task limit for planning of finishing projects has to be positive integer");
-                setDefaultPort();
+                setDefaultTaskLimit();
             }
         }
         

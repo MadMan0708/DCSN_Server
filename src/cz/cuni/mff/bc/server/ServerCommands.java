@@ -92,7 +92,7 @@ public class ServerCommands {
         if (checkParamNum(1, params)) {
             try {
                 server.getServerParams().setTaskLimit(Integer.parseInt(params[0]));
-            } catch (NumberFormatException e) {
+            } catch (IllegalArgumentException e) {
                 LOG.log(Level.WARNING, "Task limit for planning of finishing projects has to be positive integer");
             }
         } else {
