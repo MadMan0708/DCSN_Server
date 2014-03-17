@@ -81,11 +81,7 @@ public class ServerParams {
     }
 
     private boolean validatePort(int port) {
-        if (port >= 1 && port <= 65535) {
-            return true;
-        } else {
-            return false;
-        }
+        return port >= 1 && port <= 65535;
     }
 
     /**

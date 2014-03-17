@@ -27,11 +27,11 @@ public class ActiveClient {
     private Session session;
     private int memoryLimit;
     private int coresLimit;
-    private HashMap<ProjectUID, ArrayList<TaskID>> currentTasks;
+    private final HashMap<ProjectUID, ArrayList<TaskID>> currentTasks;
     // preserve order of inserted item
     private LinkedHashMap<ProjectUID, Integer> currentPlan;
     private boolean computing;
-    private IActiveClientListener listener;
+    private final IActiveClientListener listener;
 
     /**
      * Constructor

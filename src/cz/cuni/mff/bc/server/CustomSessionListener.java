@@ -25,10 +25,10 @@ import org.cojen.dirmi.SessionCloseListener;
  */
 public class CustomSessionListener implements org.cojen.dirmi.SessionListener {
 
-    private TaskManager taskManager;
-    private ConcurrentHashMap<String, ActiveClient> activeClients;
-    private IServerImpl remoteMethods;
-    private SessionAcceptor sesAcceptor;
+    private final TaskManager taskManager;
+    private final ConcurrentHashMap<String, ActiveClient> activeClients;
+    private final IServerImpl remoteMethods;
+    private final SessionAcceptor sesAcceptor;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     /**

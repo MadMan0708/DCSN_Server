@@ -26,7 +26,7 @@ public class MaxThroughputStrategy implements IStrategy {
 
     private int notPlannedLimit;
     private LinkedList<Project> allProjectsSorted;
-    private Comparator<Project> comparator;
+    private final Comparator<Project> comparator;
     private LinkedList<Project> notPlannedLately;
     private LinkedList<Project> notPlannedLatelyIncrement;
     private HashMap<Project, Integer> notPlannedLatelyNumbers;

@@ -18,7 +18,7 @@ import java.util.logging.Level;
  */
 public class DiscoveryThread extends Thread {
 
-    private int port;
+    private final int port;
     private boolean discovering = true;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 

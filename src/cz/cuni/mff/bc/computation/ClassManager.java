@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 public class ClassManager {
 
     private CustomClassLoader classLoader = new CustomClassLoader();
-    private FilesStructure filesStructure;
+    private final FilesStructure filesStructure;
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     /**

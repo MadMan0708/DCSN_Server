@@ -11,8 +11,8 @@ package cz.cuni.mff.bc.server.strategies;
  */
 public class Pair {
 
-    private int first;
-    private int second;
+    private final int first;
+    private final int second;
 
     /**
      * Creates the pair

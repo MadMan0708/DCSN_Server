@@ -26,7 +26,7 @@ public class HighestPriorityStrategy implements IStrategy {
     private HashMap<Pair, LinkedList<Project>> availableProjects;
     private HashMap<Pair, LinkedList<Project>> availableProjectsBackup;
     private HashMap<Pair, LinkedList<Project>> usedProjects;
-    private Comparator<Project> comparator;
+    private final Comparator<Project> comparator;
     private LinkedList<Project> notPlannedLatelyIncrement;
     private HashMap<Project, Integer> notPlannedLatelyNumbers;
 

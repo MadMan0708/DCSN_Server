@@ -17,7 +17,7 @@ public class FilesStructure {
 
     private static String jarFilesName = "project";
     private static String dataFilesName = "data";
-    private ServerParams serverParams;
+    private final ServerParams serverParams;
 
     /**
      * Constructor

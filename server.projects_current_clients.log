@@ -86,3 +86,27 @@ Mon Mar 03 18:19:00 GMT 2014 : --PLANNING FOR ONE
 Mon Mar 03 18:19:00 GMT 2014 : ------------PROJECTS PLANNED ON------------
 Mon Mar 03 18:19:00 GMT 2014 : 	 Project Weather is planned on:
 Mon Mar 03 18:19:00 GMT 2014 : 		 Petr
+Thu Mar 06 18:03:55 GMT 2014 : --PLANNING FOR ALL
+Thu Mar 06 18:03:55 GMT 2014 : ------------PROJECTS PLANNED ON------------
+Thu Mar 06 18:03:55 GMT 2014 : Project  hasn't been planned for ProjectA planning
+Thu Mar 06 18:04:02 GMT 2014 : --PLANNING FOR ALL
+Thu Mar 06 18:04:02 GMT 2014 : ------------PROJECTS PLANNED ON------------
+Thu Mar 06 18:04:02 GMT 2014 : Project  hasn't been planned for ProjectB planning
+Thu Mar 06 18:04:02 GMT 2014 : Project  hasn't been planned for ProjectA planning
+Thu Mar 06 18:04:54 GMT 2014 : --PLANNING FOR ONE
+Thu Mar 06 18:04:54 GMT 2014 : ------------PROJECTS PLANNED ON------------
+Thu Mar 06 18:04:54 GMT 2014 : Project  hasn't been planned for ProjectB planning
+Thu Mar 06 18:04:54 GMT 2014 : 	 Project ProjectA is planned on:
+Thu Mar 06 18:04:54 GMT 2014 : 		 Petr
+Fri Mar 07 01:30:59 GMT 2014 : --PLANNING FOR ALL
+Fri Mar 07 01:30:59 GMT 2014 : ------------PROJECTS PLANNED ON------------
+Fri Mar 07 01:30:59 GMT 2014 : Project  hasn't been planned for ProjectA planning
+Fri Mar 07 01:31:08 GMT 2014 : --PLANNING FOR ALL
+Fri Mar 07 01:31:08 GMT 2014 : ------------PROJECTS PLANNED ON------------
+Fri Mar 07 01:31:08 GMT 2014 : Project  hasn't been planned for ProjectB planning
+Fri Mar 07 01:31:08 GMT 2014 : Project  hasn't been planned for ProjectA planning
+Fri Mar 07 01:31:25 GMT 2014 : --PLANNING FOR ONE
+Fri Mar 07 01:31:25 GMT 2014 : ------------PROJECTS PLANNED ON------------
+Fri Mar 07 01:31:25 GMT 2014 : 	 Project ProjectB is planned on:
+Fri Mar 07 01:31:25 GMT 2014 : 		 Petr
+Fri Mar 07 01:31:25 GMT 2014 : Project  hasn't been planned for ProjectA planning

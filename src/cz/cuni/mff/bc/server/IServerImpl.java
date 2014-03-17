@@ -36,10 +36,10 @@ import org.cojen.dirmi.Pipe;
  */
 public class IServerImpl implements IServer {
 
-    private TaskManager taskManager;
+    private final TaskManager taskManager;
     private final int timerPeriodSec = 40;
-    private ConcurrentHashMap<String, ActiveClient> activeClients;
-    private FilesStructure filesStructure;
+    private final ConcurrentHashMap<String, ActiveClient> activeClients;
+    private final FilesStructure filesStructure;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     /**
@@ -116,11 +116,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public boolean isConnected(String clientName) throws RemoteException {
-        if (activeClients.containsKey(clientName)) {
-            return true;
-        } else {
-            return false;
-        }
+        return activeClients.containsKey(clientName);
     }
 
     @Override
@@ -211,11 +207,7 @@ public class IServerImpl implements IServer {
 
     @Override
     public boolean isProjectExists(String clientID, String projectID) throws RemoteException {
-        if (taskManager.isProjectInManager(clientID, projectID)) {
-            return true;
-        } else {
-            return false;
-        }
+        return taskManager.isProjectInManager(clientID, projectID);
     }
 
     @Override

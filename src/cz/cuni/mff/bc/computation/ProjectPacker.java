@@ -20,9 +20,9 @@ import java.util.logging.Logger;
  */
 public class ProjectPacker implements Callable<Boolean> {
 
-    private Project project;
-    private File sourceDirectory;
-    private File destination;
+    private final Project project;
+    private final File sourceDirectory;
+    private final File destination;
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     @Override

@@ -18,11 +18,11 @@ import java.util.logging.Logger;
  */
 public class Extractor {
 
-    private String extension;
-    private String projectName;
-    private String clientName;
-    private File archive;
-    private File destination;
+    private final String extension;
+    private final String projectName;
+    private final String clientName;
+    private final File archive;
+    private final File destination;
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     /**

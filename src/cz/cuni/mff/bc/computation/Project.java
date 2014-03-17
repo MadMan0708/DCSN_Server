@@ -22,14 +22,14 @@ public class Project implements Serializable {
 
     private ProjectState state;
     private int numberOfTask;
-    private String clientName;
-    private String projectName;
-    private int priority;
-    private int cores;
-    private int memory;
-    private int time;
-    private Set<TaskID> tasksUncompleted;
-    private Set<TaskID> tasksCompleted;
+    private final String clientName;
+    private final String projectName;
+    private final int priority;
+    private final int cores;
+    private final int memory;
+    private final int time;
+    private final Set<TaskID> tasksUncompleted;
+    private final Set<TaskID> tasksCompleted;
 
     /**
      * Constructor
@@ -63,14 +63,6 @@ public class Project implements Serializable {
         return cores;
     }
 
-    /**
-     * Sets the cores limit
-     *
-     * @param cores cores limit
-     */
-    public void setCores(int cores) {
-        this.cores = cores;
-    }
 
     /**
      * Gets average task time
@@ -82,15 +74,6 @@ public class Project implements Serializable {
     }
 
     /**
-     * Sets average task time
-     *
-     * @param time average task time
-     */
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-    /**
      * Gets the memory limit
      *
      * @return memory limit
@@ -99,14 +82,6 @@ public class Project implements Serializable {
         return memory;
     }
 
-    /**
-     * Sets the memory limit
-     *
-     * @param memory memory limit
-     */
-    public void setMemory(int memory) {
-        this.memory = memory;
-    }
 
     /**
      * Checks if the task is completed
@@ -193,11 +168,7 @@ public class Project implements Serializable {
      * @return true if there are no more tasks to be calculated, false otherwise
      */
     public boolean zeroTasks() {
-        if (tasksUncompleted.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return tasksUncompleted.isEmpty();
     }
 
     /**
@@ -206,11 +177,7 @@ public class Project implements Serializable {
      * @return true if all tasks are completed, false otherwise
      */
     public boolean allTasksCompleted() {
-        if (tasksCompleted.size() == numberOfTask) {
-            return true;
-        } else {
-            return false;
-        }
+        return tasksCompleted.size() == numberOfTask;
     }
 
     /**

@@ -24,14 +24,14 @@ import java.util.Map.Entry;
  */
 public class Planner {
 
-    private HashMap<StrategiesList, IStrategy> strategies;
-    private ServerParams serverParams;
+    private final HashMap<StrategiesList, IStrategy> strategies;
+    private final ServerParams serverParams;
     private ArrayList<ActiveClient> computingClients;
     private ArrayList<Project> activeProjects;
-    private CustomLogger LOG_PLAN;
-    private CustomLogger LOG_TASKS;
-    private CustomLogger LOG_PROJECTS_CURRENT_CLIENTS;
-    private CustomLogger LOG_PROJECTS_POSSIBLE_CLIENTS;
+    private final CustomLogger LOG_PLAN;
+    private final CustomLogger LOG_TASKS;
+    private final CustomLogger LOG_PROJECTS_CURRENT_CLIENTS;
+    private final CustomLogger LOG_PROJECTS_POSSIBLE_CLIENTS;
 
     /**
      * Constructor

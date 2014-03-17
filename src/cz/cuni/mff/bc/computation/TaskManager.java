@@ -46,10 +46,10 @@ import java.util.logging.Level;
  */
 public class TaskManager {
 
-    private ExecutorService executor;
-    private FilesStructure filesStructure;
-    private ConcurrentHashMap<String, ActiveClient> activeClients;
-    private ClassManager classManager;
+    private final ExecutorService executor;
+    private final FilesStructure filesStructure;
+    private final ConcurrentHashMap<String, ActiveClient> activeClients;
+    private final ClassManager classManager;
     private final ConcurrentHashMap<ProjectUID, BlockingQueue<TaskID>> tasksPool;
     private final CopyOnWriteArrayList<TaskID> tasksInProgress;
     private ConcurrentHashMap<ProjectUID, Project> projectsActive;
@@ -59,9 +59,9 @@ public class TaskManager {
     private ConcurrentHashMap<ProjectUID, Project> projectsCompleted;
     private ConcurrentHashMap<ProjectUID, Project> projectsForDownload;
     private ConcurrentHashMap<ProjectUID, Project> projectsCorrupted;
-    private SortedSet<Project> finishingProjects;
-    private Planner planner;
-    private ServerParams serverParams;
+    private final SortedSet<Project> finishingProjects;
+    private final Planner planner;
+    private final ServerParams serverParams;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     /**
@@ -144,11 +144,7 @@ public class TaskManager {
      * @return true if the project is ready for download, false otherwise
      */
     public boolean isProjectReadyForDownload(String clientName, String projectName) {
-        if (projectsForDownload.containsKey(new ProjectUID(clientName, projectName))) {
-            return true;
-        } else {
-            return false;
-        }
+        return projectsForDownload.containsKey(new ProjectUID(clientName, projectName));
     }
 
     /**
@@ -159,11 +155,7 @@ public class TaskManager {
      * @return true if the project is corrupted, false otherwise
      */
     public boolean isProjectCorrupted(String clientName, String projectName) {
-        if (projectsCorrupted.containsKey(new ProjectUID(clientName, projectName))) {
-            return true;
-        } else {
-            return false;
-        }
+        return projectsCorrupted.containsKey(new ProjectUID(clientName, projectName));
     }
 
     /**
@@ -174,11 +166,7 @@ public class TaskManager {
      * @return true if the project is completed, false otherwise
      */
     public boolean isProjectCompleted(String clientName, String projectName) {
-        if (projectsCompleted.contains(new ProjectUID(clientName, projectName))) {
-            return true;
-        } else {
-            return false;
-        }
+        return projectsCompleted.contains(new ProjectUID(clientName, projectName));
     }
 
     /**
@@ -198,11 +186,7 @@ public class TaskManager {
      * @return true if the task computation is in progress, false otherwise
      */
     public boolean isTaskInProgress(TaskID ID) {
-        if (tasksInProgress.contains(ID)) {
-            return true;
-        } else {
-            return false;
-        }
+        return tasksInProgress.contains(ID);
     }
 
     /**
@@ -213,11 +197,7 @@ public class TaskManager {
      * @return true if project exists in task manager, false otherwise
      */
     public boolean isProjectInManager(String clientName, String projectName) {
-        if (projectsAll.containsKey(new ProjectUID(clientName, projectName))) {
-            return true;
-        } else {
-            return false;
-        }
+        return projectsAll.containsKey(new ProjectUID(clientName, projectName));
     }
 
     /*
@@ -285,22 +265,14 @@ public class TaskManager {
      * @return true if the client is active, false otherwise
      */
     public boolean isClientActive(String clientName) {
-        if (activeClients.containsKey(clientName)) {
-            return true;
-        } else {
-            return false;
-        }
+        return activeClients.containsKey(clientName);
     }
 
     /*
      * Checks if the client is active and computing tasks
      */
     private boolean isClientComputing(String clientName) {
-        if (isClientActive(clientName) && activeClients.get(clientName).isComputing()) {
-            return true;
-        } else {
-            return false;
-        }
+        return isClientActive(clientName) && activeClients.get(clientName).isComputing();
     }
 
     /**
@@ -393,7 +365,7 @@ public class TaskManager {
             } else if (currentTasks.get(entry.getKey()).size() < entry.getValue()) { // if there can be more tasks of one project
                 return entry.getKey();
             } else {
-                continue;
+                // continue with another project from the plan
             }
         }
         // this part never returns null because of design of planning, but it has to be here to preserve correctness of the function

@@ -34,13 +34,13 @@ public class Server implements IConsole {
     private static final int numThreads = 100;
     private Environment env;
     private SessionAcceptor sesAcceptor;
-    private ConcurrentHashMap<String, ActiveClient> activeClients;
-    private IServerImpl remoteMethods;
-    private CustomHandler logHandler;
-    private ServerParams serverParams;
-    private ServerCommands commands;
+    private final ConcurrentHashMap<String, ActiveClient> activeClients;
+    private final IServerImpl remoteMethods;
+    private final CustomHandler logHandler;
+    private final ServerParams serverParams;
+    private final ServerCommands commands;
     private DiscoveryThread discoveryThread;
-    private FilesStructure filesStructure;
+    private final FilesStructure filesStructure;
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Server.class.getName());
 
     /**
