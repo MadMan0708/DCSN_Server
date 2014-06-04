@@ -90,7 +90,6 @@ public class HighestPriorityStrategy implements IStrategy {
         for (Project project : allProjectsSorted) {
             if (project.getMemory() > memoryLimit) {
                 // rest of the projects in the list have higher memory requirement then client can handle
-                break;
             } else if (project.getCores() > coresLeft) {
                 // skip projects with higher cores requirements then client can hangdle
             } else {
