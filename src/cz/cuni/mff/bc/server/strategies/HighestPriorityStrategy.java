@@ -89,9 +89,9 @@ public class HighestPriorityStrategy implements IStrategy {
 
         for (Project project : allProjectsSorted) {
             if (project.getMemory() > memoryLimit) {
-                // rest of the projects in the list have higher memory requirement then client can handle
+                // skip projects with higher memory requirements than client can handle
             } else if (project.getCores() > coresLeft) {
-                // skip projects with higher cores requirements then client can hangdle
+                // skip projects with higher cores requirements than client can handle
             } else {
                 Pair key = new Pair(project.getPriority(), project.getCores());
                 if (availableProjects.get(key).contains(project)) {
@@ -118,7 +118,7 @@ public class HighestPriorityStrategy implements IStrategy {
                             // higher memory requirements then client can handle, all projects later in the list will have higher
                             // requiremts as well because the list is sorted
                             // 
-                            // therefore we chose the actual project in the main loop, which has lower memory requirements 
+                            // therefore we chose the current project in the main loop, which has lower memory requirements 
                             coresLeft = assignProjectForClient(coresLeft, newerPlan, project);
                         }
                     }
