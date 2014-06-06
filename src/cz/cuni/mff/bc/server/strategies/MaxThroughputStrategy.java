@@ -129,11 +129,10 @@ public class MaxThroughputStrategy implements IStrategy {
         }
         // continue with regular planning
         LinkedList<Project> forDistribution = new LinkedList<>(allProjectsSorted);
-        HashMap<Pair, LinkedList<Project>> distributionList = findBestAssociation(coresLeft, memoryLimit, forDistribution);
-        for (Entry<Pair, LinkedList<Project>> entry : distributionList.entrySet()) {
-            for (int i = entry.getKey().getSecond(); i > 0; i--) {
-                Project project = entry.getValue().getFirst();
-                assignProjectForClient(newPlan, project, entry.getKey().getSecond());
+        LinkedList<ProjectInAssociation> distributionList = findBestAssociation(coresLeft, memoryLimit, forDistribution);
+        for (ProjectInAssociation projectInAssociation : distributionList) {
+             for (int i = projectInAssociation.getCount(); i > 0; i--) {
+                assignProjectForClient(newPlan, projectInAssociation.getProject(), projectInAssociation.getCount());
             }
         }
         active.setCurrentPlan(newPlan);
@@ -147,10 +146,10 @@ public class MaxThroughputStrategy implements IStrategy {
     /*
      * Returns the list where the keys tell how many times can projects from list in hashmap value be used
      */
-    private HashMap<Pair, LinkedList<Project>> findBestAssociation(int coresLimit, int memoryLimit, LinkedList<Project> projects) {
+    private LinkedList<ProjectInAssociation> findBestAssociation(int coresLimit, int memoryLimit, LinkedList<Project> projects) {
         int capacity = coresLimit;
         HashMap<Integer, LinkedList<Project>> filtered = filterProjects(coresLimit, memoryLimit, projects);
-        HashMap<Pair, LinkedList<Project>> toReturn = new HashMap<>();
+        LinkedList<ProjectInAssociation> toReturn = new LinkedList<>();
         Integer[] items = prepareArrayOfWeights(coresLimit, filtered);
         Integer[][] result = new Integer[items.length + 1][capacity + 1];
         Integer[][] picked = new Integer[items.length + 1][capacity + 1];
@@ -193,7 +192,7 @@ public class MaxThroughputStrategy implements IStrategy {
         }
         // now we have how many times project with specific cores limit can be in most effective list
         for (Map.Entry<Integer, Integer> entry : selectedItems.entrySet()) {
-            toReturn.put(new Pair(entry.getKey(), entry.getValue()), filtered.get(entry.getKey()));
+            toReturn.add(new ProjectInAssociation(entry.getValue(), filtered.get(entry.getKey()).getFirst()));
         }
         return toReturn;
     }
