@@ -129,7 +129,6 @@ public class MaxThroughputStrategy implements IStrategy {
         }
         // continue with regular planning
         LinkedList<Project> forDistribution = new LinkedList<>(allProjectsSorted);
-        forDistribution.removeAll(chosenProjects); // remove projects which has been added cause of immediate planning
         HashMap<Pair, LinkedList<Project>> distributionList = findBestAssociation(coresLeft, memoryLimit, forDistribution);
         for (Entry<Pair, LinkedList<Project>> entry : distributionList.entrySet()) {
             for (int i = entry.getKey().getSecond(); i > 0; i--) {
