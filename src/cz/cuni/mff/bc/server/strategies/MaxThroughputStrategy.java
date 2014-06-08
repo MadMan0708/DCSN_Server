@@ -8,6 +8,7 @@ import cz.cuni.mff.bc.api.main.ProjectUID;
 import cz.cuni.mff.bc.computation.ActiveClient;
 import cz.cuni.mff.bc.computation.Project;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -130,7 +131,7 @@ public class MaxThroughputStrategy implements IStrategy {
         LinkedList<Project> forDistribution = new LinkedList<>(allProjectsSorted);
         LinkedList<ProjectInAssociation> distributionList = findBestAssociation(coresLeft, memoryLimit, forDistribution);
         for (ProjectInAssociation projectInAssociation : distributionList) {
-             for (int i = projectInAssociation.getCount(); i > 0; i--) {
+            for (int i = projectInAssociation.getCount(); i > 0; i--) {
                 assignProjectForClient(newPlan, projectInAssociation.getProject(), projectInAssociation.getCount());
             }
         }
@@ -146,71 +147,47 @@ public class MaxThroughputStrategy implements IStrategy {
      * Returns the list where the keys tell how many times can projects from list in hashmap value be used
      */
     private LinkedList<ProjectInAssociation> findBestAssociation(int coresLimit, int memoryLimit, LinkedList<Project> projects) {
-        int capacity = coresLimit;
         HashMap<Integer, LinkedList<Project>> filtered = filterProjects(coresLimit, memoryLimit, projects);
         LinkedList<ProjectInAssociation> toReturn = new LinkedList<>();
-        Integer[] items = prepareArrayOfWeights(coresLimit, filtered);
-        Integer[][] result = new Integer[items.length + 1][capacity + 1];
-        Integer[][] picked = new Integer[items.length + 1][capacity + 1];
-        HashMap<Integer, Integer> selectedItems = new HashMap<>();
+
         // initialize
-        for (int j = 0; j <= capacity; j++) {
-            result[0][j] = 0;
-            picked[0][j] = 0;
+        int maxWeight = coresLimit; // KnapSack capacity
+        Integer[] w = filtered.keySet().toArray(new Integer[filtered.size()]); // weight of each item
+        Integer[] v = Arrays.copyOf(w, w.length); // weight==value, value of each item
+        int[] m = new int[maxWeight + 1];        //maximum value each knapsack
+        int[] l = new int[maxWeight + 1];        //last item added into each knapsack
+        int n = w.length; // number if items
+        int[] selectedItems = new int[n];
+
+        // prepare arrays
+        for (int j = 0; j <= maxWeight; j++) {
+            m[j] = 0;
+            l[j] = -1;
         }
-        // solve
-        for (int i = 1; i <= items.length; i++) {
-            for (int j = 0; j <= capacity; j++) {
-                if (items[i - 1] <= j) {
-                    int withNewItem = result[i - 1][j - items[i - 1]] + items[i - 1];
-                    int previousItem = result[i - 1][j];
-                    if (withNewItem < previousItem) {
-                        result[i][j] = previousItem;
-                        picked[i][j] = 0;
-                    } else {
-                        result[i][j] = withNewItem;
-                        picked[i][j] = 1;
-                    }
-                } else {
-                    result[i][j] = result[i - 1][j];
-                    picked[i][j] = 0;
+        // solve the unbounded knapsack problem
+        for (int i = 1; i < m.length; i++) {
+            for (int j = 0; j < n; j++) {
+                if (w[j] <= i
+                        && (v[j] + m[i - w[j]]) > m[i]) {
+                    m[i] = v[j] + m[i - w[j]];
+                    l[i] = j;
                 }
             }
         }
-        // find the cores to use
-        int c = capacity;
-        for (int i = items.length; i > 0; i--) {
-            if (picked[i][c] == 1) {
-                if (!selectedItems.containsKey(items[i - 1])) {
-                    selectedItems.put(items[i - 1], 1);
-                } else {
-                    selectedItems.put(items[i - 1], selectedItems.get(items[i - 1]) + 1);
-                }
-                c = c - items[i - 1];
-            }
+        // find the chosen items (find the cores to use)
+        int currentBag = l.length - 1;
+        int lastItem = l[currentBag];
+
+        while (lastItem != -1 && currentBag > 0) {
+            selectedItems[lastItem]++;
+            currentBag = currentBag - w[lastItem];
+            lastItem = l[currentBag];
         }
-        // now we have how many times project with specific cores limit can be in most effective list
-        for (Map.Entry<Integer, Integer> entry : selectedItems.entrySet()) {
-            toReturn.add(new ProjectInAssociation(entry.getValue(), filtered.get(entry.getKey()).getFirst()));
+        // return a list containg information about how many times can be a project planned on the client
+        for (int cores : selectedItems) {
+            toReturn.add(new ProjectInAssociation(cores, filtered.get(cores).getFirst()));
         }
         return toReturn;
-    }
-
-    /*
-     * Prepares array of core limits
-     * Supportive function for findBestAssociation
-     */
-    private Integer[] prepareArrayOfWeights(int coresLimit, HashMap<Integer, LinkedList<Project>> filtredProejcts) {
-        ArrayList<Integer> weights = new ArrayList<>();
-        int coresTemp;
-        for (Integer cores : filtredProejcts.keySet()) {
-            coresTemp = coresLimit - cores;
-            while (coresTemp >= 0) {
-                weights.add(cores);
-                coresTemp = coresTemp - cores;
-            }
-        }
-        return (Integer[]) weights.toArray(new Integer[weights.size()]);
     }
 
     /*
