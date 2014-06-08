@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Implementation of Maximal Throughput strategy
