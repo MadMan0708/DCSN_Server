@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * Implementation of Maximal Throughput strategy
@@ -25,7 +24,7 @@ import java.util.Map;
 public class MaxThroughputStrategy implements IStrategy {
 
     private int notPlannedLimit;
-    private LinkedList<Project> allProjectsSorted;
+    private LinkedList<Project> activeProjects;
     private final Comparator<Project> comparator;
     private LinkedList<Project> notPlannedLately;
     private LinkedList<Project> notPlannedLatelyIncrement;
@@ -42,7 +41,7 @@ public class MaxThroughputStrategy implements IStrategy {
         this.notPlannedLatelyNumbers = new LinkedHashMap<>();
         this.notPlannedLatelyIncrement = new LinkedList<>();
         this.notPlannedLately = new LinkedList<>();
-        this.allProjectsSorted = new LinkedList<>();
+        this.activeProjects = new LinkedList<>();
         this.comparator = new Comparator<Project>() {
             @Override
             public int compare(Project p1, Project p2) {
@@ -71,9 +70,8 @@ public class MaxThroughputStrategy implements IStrategy {
 
     @Override
     public void planForAll(ArrayList<ActiveClient> activeClients, Collection<Project> activeProjects) {
-        allProjectsSorted = new LinkedList<>(activeProjects);
-        Collections.sort(allProjectsSorted, comparator);
-        for (Project project : activeProjects) {
+        this.activeProjects = new LinkedList<>(activeProjects);
+        for (Project project : this.activeProjects) {
             if (!notPlannedLatelyNumbers.containsKey(project)) {
                 notPlannedLatelyNumbers.put(project, 0);
             }
@@ -82,7 +80,7 @@ public class MaxThroughputStrategy implements IStrategy {
         for (ActiveClient active : activeClients) {
             planForOne(active);
         }
-        notPlannedLatelyIncrement = new LinkedList<>(allProjectsSorted);
+        notPlannedLatelyIncrement = new LinkedList<>(this.activeProjects);
     }
 
     /*
@@ -128,8 +126,7 @@ public class MaxThroughputStrategy implements IStrategy {
             }
         }
         // continue with regular planning
-        LinkedList<Project> forDistribution = new LinkedList<>(allProjectsSorted);
-        LinkedList<ProjectInAssociation> distributionList = findBestAssociation(coresLeft, memoryLimit, forDistribution);
+        LinkedList<ProjectInAssociation> distributionList = findBestAssociation(coresLeft, memoryLimit, activeProjects);
         for (ProjectInAssociation projectInAssociation : distributionList) {
             for (int i = projectInAssociation.getCount(); i > 0; i--) {
                 assignProjectForClient(newPlan, projectInAssociation.getProject(), projectInAssociation.getCount());
