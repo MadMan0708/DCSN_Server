@@ -336,6 +336,19 @@ public class TaskManager {
     }
 
     /*
+    Checks if any project from the finishing project could be possibly planned on the client
+    */
+    private boolean isAnyFinishingSuitable(ActiveClient active){
+        int coresLimit = active.getCoresLimit();
+        int memoryLimit = active.getMemoryLimit();
+        for (Project project : finishingProjects) {
+            if(project.getMemory() <=memoryLimit && project.getCores() <= coresLimit){
+                return true;
+            }
+        }
+        return false;
+    }
+    /*
      * Gets project which will user calculate from finishing projects
      */
     private ProjectUID getTaskFromFinishing(ActiveClient active) {
@@ -380,7 +393,7 @@ public class TaskManager {
      */
     public synchronized ProjectUID getProjectIDBeforeCalculation(String clientName) {
         ActiveClient active = activeClients.get(clientName);
-        if (!finishingProjects.isEmpty() && finishingProjectsHasTasks(finishingProjects)) {
+        if (!finishingProjects.isEmpty() && isAnyFinishingSuitable(active) && finishingProjectsHasTasks(finishingProjects)) {
             // planning for finishing projects
             return getTaskFromFinishing(active);
         } else {
