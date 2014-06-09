@@ -180,8 +180,10 @@ public class MaxThroughputStrategy implements IStrategy {
         }
         // return a list containg information about how many times can be a project planned on the client
         for (int i = 0; i < selectedItems.length; i++) {
-            Project first = filtered.get(v[i]).getFirst();
-            toReturn.add(new ProjectInAssociation(selectedItems[i], first));
+            if (selectedItems[i] > 0) {
+                Project first = filtered.get(v[i]).getFirst();
+                toReturn.add(new ProjectInAssociation(selectedItems[i], first));
+            }
         }
         return toReturn;
     }
