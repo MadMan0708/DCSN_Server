@@ -128,9 +128,7 @@ public class MaxThroughputStrategy implements IStrategy {
         // continue with regular planning
         LinkedList<ProjectInAssociation> distributionList = findBestAssociation(coresLeft, memoryLimit, activeProjects);
         for (ProjectInAssociation projectInAssociation : distributionList) {
-            for (int i = projectInAssociation.getCount(); i > 0; i--) {
-                assignProjectForClient(newPlan, projectInAssociation.getProject(), projectInAssociation.getCount());
-            }
+            assignProjectForClient(newPlan, projectInAssociation.getProject(), projectInAssociation.getCount());
         }
         active.setCurrentPlan(newPlan);
     }
