@@ -78,8 +78,9 @@ public class HighestPriorityStrategy implements IStrategy {
     private Project getAndAppendAsLast(Pair key, int memoryLimit) {
         Project selected = null;
         for (Iterator<Project> it = availableProjects.get(key).listIterator(); it.hasNext();) {
-            if (it.next().getMemory() <= memoryLimit) {
-                selected = it.next();
+            Project tmp = it.next();
+            if (tmp.getMemory() <= memoryLimit) {
+                selected = tmp;
                 break;
             }
         }
