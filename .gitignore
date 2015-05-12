@@ -1,1 +1,12 @@
-/dist/
+dist/
+build/
+docs/
+dev-docs/
+.idea/
+server.iml
+server.config.properties
+server.current_plans.log
+server.current_tasks.log
+server.projects_current_clients.log
+server.projects_possible_clients.log
+server.main.log

@@ -122,7 +122,7 @@ public class ServerParams {
      * Sets the base directory
      *
      * @param dir path to the base directory
-     * @return
+     * @return true if the directory has been successfully set, otherwise false
      */
     public boolean setBaseDir(String dir) {
         File f = new File(dir);
