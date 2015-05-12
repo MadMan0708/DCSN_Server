@@ -9,7 +9,7 @@ package cz.cuni.mff.bc.server.strategies;
 import cz.cuni.mff.bc.computation.Project;
 
 /**
- * Contains projects along with a integer saying how many times it can be planned on the client
+ * Contains projects along with an integer saying how many times it can be planned on the client
  * @author Jakub Hava
  */
 public class ProjectInAssociation {
